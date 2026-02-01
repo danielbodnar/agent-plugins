@@ -362,6 +362,17 @@
       "homepage": "https://github.com/anthropics/claude-plugins-public/tree/main/plugins/frontend-design"
     },
     {
+      "name": "playground",
+      "description": "Creates interactive HTML playgrounds — self-contained single-file explorers with visual controls, live preview, and prompt output with copy button. Includes templates for design playgrounds, data explorers, concept maps, and document critique.",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": "./plugins/playground",
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/playground"
+    },
+    {
       "name": "ralph-loop",
       "description": "Interactive self-referential AI loops for iterative development, implementing the Ralph Wiggum technique. Claude works on the same task repeatedly, seeing its previous work, until completion.",
       "author": {
@@ -598,6 +609,26 @@
         "url": "https://github.com/obra/superpowers.git"
       },
       "homepage": "https://github.com/obra/superpowers.git"
+    },
+    {
+      "name": "posthog",
+      "description": "Connect Claude Code to your PostHog analytics platform. Query insights, manage feature flags, run A/B experiments, track errors, and analyze LLM costs all through natural language. The plugin provides 10 slash commands for common workflows and full access to PostHog's MCP tools. Ask questions like \"What are my top errors?\" or \"Create a feature flag for 50% of users\" and Claude handles the API calls. Supports OAuth authentication, EU and US cloud regions, and self-hosted instances.",
+      "category": "monitoring",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/PostHog/posthog-for-claude.git"
+      },
+      "homepage": "https://github.com/PostHog/posthog-for-claude.git"
+    },
+    {
+      "name": "coderabbit",
+      "description": "Your code review partner. CodeRabbit provides external validation using a specialized AI architecture and 40+ integrated static analyzers—offering a different perspective that catches bugs, security vulnerabilities, logic errors, and edge cases. Context-aware analysis via AST parsing and codegraph relationships. Automatically incorporates CLAUDE.md and project coding guidelines into reviews. Useful after writing or modifying code, before commits, when implementing complex or security-sensitive logic, or when a second opinion would increase confidence in the changes. Returns specific findings with suggested fixes that can be applied immediately. Free to use.",
+      "category": "productivity",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/coderabbitai/claude-plugin.git"
+      },
+      "homepage": "https://github.com/coderabbitai/claude-plugin.git"
     }
   ]
 }
