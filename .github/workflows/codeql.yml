@@ -1,0 +1,46 @@
+name: CodeQL
+
+# Advanced CodeQL setup that honours .github/codeql/codeql-config.yml (path
+# exclusions for vendored skill demo assets). This is GATED on a repo variable
+# so it does NOT run — and cannot conflict with the repo's CodeQL *default
+# setup* — until you intentionally switch over:
+#   1. Settings -> Security -> Code scanning: disable CodeQL "default setup"
+#   2. gh variable set CODEQL_ADVANCED --body true
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 7 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    if: vars.CODEQL_ADVANCED == 'true'
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [actions, javascript-typescript, python]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@3e6af16ff035267728e2ebc35df5d4c4cf249f81 # v3.30.3
+        with:
+          languages: ${{ matrix.language }}
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@3e6af16ff035267728e2ebc35df5d4c4cf249f81 # v3.30.3
+        with:
+          category: "/language:${{ matrix.language }}"

@@ -1,0 +1,18 @@
+name: "bodnar-agent-plugins CodeQL config"
+
+# Scan first-party code (plugin/hook logic, scripts, CI workflows) but exclude
+# vendored third-party skill *assets*: demo slide decks, prototype HTML/JS,
+# example apps and reference fixtures that ship as skill reference material and
+# are never deployed or executed as part of this marketplace. They generate
+# DOM-XSS-style findings (e.g. innerHTML on already-escaped local data) that are
+# noise for non-deployed demos. Real first-party code remains analyzed.
+paths-ignore:
+  - "plugins/**/skills/**/assets/**"
+  - "plugins/**/skills/**/references/**"
+  - "plugins/**/skills/**/examples/**"
+  - "plugins/**/skills/**/prototypes/**"
+  - "external_plugins/**/skills/**/assets/**"
+  - "**/*.min.js"
+
+queries:
+  - uses: security-and-quality
