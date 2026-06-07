@@ -1840,16 +1840,26 @@ function setOpen(open) {
   }
 }
 
-function appendEntry(html) {
-  const div = document.createElement('div');
-  div.className = 'entry';
-  div.innerHTML = html;
-  output.appendChild(div);
+// Build terminal entries as DOM nodes (textContent), never via innerHTML, so
+// command output can never be reinterpreted as HTML. Each entry is one or more
+// lines: { cls, text, prompt? }.
+function appendEntry(lines) {
+  const entry = document.createElement('div');
+  entry.className = 'entry';
+  for (const { cls, text, prompt } of lines) {
+    const line = document.createElement('div');
+    line.className = cls;
+    if (prompt) {
+      const p = document.createElement('span');
+      p.className = 'prompt';
+      p.textContent = '$';
+      line.appendChild(p);
+    }
+    line.appendChild(document.createTextNode(text));
+    entry.appendChild(line);
+  }
+  output.appendChild(entry);
   output.scrollTop = output.scrollHeight;
-}
-
-function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 // === Load just-bash from CDN ===
@@ -1892,8 +1902,10 @@ Each lesson lives on its own branch:
   } catch (err) {
     setState('disabled', 'unavailable');
     input.placeholder = 'terminal unavailable in this environment';
-    appendEntry(`<div class="stderr">Terminal could not load: ${escapeHtml(String(err.message || err))}</div>
-<div class="meta">The page works without it — this is a runtime sandbox that requires network access to a CDN. Try opening this file from a normal browser context.</div>`);
+    appendEntry([
+      { cls: 'stderr', text: `Terminal could not load: ${String(err.message || err)}` },
+      { cls: 'meta', text: 'The page works without it — this is a runtime sandbox that requires network access to a CDN. Try opening this file from a normal browser context.' },
+    ]);
   }
 })();
 
@@ -1903,7 +1915,7 @@ async function runCommand(cmd) {
   if (!trimmed) return;
 
   // Echo the command
-  appendEntry(`<div class="echo"><span class="prompt">$</span>${escapeHtml(cmd)}</div>`);
+  appendEntry([{ cls: 'echo', text: cmd, prompt: true }]);
 
   // Special client-side commands
   if (trimmed === 'clear' || trimmed === 'cls') {
@@ -1912,23 +1924,23 @@ async function runCommand(cmd) {
   }
 
   if (!bash) {
-    appendEntry(`<div class="stderr">Terminal not ready.</div>`);
+    appendEntry([{ cls: 'stderr', text: 'Terminal not ready.' }]);
     return;
   }
 
   try {
     const result = await bash.exec(trimmed);
     if (result.stdout) {
-      appendEntry(`<div class="stdout">${escapeHtml(result.stdout.replace(/\n$/, ''))}</div>`);
+      appendEntry([{ cls: 'stdout', text: result.stdout.replace(/\n$/, '') }]);
     }
     if (result.stderr) {
-      appendEntry(`<div class="stderr">${escapeHtml(result.stderr.replace(/\n$/, ''))}</div>`);
+      appendEntry([{ cls: 'stderr', text: result.stderr.replace(/\n$/, '') }]);
     }
     if (result.exitCode !== 0 && !result.stderr) {
-      appendEntry(`<div class="meta">exit ${result.exitCode}</div>`);
+      appendEntry([{ cls: 'meta', text: `exit ${result.exitCode}` }]);
     }
   } catch (err) {
-    appendEntry(`<div class="stderr">${escapeHtml(String(err.message || err))}</div>`);
+    appendEntry([{ cls: 'stderr', text: String(err.message || err) }]);
   }
 }
 
