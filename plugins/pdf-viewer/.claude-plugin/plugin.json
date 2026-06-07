@@ -1,0 +1,8 @@
+{
+  "name": "pdf-viewer",
+  "version": "0.1.0",
+  "description": "Interactive PDF viewing, annotation, and collaborative markup.",
+  "keywords": [
+    "view-pdf"
+  ]
+}

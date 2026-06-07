@@ -1,0 +1,158 @@
+#!/usr/bin/env bun
+// orchestrate <owner> [options]
+//
+// Main entry point for fast mode. Lists all forks for <owner>, then syncs them
+// in parallel with a configurable concurrency limit.
+//
+// Outputs NDJSON: one {type:"result"} per repo branch, plus a final
+// {type:"summary"} object.
+//
+// Options:
+//   --concurrency=N      Parallel sync workers (default: 5)
+//   --strategy=NAME      skip | rebase | pr (default: skip)
+//   --branches=MODE      default | all (default: default)
+//   --no-cache           Bypass the API cache
+//   --dry-run            Compute outcomes without mutating any forks
+//   --include-archived   Include archived forks (default: skip them)
+//   --filter=PATTERN     Only sync repos whose full_name matches the pattern (substring)
+
+import { openDb, isSkipped } from "./lib/state.ts";
+import { listForks, syncFork, type StrategyName } from "./lib/sync.ts";
+import { parseArgs } from "node:util";
+import { randomUUID } from "node:crypto";
+
+const { values, positionals } = parseArgs({
+  args: process.argv.slice(2),
+  options: {
+    concurrency: { type: "string", default: "5" },
+    strategy: { type: "string", default: "skip" },
+    branches: { type: "string", default: "default" },
+    "no-cache": { type: "boolean", default: false },
+    "dry-run": { type: "boolean", default: false },
+    "include-archived": { type: "boolean", default: false },
+    filter: { type: "string" },
+  },
+  allowPositionals: true,
+});
+
+const owner = positionals[0];
+if (!owner) {
+  console.error("Usage: orchestrate <owner> [options]");
+  process.exit(1);
+}
+
+const concurrency = parseInt(values.concurrency!, 10);
+if (isNaN(concurrency) || concurrency < 1 || concurrency > 50) {
+  console.error("--concurrency must be 1-50");
+  process.exit(1);
+}
+
+const strategy = values.strategy as StrategyName;
+if (!["skip", "rebase", "pr"].includes(strategy)) {
+  console.error(`Invalid strategy: ${strategy}`);
+  process.exit(1);
+}
+
+const branches = values.branches as "default" | "all";
+const filter = values.filter;
+
+async function main() {
+  const db = openDb();
+  const t0 = Date.now();
+  const run_id = randomUUID();
+
+  try {
+    let forks = await listForks(db, owner, { noCache: values["no-cache"] });
+    if (!values["include-archived"]) {
+      forks = forks.filter((f) => !f.is_archived && !f.parent_is_archived);
+    }
+    forks = forks.filter((f) => isSkipped(db, f.full_name) === null);
+    if (filter) {
+      forks = forks.filter((f) => f.full_name.includes(filter));
+    }
+
+    process.stderr.write(
+      `Discovered ${forks.length} sync-eligible forks for ${owner}. ` +
+        `Concurrency: ${concurrency}. Strategy: ${strategy}. Run ID: ${run_id}\n`,
+    );
+
+    // Concurrency-limited Promise.all
+    const counts: Record<string, number> = {
+      synced: 0,
+      already_up_to_date: 0,
+      rebased: 0,
+      merged: 0,
+      diverged: 0,
+      conflict: 0,
+      skipped: 0,
+      failed: 0,
+    };
+    let totalBranches = 0;
+
+    const queue = [...forks];
+    const inFlight = new Set<Promise<void>>();
+
+    async function processOne(full_name: string) {
+      try {
+        const results = await syncFork({
+          db,
+          full_name,
+          strategy,
+          branches,
+          run_id,
+          noCache: values["no-cache"],
+          dryRun: values["dry-run"],
+        });
+        for (const r of results) {
+          process.stdout.write(JSON.stringify(r) + "\n");
+          counts[r.outcome] = (counts[r.outcome] ?? 0) + 1;
+          totalBranches++;
+        }
+      } catch (e) {
+        const errLine = {
+          type: "result",
+          full_name,
+          outcome: "failed" as const,
+          error_message: String(e),
+        };
+        process.stdout.write(JSON.stringify(errLine) + "\n");
+        counts.failed = (counts.failed ?? 0) + 1;
+        totalBranches++;
+      }
+    }
+
+    while (queue.length > 0 || inFlight.size > 0) {
+      while (inFlight.size < concurrency && queue.length > 0) {
+        const repo = queue.shift()!;
+        const promise = processOne(repo.full_name).finally(() => {
+          inFlight.delete(promise);
+        });
+        inFlight.add(promise);
+      }
+      if (inFlight.size > 0) {
+        await Promise.race(inFlight);
+      }
+    }
+
+    const summary = {
+      type: "summary" as const,
+      owner,
+      run_id,
+      total_repos: forks.length,
+      total_branches: totalBranches,
+      ...counts,
+      duration_ms: Date.now() - t0,
+    };
+    process.stdout.write(JSON.stringify(summary) + "\n");
+
+    // Exit non-zero if anything failed
+    process.exit(counts.failed > 0 || counts.conflict > 0 ? 1 : 0);
+  } finally {
+    db.close();
+  }
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

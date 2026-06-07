@@ -1,0 +1,226 @@
+<!--
+  Interactive selector for aitmpl-compose.
+
+  Render via visualize:show_widget. Claude must first substitute:
+    __CATALOG__   -> JSON.stringify of the loaded catalog
+    __DETECTED__  -> JSON.stringify of the stack detection output
+    __PACKS__     -> JSON.stringify of the available packs
+
+  On submit, the widget calls sendPrompt() with a JSON payload Claude can pass
+  to `aitmpl-compose compose --selection-file <path>`.
+-->
+<style>
+  :root {
+    color-scheme: light dark;
+    --aitmpl-fg: #1a1a1a;
+    --aitmpl-bg: #ffffff;
+    --aitmpl-muted: #6b7280;
+    --aitmpl-border: #e5e7eb;
+    --aitmpl-card: #f9fafb;
+    --aitmpl-accent: #f97316;
+    --aitmpl-accent-fg: #ffffff;
+    --aitmpl-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --aitmpl-fg: #f3f4f6;
+      --aitmpl-bg: #0e0c0c;
+      --aitmpl-muted: #9ca3af;
+      --aitmpl-border: #27272a;
+      --aitmpl-card: #18181b;
+      --aitmpl-accent: #fb923c;
+      --aitmpl-accent-fg: #0e0c0c;
+    }
+  }
+  .aitmpl { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--aitmpl-fg); padding: 16px; line-height: 1.5; }
+  .aitmpl h2 { font-size: 16px; margin: 0 0 4px; }
+  .aitmpl h3 { font-size: 13px; margin: 16px 0 6px; color: var(--aitmpl-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .aitmpl .row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .aitmpl input[type="text"] { padding: 8px 10px; border: 1px solid var(--aitmpl-border); border-radius: 6px; background: var(--aitmpl-bg); color: var(--aitmpl-fg); font-size: 14px; font-family: inherit; }
+  .aitmpl input[type="text"]:focus { outline: 2px solid var(--aitmpl-accent); outline-offset: -1px; }
+  .aitmpl .stacks { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .aitmpl .stack-tag { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--aitmpl-card); border: 1px solid var(--aitmpl-border); color: var(--aitmpl-muted); }
+  .aitmpl .search { width: 100%; }
+  .aitmpl .packs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+  .aitmpl .pack-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--aitmpl-border); border-radius: 6px; background: var(--aitmpl-card); font-size: 13px; }
+  .aitmpl .pack-row code { font-family: var(--aitmpl-mono); font-size: 12px; color: var(--aitmpl-accent); }
+  .aitmpl .group { border: 1px solid var(--aitmpl-border); border-radius: 6px; margin-bottom: 8px; background: var(--aitmpl-card); }
+  .aitmpl .group-header { padding: 8px 12px; font-weight: 600; font-size: 13px; cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
+  .aitmpl .group-body { display: none; padding: 4px 12px 8px; max-height: 240px; overflow-y: auto; border-top: 1px solid var(--aitmpl-border); }
+  .aitmpl .group.open .group-body { display: block; }
+  .aitmpl .item { display: flex; align-items: flex-start; gap: 8px; padding: 4px 0; font-size: 12px; }
+  .aitmpl .item code { font-family: var(--aitmpl-mono); font-size: 11px; color: var(--aitmpl-accent); }
+  .aitmpl .item .desc { color: var(--aitmpl-muted); font-size: 11px; margin-top: 2px; }
+  .aitmpl .badge { background: var(--aitmpl-accent); color: var(--aitmpl-accent-fg); padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+  .aitmpl button.submit { background: var(--aitmpl-accent); color: var(--aitmpl-accent-fg); border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 8px; }
+  .aitmpl button.submit:hover { opacity: 0.9; }
+  .aitmpl .count { color: var(--aitmpl-muted); font-weight: normal; font-size: 11px; }
+  .aitmpl .hidden { display: none !important; }
+</style>
+
+<div class="aitmpl">
+  <h2>Compose a Claude Code workflow</h2>
+  <div class="row">
+    <label>Workflow name (kebab-case)</label>
+    <input type="text" id="wfname" placeholder="e.g. cf-worker-secure" />
+  </div>
+  <div class="row">
+    <label>Description (optional)</label>
+    <input type="text" id="wfdesc" placeholder="What is this workflow for?" />
+  </div>
+
+  <h3>Detected stack</h3>
+  <div class="stacks" id="stacks"></div>
+
+  <h3>Bodnar packs</h3>
+  <div class="packs" id="packs"></div>
+
+  <h3>Components</h3>
+  <input type="text" class="search" id="search" placeholder="Filter components..." />
+  <div id="groups"></div>
+
+  <button class="submit" id="submit">Compose workflow</button>
+</div>
+
+<script>
+  // Substituted by Claude before render
+  const CATALOG = __CATALOG__;
+  const DETECTED = __DETECTED__;
+  const PACKS = __PACKS__;
+
+  const selected = new Set();        // "type:install_name"
+  const selectedPacks = new Set();
+
+  function renderStacks() {
+    const el = document.getElementById("stacks");
+    if (!DETECTED || !DETECTED.stacks || !DETECTED.stacks.length) {
+      el.innerHTML = '<span class="stack-tag">(no stack detected)</span>';
+      return;
+    }
+    el.innerHTML = DETECTED.stacks.map(s => `<span class="stack-tag">${s}</span>`).join("");
+  }
+
+  function renderPacks() {
+    const el = document.getElementById("packs");
+    if (!PACKS || !PACKS.length) {
+      el.innerHTML = '<div class="pack-row" style="color: var(--aitmpl-muted)">No packs available. Author one with <code>aitmpl-compose new-pack</code>.</div>';
+      return;
+    }
+    el.innerHTML = PACKS.map(p => `
+      <label class="pack-row">
+        <input type="checkbox" data-pack="${p.name}" />
+        <code>${p.name}</code>
+        <span style="color: var(--aitmpl-muted)">${p.description}</span>
+      </label>
+    `).join("");
+    el.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener("change", e => {
+        const name = e.target.dataset.pack;
+        if (e.target.checked) selectedPacks.add(name);
+        else selectedPacks.delete(name);
+      });
+    });
+  }
+
+  function renderGroups() {
+    const el = document.getElementById("groups");
+    const suggestedKeys = new Set((DETECTED?.suggested || []).map(s => `${s.type}:${s.name}`));
+    const types = Object.keys(CATALOG.components);
+    el.innerHTML = types.map(type => {
+      const items = CATALOG.components[type] || [];
+      const suggested = items.filter(it => suggestedKeys.has(`${type}:${it.install_name}`));
+      const others = items.filter(it => !suggestedKeys.has(`${type}:${it.install_name}`));
+      const renderItem = (it) => {
+        const key = `${type}:${it.install_name}`;
+        const checked = suggestedKeys.has(key) ? "checked" : "";
+        if (checked) selected.add(key);
+        return `
+          <label class="item" data-key="${key}" data-search="${(it.install_name + " " + (it.description || "")).toLowerCase()}">
+            <input type="checkbox" data-key="${key}" ${checked} />
+            <div>
+              <code>${it.install_name}</code>
+              ${suggestedKeys.has(key) ? '<span class="badge">suggested</span>' : ""}
+              ${it.description ? `<div class="desc">${it.description.slice(0, 100).replace(/[<>]/g, '')}</div>` : ""}
+            </div>
+          </label>
+        `;
+      };
+      const isOpen = suggested.length > 0;
+      return `
+        <div class="group ${isOpen ? "open" : ""}" data-type="${type}">
+          <div class="group-header">
+            <span>${type} <span class="count">(${items.length})</span></span>
+            <span>${isOpen ? "−" : "+"}</span>
+          </div>
+          <div class="group-body">
+            ${suggested.map(renderItem).join("")}
+            ${others.map(renderItem).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // Wire up handlers
+    el.querySelectorAll(".group-header").forEach(h => {
+      h.addEventListener("click", () => {
+        const group = h.parentElement;
+        group.classList.toggle("open");
+        h.querySelector("span:last-child").textContent = group.classList.contains("open") ? "−" : "+";
+      });
+    });
+    el.querySelectorAll('input[type="checkbox"][data-key]').forEach(cb => {
+      cb.addEventListener("change", e => {
+        const key = e.target.dataset.key;
+        if (e.target.checked) selected.add(key);
+        else selected.delete(key);
+      });
+    });
+  }
+
+  function applyFilter() {
+    const q = document.getElementById("search").value.trim().toLowerCase();
+    document.querySelectorAll(".item").forEach(it => {
+      if (!q) { it.classList.remove("hidden"); return; }
+      const haystack = it.dataset.search || "";
+      it.classList.toggle("hidden", !haystack.includes(q));
+    });
+    // Open groups that have matches
+    if (q) {
+      document.querySelectorAll(".group").forEach(g => {
+        const hasMatch = [...g.querySelectorAll(".item")].some(it => !it.classList.contains("hidden"));
+        g.classList.toggle("open", hasMatch);
+      });
+    }
+  }
+
+  document.getElementById("search").addEventListener("input", applyFilter);
+
+  document.getElementById("submit").addEventListener("click", () => {
+    const name = document.getElementById("wfname").value.trim();
+    const description = document.getElementById("wfdesc").value.trim();
+    if (!name) {
+      alert("Workflow name is required.");
+      return;
+    }
+    const components = [...selected].map(k => {
+      const [type, ...rest] = k.split(":");
+      return { type, name: rest.join(":") };
+    });
+    const payload = {
+      name,
+      description: description || undefined,
+      packs: [...selectedPacks],
+      components,
+    };
+    // sendPrompt is injected by the host (visualize:show_widget)
+    if (typeof sendPrompt === "function") {
+      sendPrompt(`Compose the workflow using this selection:\n\`\`\`json\n${JSON.stringify(payload, null, 2)}\n\`\`\``);
+    } else {
+      console.log("Selection:", payload);
+    }
+  });
+
+  renderStacks();
+  renderPacks();
+  renderGroups();
+</script>

@@ -1,10 +1,11 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "claude-plugins-official",
-  "description": "Directory of popular Claude Code extensions including development tools, productivity plugins, and MCP integrations",
+  "name": "bodnar-agent-plugins",
+  "description": "Daniel Bodnar's curated directory of Claude Code, OpenCode, and other AI agent plugins, skills, and MCP integrations. Forked from Anthropic's claude-plugins-official and extended with personal skill bundles.",
   "owner": {
-    "name": "Anthropic",
-    "email": "support@anthropic.com"
+    "name": "Daniel Bodnar",
+    "email": "1790726+danielbodnar@users.noreply.github.com",
+    "url": "https://github.com/danielbodnar"
   },
   "plugins": [
     {
@@ -2991,6 +2992,158 @@
         "sha": "f84ce4f0ed48047614a4202ac311cbdf00ea9a10"
       },
       "homepage": "https://github.com/zscaler/zscaler-mcp-server"
+    },
+    {
+      "name": "bodnar-skills",
+      "description": "Daniel Bodnar's personal skill set (28 skills).",
+      "source": "./plugins/bodnar-skills",
+      "category": "development",
+      "author": {
+        "name": "Daniel Bodnar",
+        "email": "1790726+danielbodnar@users.noreply.github.com",
+        "url": "https://github.com/danielbodnar"
+      },
+      "homepage": "https://github.com/danielbodnar/agent-plugins/tree/main/plugins/bodnar-skills"
+    },
+    {
+      "name": "bio-research",
+      "description": "Bioinformatics and computational biology workflows: single-cell RNA QC, scvi-tools, Nextflow pipelines, Allotrope conversion, and research strategy.",
+      "source": "./plugins/bio-research",
+      "category": "research"
+    },
+    {
+      "name": "cowork-plugin-management",
+      "description": "Author and customize Claude Code plugins inside Cowork sessions.",
+      "source": "./plugins/cowork-plugin-management",
+      "category": "development"
+    },
+    {
+      "name": "customer-support",
+      "description": "Customer support workflows: ticket triage, research, escalation, response drafting, and knowledge-base articles.",
+      "source": "./plugins/customer-support",
+      "category": "support"
+    },
+    {
+      "name": "design",
+      "description": "Product design workflows: design systems, developer handoff, critique, UX copy, and user research.",
+      "source": "./plugins/design",
+      "category": "design"
+    },
+    {
+      "name": "engineering",
+      "description": "Software engineering workflows: architecture, code review, debugging, testing, incident response, and documentation.",
+      "source": "./plugins/engineering",
+      "category": "development"
+    },
+    {
+      "name": "enterprise-search",
+      "description": "Cross-source enterprise search, query decomposition, and knowledge synthesis.",
+      "source": "./plugins/enterprise-search",
+      "category": "productivity"
+    },
+    {
+      "name": "finance",
+      "description": "Accounting and finance workflows: financial statements, journal entries, reconciliation, variance analysis, and SOX testing.",
+      "source": "./plugins/finance",
+      "category": "finance"
+    },
+    {
+      "name": "human-resources",
+      "description": "HR workflows: compensation analysis, offers, onboarding, interviews, performance reviews, and org planning.",
+      "source": "./plugins/human-resources",
+      "category": "hr"
+    },
+    {
+      "name": "marketing",
+      "description": "Marketing workflows: campaign planning, content creation, email sequences, SEO audits, and brand review.",
+      "source": "./plugins/marketing",
+      "category": "marketing"
+    },
+    {
+      "name": "mcp-spec",
+      "description": "Model Context Protocol specification tooling: GitHub search and SEP drafting.",
+      "source": "./plugins/mcp-spec",
+      "category": "development"
+    },
+    {
+      "name": "operations",
+      "description": "Operations workflows: runbooks, change requests, process docs, risk assessment, compliance tracking, and capacity planning.",
+      "source": "./plugins/operations",
+      "category": "operations"
+    },
+    {
+      "name": "pdf-viewer",
+      "description": "Interactive PDF viewing, annotation, and collaborative markup.",
+      "source": "./plugins/pdf-viewer",
+      "category": "productivity"
+    },
+    {
+      "name": "product-management",
+      "description": "Product management workflows: specs, roadmaps, sprint planning, metrics review, and stakeholder updates.",
+      "source": "./plugins/product-management",
+      "category": "product"
+    },
+    {
+      "name": "product-tracking-skills",
+      "description": "Product analytics and telemetry lifecycle: product modeling, current-state audit, tracking plan design, and instrumentation.",
+      "source": "./plugins/product-tracking-skills",
+      "category": "product"
+    },
+    {
+      "name": "productivity",
+      "description": "Personal productivity system: task management, two-tier memory, and activity sync.",
+      "source": "./plugins/productivity",
+      "category": "productivity"
+    },
+    {
+      "name": "sales",
+      "description": "Sales workflows: account research, call prep, forecasting, outreach, pipeline review, and competitive battlecards.",
+      "source": "./plugins/sales",
+      "category": "sales"
+    },
+    {
+      "name": "small-business",
+      "description": "Small-business operations suite: cash flow, payroll, CRM maintenance, campaigns, contracts, and tax prep.",
+      "source": "./plugins/small-business",
+      "category": "business"
+    },
+    {
+      "name": "sp-global",
+      "description": "S&P Global Capital IQ research: company tear sheets, funding digests, and earnings previews.",
+      "source": "./plugins/sp-global",
+      "category": "finance"
+    },
+    {
+      "name": "compound-engineering",
+      "description": "Compound engineering workflow: agent-native architecture, audits, and engineering practices for Claude Code, Codex, and Cursor.",
+      "author": {
+        "name": "Compound Engineering"
+      },
+      "category": "development",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/danielbodnar/compound-engineering-plugin.git",
+        "path": "plugins/compound-engineering",
+        "ref": "main",
+        "sha": "bb0c9ab4ee596d546f2965222e0ec8c2a097ae53"
+      },
+      "homepage": "https://github.com/danielbodnar/compound-engineering-plugin"
+    },
+    {
+      "name": "coding-tutor",
+      "description": "Interactive coding tutor skill from the Compound Engineering plugin.",
+      "author": {
+        "name": "Compound Engineering"
+      },
+      "category": "development",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/danielbodnar/compound-engineering-plugin.git",
+        "path": "plugins/coding-tutor",
+        "ref": "main",
+        "sha": "bb0c9ab4ee596d546f2965222e0ec8c2a097ae53"
+      },
+      "homepage": "https://github.com/danielbodnar/compound-engineering-plugin"
     }
   ]
 }

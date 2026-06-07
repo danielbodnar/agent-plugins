@@ -1,0 +1,24 @@
+{
+  "name": "@bitbuilder/github-fork-sync",
+  "version": "0.1.0",
+  "description": "Sync forked GitHub repos with upstream, in parallel, with persistent state.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "bun": ">=1.2.0"
+  },
+  "scripts": {
+    "init": "./scripts/init",
+    "orchestrate": "./scripts/orchestrate",
+    "list-forks": "./scripts/list-forks",
+    "sync-fork": "./scripts/sync-fork",
+    "skip": "./scripts/skip",
+    "status": "./scripts/status",
+    "db": "./scripts/db",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.5.0"
+  }
+}

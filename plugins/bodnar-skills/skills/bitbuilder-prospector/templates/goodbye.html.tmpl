@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Preview no longer available</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-stone-50 min-h-screen flex items-center justify-center p-6">
+<div class="max-w-md w-full bg-white rounded-lg shadow p-8">
+  <h1 class="text-2xl font-semibold mb-3">This preview has ended.</h1>
+  <p class="text-stone-600 mb-6">
+    For legal reasons the demo site was deleted after the review window closed.
+    If you'd like it restored from a backup, fill out the form below and Daniel
+    will follow up personally within one business day.
+  </p>
+
+  <form method="POST" action="/goodbye/restore-request" class="space-y-3">
+    <input name="name" placeholder="Your name" class="w-full border border-stone-300 rounded px-3 py-2" required>
+    <input name="email" type="email" placeholder="Email" class="w-full border border-stone-300 rounded px-3 py-2" required>
+    <input name="phone" placeholder="Phone (optional)" class="w-full border border-stone-300 rounded px-3 py-2">
+
+    <fieldset class="pt-2">
+      <legend class="text-sm text-stone-600 mb-2">How would you prefer I reach out?</legend>
+      <label class="flex items-center gap-2 text-sm">
+        <input type="radio" name="preferred_contact" value="email" checked> Email
+      </label>
+      <label class="flex items-center gap-2 text-sm">
+        <input type="radio" name="preferred_contact" value="phone"> Phone call
+      </label>
+      <label class="flex items-center gap-2 text-sm">
+        <input type="radio" name="preferred_contact" value="text"> Text message
+      </label>
+    </fieldset>
+
+    <button type="submit" class="w-full bg-stone-900 hover:bg-stone-800 text-white rounded py-2 font-medium mt-4">
+      Request restore from backup
+    </button>
+  </form>
+
+  <p class="text-xs text-stone-500 mt-6 text-center">
+    BitBuilder Cloud LLC · daniel@bitbuilder.io · Denton, TX
+  </p>
+</div>
+</body>
+</html>

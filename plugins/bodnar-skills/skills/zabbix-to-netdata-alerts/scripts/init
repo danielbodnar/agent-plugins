@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+# init: prepare the parser dependency. Run once before parse-zabbix-export.
+set -eu
+
+here=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$here"
+
+if ! command -v bun >/dev/null 2>&1; then
+  echo "bun not found on PATH." >&2
+  echo "The parser is optional. Without bun, read the Zabbix XML directly per SKILL.md." >&2
+  exit 1
+fi
+
+bun install
+echo "ready: ./scripts/parse-zabbix-export <export.xml>"

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{BUSINESS_NAME}}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="{{META_DESCRIPTION}}">
+<meta property="og:title" content="{{BUSINESS_NAME}}">
+<meta property="og:description" content="{{META_DESCRIPTION}}">
+<meta property="og:image" content="/og-image.png">
+<meta name="robots" content="noindex,nofollow">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="{{GOOGLE_FONTS_URL}}" rel="stylesheet">
+
+<style>
+  :root {
+    --primary: {{PRIMARY_HEX}};
+    --accent: {{ACCENT_HEX}};
+    --bg: {{BG_HEX}};
+    --text: {{TEXT_HEX}};
+    --muted: {{MUTED_HEX}};
+  }
+  body { font-family: {{BODY_FONT_STACK}}; color: var(--text); background: var(--bg); }
+  h1, h2, h3 { font-family: {{HEADLINE_FONT_STACK}}; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .text-primary { color: var(--primary); }
+  .bg-primary { background: var(--primary); }
+  .text-muted { color: var(--muted); }
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- Sticky header -->
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-stone-200">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2">
+      {{LOGO_IMG_OR_NAME}}
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm">
+      <a href="#services" class="hover:text-primary">Services</a>
+      <a href="#about" class="hover:text-primary">About</a>
+      <a href="#contact" class="hover:text-primary">Contact</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="tel:{{PHONE_DIGITS}}" class="hidden sm:inline text-sm font-medium">{{PHONE_FORMATTED}}</a>
+      <a href="/cta/schedule" class="btn-primary rounded px-4 py-2 text-sm font-medium">{{PRIMARY_CTA_TEXT}}</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- Hero -->
+<section class="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
+  <div>
+    <h1 class="text-4xl md:text-5xl font-semibold leading-tight mb-4">{{HERO_HEADLINE}}</h1>
+    <p class="text-lg text-muted mb-6">{{HERO_SUBHEAD}}</p>
+    <div class="flex flex-wrap gap-3">
+      <a href="/cta/schedule" class="btn-primary rounded px-5 py-3 font-medium">{{PRIMARY_CTA_TEXT}}</a>
+      <a href="#services" class="rounded border border-stone-300 px-5 py-3 font-medium">See services</a>
+    </div>
+  </div>
+  <div class="order-first md:order-last">
+    {{HERO_VISUAL}}
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services" class="bg-white border-y border-stone-200">
+  <div class="max-w-6xl mx-auto px-4 py-16 md:py-20">
+    <h2 class="text-3xl font-semibold mb-2">What we do</h2>
+    <p class="text-muted mb-10 max-w-2xl">{{SERVICES_INTRO}}</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {{SERVICE_CARDS}}
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about" class="max-w-6xl mx-auto px-4 py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
+  <div>
+    <h2 class="text-3xl font-semibold mb-4">About {{BUSINESS_NAME_SHORT}}</h2>
+    <p class="text-muted leading-relaxed mb-4">{{ABOUT_PARAGRAPH}}</p>
+  </div>
+  <div>
+    {{ABOUT_VISUAL}}
+  </div>
+</section>
+
+<!-- Testimonials (optional; omit section if empty) -->
+{{TESTIMONIALS_SECTION}}
+
+<!-- Contact -->
+<section id="contact" class="bg-white border-t border-stone-200">
+  <div class="max-w-6xl mx-auto px-4 py-16 md:py-20 grid md:grid-cols-2 gap-10">
+    <div>
+      <h2 class="text-3xl font-semibold mb-4">Get in touch</h2>
+      <p class="text-muted mb-6">{{CONTACT_PROMPT}}</p>
+      <div class="space-y-2 text-sm">
+        <p><strong>Phone:</strong> <a href="tel:{{PHONE_DIGITS}}" class="underline">{{PHONE_FORMATTED}}</a></p>
+        <p><strong>Email:</strong> <a href="mailto:{{EMAIL}}" class="underline">{{EMAIL}}</a></p>
+        <p><strong>Address:</strong> {{ADDRESS}}</p>
+      </div>
+    </div>
+    <div>
+      {{HOURS_OR_MAP}}
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Footer (watermark is required, byte-exact) -->
+<footer class="bg-stone-900 text-stone-300">
+  <div class="max-w-6xl mx-auto px-4 py-10 text-sm">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <p>&copy; {{CURRENT_YEAR}} {{BUSINESS_NAME}}. All rights reserved.</p>
+      <p class="text-stone-400">{{PHONE_FORMATTED}} · {{EMAIL}}</p>
+    </div>
+    <p class="mt-6 text-xs text-stone-500">
+      Design concept prepared by BitBuilder Cloud. Not affiliated with {{BUSINESS_NAME}}. Feedback: daniel@bitbuilder.io
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Smooth scroll for in-page links
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('a[href^="#"]');
+    if (!t) return;
+    var id = t.getAttribute('href');
+    var el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+</script>
+<script src="/beacon.js" defer></script>
+</body>
+</html>

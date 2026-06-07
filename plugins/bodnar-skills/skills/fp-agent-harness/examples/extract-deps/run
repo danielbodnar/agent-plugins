@@ -1,0 +1,30 @@
+#!/usr/bin/env bun
+// run — execute the extract-deps pipeline. stdin -> stdout.
+//
+// The executor is selected here, at the edge, by configuration. The pipeline
+// agents never name a provider. A real `harness` build vendors core.ts and the
+// adapters into the output directory so it stands alone; this example imports
+// them from the skill instead, to keep one source of truth.
+
+import { fromFile, pipe, asInput } from "../../scripts/lib/core.ts";
+import { fakeAdapter } from "../../scripts/adapters/fake.ts";
+import { httpJsonAdapter } from "../../scripts/adapters/http-json.ts";
+
+const exec =
+  (process.env.HARNESS_ADAPTER ?? "http-json") === "fake"
+    ? fakeAdapter((r) => r)
+    : httpJsonAdapter;
+
+const { pipeline } = await Bun.file(`${import.meta.dir}/pipeline.json`).json();
+const stages = await Promise.all(
+  pipeline.map((name: string) =>
+    fromFile(`${import.meta.dir}/agents/${name}.md`, exec)),
+);
+
+const result = await pipe(...stages)(await Bun.stdin.text());
+if (result.ok) {
+  process.stdout.write(asInput(result.value) + "\n");
+} else {
+  process.stderr.write(`pipeline: ${result.error}\n`);
+  process.exit(1);
+}

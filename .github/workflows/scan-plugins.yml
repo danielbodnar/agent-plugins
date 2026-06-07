@@ -32,7 +32,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write # Anthropic Workload Identity Federation (scan-plugins action)
+  id-token: write # Workload Identity Federation OIDC token (scan-plugins action)
 
 # Serialize scans per ref so concurrent runs (a re-dispatch racing the
 # original, or a manual dispatch) don't both restore the same cache, scan
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
 
@@ -91,7 +91,7 @@ jobs:
       - name: Restore verdict cache
         if: steps.changes.outputs.relevant == 'true'
         id: cache-restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
         with:
           path: .scan-cache
           # run_attempt so a re-run can save its own verdicts (cache keys are
@@ -188,23 +188,33 @@ jobs:
           echo "::notice::$changed_count changed entrie(s): $cached_count cached ($cached_fail_count failing), $to_scan_count to scan."
 
       - name: Scan uncached entries
-        if: steps.changes.outputs.relevant == 'true' && steps.filter.outputs.to_scan != '0'
+        # Skip gracefully when Workload Identity Federation is not configured
+        # for this repository (e.g. a fork). The federation rule/org/service
+        # account are repository-bound, so they are supplied as repo variables
+        # rather than hardcoded; without them the job runs on cached verdicts
+        # only. Configure: gh variable set SCAN_WIF_FEDERATION_RULE_ID (and the
+        # ORGANIZATION_ID / SERVICE_ACCOUNT_ID variants).
+        if: >-
+          steps.changes.outputs.relevant == 'true'
+          && steps.filter.outputs.to_scan != '0'
+          && vars.SCAN_WIF_FEDERATION_RULE_ID != ''
         id: scan
         # Capture the action's per-entry outputs even when it exits nonzero.
         # The verdict (cached + fresh) is what gates the job, not the action's
         # exit code, and the revert workflow needs the artifact even on failure.
         continue-on-error: true
-        # Pinned to claude-plugins-community#34 (WIF input support).
-        # TODO: re-pin to a main-branch SHA once #34 merges.
+        # Upstream composite action (pulled from anthropics/claude-plugins-community).
+        # Pinned to a commit with WIF input support. Forking/vendoring this action
+        # is recommended future work for full independence from the upstream org.
         uses: anthropics/claude-plugins-community/.github/actions/scan-plugins@e85f0d65b4fc87f07862e1dcdc467950514414ec
         with:
-          # Anthropic auth via Workload Identity Federation — the action
-          # mints a GitHub OIDC token (id-token: write above) and the claude
-          # CLI exchanges it for a short-lived bearer. The federation rule is
-          # bound to this repository (repository_id-pinned).
-          anthropic-federation-rule-id: fdrl_0147kJdru6bZKTtzwFNEqsDf
-          anthropic-organization-id: 1ec12c5c-6542-4da8-bf2f-c15919aef01c
-          anthropic-service-account-id: svac_01DnC3BtPHGjYJEGeuUUXZ8v
+          # Auth via Workload Identity Federation — the action mints a GitHub
+          # OIDC token (id-token: write above) and the claude CLI exchanges it
+          # for a short-lived bearer. The federation rule is repository-bound;
+          # supply your own via repo variables (see the if: condition above).
+          anthropic-federation-rule-id: ${{ vars.SCAN_WIF_FEDERATION_RULE_ID }}
+          anthropic-organization-id: ${{ vars.SCAN_WIF_ORGANIZATION_ID }}
+          anthropic-service-account-id: ${{ vars.SCAN_WIF_SERVICE_ACCOUNT_ID }}
           marketplace-path: .scan-cache/scan-targets.json
           policy-prompt: .github/policy/prompt.md
           fail-on-findings: "true"
@@ -342,7 +352,7 @@ jobs:
       # found policy failures" from "scan never ran" (infra error → no revert).
       - name: Upload scan verdicts artifact
         if: steps.changes.outputs.relevant == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: scan-verdicts
           path: |
@@ -354,7 +364,7 @@ jobs:
       # re-burning Claude time on a known-bad SHA every night.
       - name: Save verdict cache
         if: always() && steps.changes.outputs.relevant == 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
         with:
           path: .scan-cache
           key: scan-verdicts-${{ hashFiles('.github/policy/**') }}-${{ github.run_id }}-${{ github.run_attempt }}
@@ -422,7 +432,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Download scan verdicts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: scan-verdicts
           path: /tmp/scan-verdicts

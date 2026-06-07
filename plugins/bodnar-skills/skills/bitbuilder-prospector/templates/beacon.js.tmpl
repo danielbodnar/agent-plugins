@@ -1,0 +1,56 @@
+// BitBuilder review-tracking beacon
+// Tracks dwell (while tab is visible) and max scroll depth.
+// Reports to /_beacon every 10s and on tab exit.
+
+(function () {
+  "use strict";
+  var SLUG = "{{SLUG}}";
+  var INTERVAL_MS = 10000;
+
+  var dwellMs = 0;
+  var maxScrollPct = 0;
+  var lastTick = Date.now();
+  var visible = document.visibilityState === "visible";
+
+  function scrollPct() {
+    var doc = document.documentElement;
+    var total = doc.scrollHeight - doc.clientHeight;
+    if (total <= 0) return 100;
+    var pct = Math.round((100 * (window.scrollY || doc.scrollTop)) / total);
+    return Math.max(0, Math.min(100, pct));
+  }
+
+  function tick() {
+    var now = Date.now();
+    if (visible) dwellMs += now - lastTick;
+    lastTick = now;
+    var s = scrollPct();
+    if (s > maxScrollPct) maxScrollPct = s;
+  }
+
+  function send(useBeacon) {
+    tick();
+    var payload = JSON.stringify({ slug: SLUG, dwell_ms: dwellMs, scroll_pct: maxScrollPct });
+    if (useBeacon && navigator.sendBeacon) {
+      navigator.sendBeacon("/_beacon", new Blob([payload], { type: "application/json" }));
+    } else {
+      fetch("/_beacon", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+        keepalive: true,
+      }).catch(function () {});
+    }
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    tick();
+    visible = document.visibilityState === "visible";
+    if (!visible) send(true);
+  });
+
+  window.addEventListener("pagehide", function () { send(true); });
+  window.addEventListener("beforeunload", function () { send(true); });
+
+  setInterval(function () { send(false); }, INTERVAL_MS);
+})();

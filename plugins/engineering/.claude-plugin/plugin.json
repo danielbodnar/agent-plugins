@@ -1,0 +1,17 @@
+{
+  "name": "engineering",
+  "version": "0.1.0",
+  "description": "Software engineering workflows: architecture, code review, debugging, testing, incident response, and documentation.",
+  "keywords": [
+    "architecture",
+    "code-review",
+    "debug",
+    "deploy-checklist",
+    "documentation",
+    "incident-response",
+    "standup",
+    "system-design",
+    "tech-debt",
+    "testing-strategy"
+  ]
+}

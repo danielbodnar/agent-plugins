@@ -15,7 +15,7 @@ jobs:
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0 (sha-pinned)
 
@@ -39,4 +39,8 @@ jobs:
         env:
           FILES: ${{ steps.changed.outputs.files }}
         run: |
-          printf '%s\n' "$FILES" | xargs bun .github/scripts/validate-frontmatter.ts
+          # Treat each newline-delimited line as a single literal argument so
+          # filenames with spaces or shell-glob characters cannot be split or
+          # expanded (xargs default word-splitting was a code-path injection
+          # vector even though fork PRs are already filtered out above).
+          printf '%s\n' "$FILES" | xargs -d '\n' bun .github/scripts/validate-frontmatter.ts

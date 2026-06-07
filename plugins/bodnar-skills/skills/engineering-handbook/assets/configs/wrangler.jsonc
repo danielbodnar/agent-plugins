@@ -1,0 +1,51 @@
+// wrangler.jsonc: Deploy a built static handbook site to Cloudflare Workers
+// Static Assets. Works with any static-site generator (MkDocs, Starlight,
+// VitePress, Docusaurus, EmDash). Pair with assets/configs/ deploy templates
+// for CI/CD setup.
+//
+// To use:
+//   1. Copy this file to your repo root.
+//   2. Set "name" to the Worker name you want.
+//   3. Set "assets.directory" to wherever your generator writes its build:
+//      - MkDocs: "./site"
+//      - Astro Starlight: "./dist"
+//      - VitePress: "./.vitepress/dist"
+//      - Docusaurus: "./build"
+//      - EmDash: "./dist"
+//   4. Run: bunx wrangler@latest deploy
+{
+  "$schema": "https://json.schemastore.org/wrangler.json",
+  "name": "engineering-handbook",
+  "compatibility_date": "2026-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Static Assets configuration.
+  "assets": {
+    // Where the generator writes its build output. Adjust for your generator.
+    "directory": "./dist",
+    // SPA routing for generators that produce client-side routes (Starlight,
+    // some Docusaurus configs). Set to "404-page" if your generator builds
+    // explicit 404.html files.
+    "not_found_handling": "single-page-application",
+    // Serve a custom HTML at root, useful when the generator's index is
+    // elsewhere. Comment out to use the directory's index.html.
+    // "html_handling": "auto-trailing-slash"
+  },
+
+  // Workers Observability: send logs and traces to the Cloudflare dashboard.
+  // See references/cloudflare-observability.md in this skill for the full
+  // explanation, including OTLP export to Honeycomb / Grafana / Axiom.
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  }
+
+  // Optional: add custom domains.
+  // "routes": [
+  //   { "pattern": "handbook.example.com", "custom_domain": true }
+  // ]
+}

@@ -1,0 +1,86 @@
+#!/usr/bin/env bun
+// kernel-test — exercise the combinator kernel with no network and no provider.
+//
+// The one effect is injected, so the whole kernel runs against the fake
+// adapter. This file is both the proof that composition works and a worked
+// reference for `pipe`, `loopUntil`, and `validate`. Run it: `./kernel-test`.
+
+import {
+  compile,
+  pipe,
+  loopUntil,
+  validate,
+  type AgentSpec,
+} from "../scripts/lib/core.ts";
+import { fakeAdapter } from "../scripts/adapters/fake.ts";
+
+const inputOf = (rendered: string) =>
+  rendered.split("INPUT:\n")[1]?.split("\n\n")[0]?.trim() ?? "";
+
+// A fake model: it reads the rendered instruction and answers deterministically.
+const exec = fakeAdapter((rendered) => {
+  const input = inputOf(rendered);
+  if (rendered.includes("Uppercase")) return input.toUpperCase();
+  if (rendered.includes("Count the words"))
+    return JSON.stringify({ count: input.split(/\s+/).filter(Boolean).length });
+  if (rendered.includes("Drop the first word"))
+    return input.split(/\s+/).slice(1).join(" ");
+  return input;
+});
+
+const spec = (over: Partial<AgentSpec>): AgentSpec => ({
+  name: "t",
+  closure: {},
+  constraints: [],
+  schema: "text",
+  body: "",
+  ...over,
+});
+
+let failures = 0;
+const check = (label: string, pass: boolean) => {
+  process.stdout.write(`${pass ? "ok  " : "FAIL"}  ${label}\n`);
+  if (!pass) failures++;
+};
+
+// 1. a single agent: text in, validated text out
+const upper = compile(spec({ body: "Uppercase the input." }), exec);
+check("single agent validates output", (await upper("hello")).ok);
+
+// 2. Kleisli composition: uppercase, then count words
+const count = compile(
+  spec({ body: "Count the words.", schema: { count: "number" } }),
+  exec,
+);
+const line = pipe(upper, count);
+const piped = await line("the quick brown fox");
+check(
+  "pipe threads structured output",
+  piped.ok && (piped.value as { count: number }).count === 4,
+);
+
+// 3. short-circuit: a failing stage stops the pipeline with its own error
+const broken = compile(spec({ body: "x", schema: { n: "number" } }), exec);
+const stopped = await pipe(broken, upper)("anything");
+check("pipe short-circuits on failure", !stopped.ok);
+
+// 4. loopUntil: the feedback loop runs a turn until a state is done
+type Trim = { text: string; done: boolean };
+const dropWord = compile(spec({ body: "Drop the first word." }), exec);
+const trimTurn = async (s: Trim): Promise<Trim> => {
+  const r = await dropWord(s.text);
+  const text = r.ok ? (r.value as string) : s.text;
+  return { text, done: text.split(/\s+/).filter(Boolean).length <= 3 };
+};
+const settled = await loopUntil<Trim>(trimTurn, (s) => s.done, 10)({
+  text: "one two three four five six",
+  done: false,
+});
+check("loopUntil runs turns to a done state", settled.text === "four five six");
+
+// 5. validate: the contract at every seam
+check("validate accepts a matching object", validate({ count: "number" }, '{"count":5}').ok);
+check("validate rejects a wrong type", !validate({ count: "number" }, '{"count":"five"}').ok);
+
+process.stdout.write(failures ? `\n${failures} failed\n` : "\nall passed\n");
+process.exit(failures ? 1 : 0);

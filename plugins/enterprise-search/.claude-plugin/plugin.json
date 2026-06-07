@@ -1,0 +1,12 @@
+{
+  "name": "enterprise-search",
+  "version": "0.1.0",
+  "description": "Cross-source enterprise search, query decomposition, and knowledge synthesis.",
+  "keywords": [
+    "digest",
+    "knowledge-synthesis",
+    "search",
+    "search-strategy",
+    "source-management"
+  ]
+}

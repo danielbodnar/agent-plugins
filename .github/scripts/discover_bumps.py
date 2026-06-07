@@ -2,8 +2,8 @@
 """Discover plugins in marketplace.json whose upstream repo has moved past
 their pinned SHA, update the file in place, and emit a summary.
 
-Adapted from claude-plugins-community-internal's discover_bumps.py for the
-single-file marketplace.json format used by claude-plugins-official.
+Adapted from the upstream claude-plugins-community discover_bumps.py for the
+single-file marketplace.json format used by bodnar-agent-plugins.
 
 Usage: discover_bumps.py [--plugin NAME] [--max N] [--dry-run]
 """

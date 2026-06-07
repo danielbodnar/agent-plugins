@@ -1,0 +1,14 @@
+{
+  "name": "product-tracking-skills",
+  "version": "0.1.0",
+  "description": "Product analytics and telemetry lifecycle: product modeling, current-state audit, tracking plan design, and instrumentation.",
+  "keywords": [
+    "product-tracking-audit-current-tracking",
+    "product-tracking-business-case",
+    "product-tracking-design-tracking-plan",
+    "product-tracking-generate-implementation-guide",
+    "product-tracking-implement-tracking",
+    "product-tracking-instrument-new-feature",
+    "product-tracking-model-product"
+  ]
+}

@@ -1,0 +1,7 @@
+name: bodnar/security-base
+description: Security baseline. Auditor agent, secret scanning, and force-push protection.
+components:
+  - { type: agent,   name: security/security-auditor }
+  - { type: command, name: security/security-audit }
+  - { type: hook,    name: security/secret-scanner }
+  - { type: hook,    name: security/force-push-blocker }

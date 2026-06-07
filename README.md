@@ -1,31 +1,53 @@
-# Claude Code Plugins Directory
+# Daniel Bodnar's Agent Plugins Directory
 
-A curated directory of high-quality plugins for Claude Code.
+`bodnar-agent-plugins` is a curated directory of high-quality plugins and skills for Claude Code, OpenCode, and other AI agents.
 
-> **⚠️ Important:** Make sure you trust a plugin before installing, updating, or using it. Anthropic does not control what MCP servers, files, or other software are included in plugins and cannot verify that they will work as intended or that they won't change. See each plugin's homepage for more information.
+> **⚠️ Important:** Make sure you trust a plugin before installing, updating, or using it. This marketplace does not control what MCP servers, files, or other software are included in plugins and cannot verify that they will work as intended or that they won't change. See each plugin's homepage for more information.
+
+> This directory was forked from Anthropic's [`claude-plugins-official`](https://github.com/anthropics/claude-plugins-public) marketplace and extended with Daniel Bodnar's personal skill bundles and additional sources. Individual plugins retain their original authors and homepages.
 
 ## Structure
 
-- **`/plugins`** - Internal plugins developed and maintained by Anthropic
+- **`/plugins`** - First-party plugins and skills curated by Daniel Bodnar, plus plugins inherited from the upstream marketplace (each retains its original author)
 - **`/external_plugins`** - Third-party plugins from partners and the community
 
 ## Installation
 
 Plugins can be installed directly from this marketplace via Claude Code's plugin system.
 
-To install, run `/plugin install {plugin-name}@claude-plugins-official`
+To install, run `/plugin install {plugin-name}@bodnar-agent-plugins`
 
 or browse for the plugin in `/plugin > Discover`
 
 ## Contributing
 
-### Internal Plugins
+### First-party Plugins
 
-Internal plugins are developed by Anthropic team members. See `/plugins/example-plugin` for a reference implementation.
+First-party plugins are maintained in this repository. See `/plugins/example-plugin` for a reference implementation.
 
 ### External Plugins
 
-Third-party partners can submit plugins for inclusion in the marketplace. External plugins must meet quality and security standards for approval. To submit a new plugin, use the [plugin directory submission form](https://clau.de/plugin-directory-submission).
+Plugins can be added to the catalog by referencing their source repository. External plugins should meet reasonable quality and security standards. Open an issue or pull request to propose a new plugin.
+
+## Daniel Bodnar repositories
+
+This marketplace gathers Daniel Bodnar's skills and plugins in one place. Some are vendored or referenced directly as catalog entries; others live in their own repositories and are linked here for discovery:
+
+**Referenced as installable catalog entries**
+
+- [`claude-code-templates`](https://github.com/danielbodnar/claude-code-templates) - 870+ skills across 27 categories, exposed as `cct-*` entries
+- [`compound-engineering-plugin`](https://github.com/danielbodnar/compound-engineering-plugin) - `compound-engineering`, `coding-tutor`
+- [`nushell-dev`](https://github.com/danielbodnar/nushell-dev) - Nushell development plugin
+- [`nushell-pro`](https://github.com/danielbodnar/nushell-pro) - Nushell best practices and security skill
+- [`claude-skillz`](https://github.com/danielbodnar/claude-skillz) - 21 programming-workflow skills
+
+**Vendored personal bundle**
+
+- `bodnar-skills` - 28 personal skills (sourced from the private [`skills`](https://github.com/danielbodnar/skills) repository)
+
+**Related repositories** (not yet wired as catalog entries)
+
+- [`claude-plugins`](https://github.com/danielbodnar/claude-plugins), [`agentskills`](https://github.com/danielbodnar/agentskills), [`autoskills`](https://github.com/danielbodnar/autoskills), [`everything-claude-code`](https://github.com/danielbodnar/everything-claude-code), [`hallmark`](https://github.com/danielbodnar/hallmark), [`cloudflare-skills`](https://github.com/danielbodnar/cloudflare-skills), [`gws-cli`](https://github.com/danielbodnar/gws-cli)
 
 ## Plugin Structure
 

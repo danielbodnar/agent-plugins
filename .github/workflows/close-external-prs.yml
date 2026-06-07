@@ -13,8 +13,12 @@ jobs:
     if: vars.DISABLE_EXTERNAL_PR_CHECK != 'true'
     runs-on: ubuntu-latest
     steps:
+      # Safe use of pull_request_target: this job never checks out or runs PR
+      # code. It only reads the author's collaborator permission and the PR
+      # number from the event payload, and calls the GitHub REST API with
+      # hardcoded owner/repo. No untrusted input is interpolated into a shell.
       - name: Check if author has write access
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
             const author = context.payload.pull_request.user.login;
@@ -36,7 +40,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.payload.pull_request.number,
-              body: `Thanks for your interest! This repo only accepts contributions from Anthropic team members. If you'd like to submit a plugin to the marketplace, please submit your plugin [here](https://clau.de/plugin-directory-submission).`
+              body: `Thanks for your interest! This repository currently only accepts contributions from maintainers with write access. If you'd like to propose a plugin for this marketplace, please [open an issue](https://github.com/danielbodnar/agent-plugins/issues/new) describing it and linking its source repository.`
             });
 
             await github.rest.pulls.update({

@@ -1,0 +1,97 @@
+# mkdocs.yml: MkDocs Material configuration for an engineering handbook.
+# Pair with .github/workflows/deploy-mkdocs.yml in this configs directory
+# for GitHub Pages deployment.
+#
+# To use:
+#   1. Copy this file to your repo root as mkdocs.yml.
+#   2. Update site_name, site_url, repo_url to match your project.
+#   3. Confirm docs_dir points at your handbook directory (default: handbook).
+#   4. pip install mkdocs-material mkdocs-git-revision-date-localized-plugin
+#   5. Run: mkdocs serve (preview at http://localhost:8000)
+#   6. Run: mkdocs build (produces ./site for deployment)
+
+site_name: Engineering Handbook
+site_url: https://your-org.github.io/handbook/
+repo_url: https://github.com/your-org/your-repo
+repo_name: your-org/your-repo
+docs_dir: handbook
+edit_uri: edit/main/handbook/
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.tracking
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.action.edit
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      type: timeago
+      enable_creation_date: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      permalink_title: Anchor link
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-org
+
+# Auto-generated nav based on docs_dir structure works fine. Add an explicit
+# nav: section here if you want manual control over ordering or labels.

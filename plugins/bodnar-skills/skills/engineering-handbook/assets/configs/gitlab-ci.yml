@@ -1,0 +1,69 @@
+# .gitlab-ci.yml
+# Deploy an engineering handbook (built with MkDocs Material) to GitLab Pages.
+#
+# To use:
+#   1. Copy this file to .gitlab-ci.yml at your repo root.
+#   2. Pair with assets/configs/mkdocs.yml at your repo root.
+#   3. Push to main; site goes live at https://<group>.gitlab.io/<project>/.
+
+stages:
+  - build
+  - deploy
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+# Build the site.
+build-handbook:
+  stage: build
+  image: python:3.12-slim
+  cache:
+    paths:
+      - .cache/pip
+  script:
+    - pip install mkdocs-material mkdocs-git-revision-date-localized-plugin
+    - mkdocs build --strict
+  artifacts:
+    paths:
+      - site
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - handbook/**/*
+        - mkdocs.yml
+        - .gitlab-ci.yml
+
+# Deploy to GitLab Pages.
+pages:
+  stage: deploy
+  needs: [build-handbook]
+  image: alpine:latest
+  script:
+    - mv site public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - handbook/**/*
+        - mkdocs.yml
+        - .gitlab-ci.yml
+
+# Optional: deploy to Cloudflare Workers Static Assets via Wrangler.
+# Uncomment and set CLOUDFLARE_API_TOKEN as a CI/CD variable.
+#
+# deploy-cloudflare:
+#   stage: deploy
+#   needs: [build-handbook]
+#   image: oven/bun:latest
+#   script:
+#     - bunx wrangler@latest deploy --assets site
+#   variables:
+#     CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+#       changes:
+#         - handbook/**/*
+#         - wrangler.jsonc

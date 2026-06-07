@@ -19,7 +19,7 @@ These are Claude Code commands — run `claude` to start a session first.
 
 Install the plugin. No env vars required.
 ```
-/plugin install imessage@claude-plugins-official
+/plugin install imessage@bodnar-agent-plugins
 ```
 
 **3. Relaunch with the channel flag.**
@@ -27,7 +27,7 @@ Install the plugin. No env vars required.
 The server won't connect without this — exit your session and start a new one:
 
 ```sh
-claude --channels plugin:imessage@claude-plugins-official
+claude --channels plugin:imessage@bodnar-agent-plugins
 ```
 
 Check that `/imessage:configure` tab-completes.

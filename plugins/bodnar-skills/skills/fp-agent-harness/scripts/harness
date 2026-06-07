@@ -1,0 +1,13 @@
+#!/usr/bin/env bun
+// harness — harness mode launcher.
+//
+// A shebang file has no extension, so Bun would parse it as plain JS and choke
+// on TypeScript syntax. This launcher carries no types; it only hands control
+// to the typed implementation in lib/harness-impl.ts.
+//
+//   harness <plan-file> [out-dir]      out-dir defaults to .claude/harness
+//
+// See lib/harness-impl.ts for the two-tier loop, the planner-in-loop routing,
+// the chaos stage, and the edge-side executor selection.
+
+import "./lib/harness-impl.ts";

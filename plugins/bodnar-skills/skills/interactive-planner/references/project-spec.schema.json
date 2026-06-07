@@ -1,0 +1,496 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bitbuilder.cloud/schemas/project-spec/v1.0.0",
+  "title": "ProjectSpec",
+  "description": "Strongly-typed project configuration specification. Output of the interactive-planner skill. Consumable by CLI agents for fully automated project scaffolding and configuration.",
+  "type": "object",
+  "required": [
+    "specVersion",
+    "metadata",
+    "stack",
+    "directory",
+    "dependencies",
+    "configuration",
+    "environment",
+    "scripts",
+    "standards"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema for validation."
+    },
+    "specVersion": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Schema version. Follows semver."
+    },
+    "metadata": { "$ref": "#/$defs/Metadata" },
+    "stack": { "$ref": "#/$defs/Stack" },
+    "directory": { "$ref": "#/$defs/DirectoryTree" },
+    "dependencies": { "$ref": "#/$defs/Dependencies" },
+    "configuration": {
+      "type": "array",
+      "description": "All configuration files the project requires.",
+      "items": { "$ref": "#/$defs/ConfigFile" }
+    },
+    "environment": { "$ref": "#/$defs/Environment" },
+    "scripts": {
+      "type": "object",
+      "description": "Named scripts. Keys are script names.",
+      "additionalProperties": { "$ref": "#/$defs/Script" }
+    },
+    "phases": {
+      "type": "array",
+      "description": "Planning phases that produced this spec.",
+      "items": { "$ref": "#/$defs/Phase" }
+    },
+    "agents": { "$ref": "#/$defs/Agents" },
+    "cicd": { "$ref": "#/$defs/CICD" },
+    "deployment": { "$ref": "#/$defs/Deployment" },
+    "standards": { "$ref": "#/$defs/Standards" },
+    "references": {
+      "type": "array",
+      "description": "External documentation and resources.",
+      "items": { "$ref": "#/$defs/Reference" }
+    }
+  },
+  "$defs": {
+    "Metadata": {
+      "type": "object",
+      "required": ["name", "description", "status", "created"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "description": { "type": "string" },
+        "version": { "type": "string", "default": "0.1.0" },
+        "status": { "type": "string", "enum": ["draft", "in-progress", "ready", "archived"] },
+        "created": { "type": "string", "format": "date-time" },
+        "updated": { "type": "string", "format": "date-time" },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "email": { "type": "string", "format": "email" },
+              "role": { "type": "string" }
+            }
+          }
+        },
+        "repository": { "type": "string", "format": "uri" },
+        "license": { "type": "string", "default": "MIT" }
+      }
+    },
+    "Stack": {
+      "type": "object",
+      "required": ["runtime", "languages", "packageManager"],
+      "additionalProperties": false,
+      "properties": {
+        "runtime": { "$ref": "#/$defs/VersionedTool" },
+        "packageManager": { "$ref": "#/$defs/VersionedTool" },
+        "languages": { "type": "array", "items": { "$ref": "#/$defs/VersionedTool" }, "minItems": 1 },
+        "frameworks": { "type": "array", "items": { "$ref": "#/$defs/VersionedTool" } },
+        "databases": { "type": "array", "items": { "$ref": "#/$defs/VersionedTool" } },
+        "platforms": { "type": "array", "items": { "$ref": "#/$defs/VersionedTool" } },
+        "tools": { "type": "array", "items": { "$ref": "#/$defs/VersionedTool" } }
+      }
+    },
+    "VersionedTool": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "registry": { "type": "string", "default": "npm" },
+        "purpose": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "DirectoryTree": {
+      "type": "object",
+      "required": ["root"],
+      "additionalProperties": false,
+      "properties": {
+        "root": { "type": "string", "default": "." },
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/DirectoryEntry" } }
+      }
+    },
+    "DirectoryEntry": {
+      "type": "object",
+      "required": ["path", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "kind": { "type": "string", "enum": ["file", "directory"] },
+        "purpose": { "type": "string" },
+        "generated": { "type": "boolean", "default": false },
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/DirectoryEntry" } }
+      }
+    },
+    "Dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "production": { "type": "array", "items": { "$ref": "#/$defs/Dependency" } },
+        "development": { "type": "array", "items": { "$ref": "#/$defs/Dependency" } }
+      }
+    },
+    "Dependency": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "registry": { "type": "string", "default": "npm" },
+        "purpose": { "type": "string" }
+      }
+    },
+    "ConfigFile": {
+      "type": "object",
+      "required": ["path", "format"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "format": { "type": "string", "enum": ["jsonc", "json", "toml", "yaml", "env", "ini", "typescript", "javascript", "nuon", "editorconfig", "gitignore", "text"] },
+        "schemaRef": { "type": "string", "format": "uri" },
+        "generatedBy": { "type": "string" },
+        "values": { "type": "object" },
+        "notes": { "type": "string" }
+      }
+    },
+    "Environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variables": { "type": "array", "items": { "$ref": "#/$defs/EnvVar" } },
+        "secrets": { "type": "array", "items": { "$ref": "#/$defs/Secret" } },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "path": { "type": "string" },
+              "description": { "type": "string" },
+              "committed": { "type": "boolean", "default": false },
+              "variables": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "EnvVar": {
+      "type": "object",
+      "required": ["name", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Z_][A-Z0-9_]*$" },
+        "description": { "type": "string" },
+        "required": { "type": "boolean", "default": true },
+        "default": { "type": "string" },
+        "scope": { "type": "string", "enum": ["development", "staging", "production", "all"], "default": "all" }
+      }
+    },
+    "Secret": {
+      "type": "object",
+      "required": ["name", "description", "provider"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Z_][A-Z0-9_]*$" },
+        "description": { "type": "string" },
+        "provider": { "type": "string", "enum": ["wrangler-secret", "1password", "env-file", "github-secret", "vault", "manual"] },
+        "provisionCommand": { "type": "string" },
+        "scope": { "type": "string", "enum": ["development", "staging", "production", "all"], "default": "all" }
+      }
+    },
+    "Script": {
+      "type": "object",
+      "required": ["command", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "command": { "type": "string" },
+        "description": { "type": "string" },
+        "phase": { "type": "string" }
+      }
+    },
+    "Phase": {
+      "type": "object",
+      "required": ["number", "name", "status", "decisions"],
+      "additionalProperties": false,
+      "properties": {
+        "number": { "type": "integer", "minimum": 0 },
+        "name": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "in-progress", "confirmed", "skipped"] },
+        "decisions": { "type": "array", "items": { "$ref": "#/$defs/Decision" } },
+        "commands": { "type": "array", "items": { "$ref": "#/$defs/Command" } },
+        "openQuestions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "Decision": {
+      "type": "object",
+      "required": ["topic", "choice", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "topic": { "type": "string" },
+        "choice": { "type": "string" },
+        "version": { "type": "string" },
+        "rationale": { "type": "string" },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "Command": {
+      "type": "object",
+      "required": ["command", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "command": { "type": "string" },
+        "description": { "type": "string" },
+        "workingDirectory": { "type": "string", "default": "." },
+        "condition": { "type": "string" },
+        "idempotent": { "type": "boolean", "default": true }
+      }
+    },
+    "Agents": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mcpServers": { "type": "array", "items": { "$ref": "#/$defs/MCPServer" } },
+        "skills": { "type": "array", "items": { "$ref": "#/$defs/AgentSkill" } },
+        "commands": { "type": "array", "items": { "$ref": "#/$defs/SlashCommand" } },
+        "prompts": { "type": "array", "items": { "$ref": "#/$defs/Prompt" } }
+      }
+    },
+    "MCPServer": {
+      "type": "object",
+      "required": ["name", "transport"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "transport": { "type": "string", "enum": ["stdio", "sse", "streamable-http"] },
+        "url": { "type": "string", "format": "uri" },
+        "command": { "type": "string" },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "env": { "type": "object", "additionalProperties": { "type": "string" } },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "AgentSkill": {
+      "type": "object",
+      "required": ["name", "description", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "path": { "type": "string" },
+        "triggers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "SlashCommand": {
+      "type": "object",
+      "required": ["name", "description", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "path": { "type": "string" },
+        "prompt": { "type": "string" },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "required": { "type": "boolean", "default": false }
+            }
+          }
+        }
+      }
+    },
+    "Prompt": {
+      "type": "object",
+      "required": ["name", "kind", "content"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "kind": { "type": "string", "enum": ["system-prompt", "agent-instruction", "context-document", "claude-md", "readme"] },
+        "path": { "type": "string" },
+        "content": { "type": "string" }
+      }
+    },
+    "CICD": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string", "enum": ["github-actions", "gitlab-ci", "cloudflare-pages", "cloudflare-workers-builds", "circleci", "other"] },
+        "workflows": { "type": "array", "items": { "$ref": "#/$defs/Workflow" } }
+      }
+    },
+    "Workflow": {
+      "type": "object",
+      "required": ["name", "path", "triggers"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "triggers": { "type": "array", "items": { "type": "string" } },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "command": { "type": "string" },
+              "uses": { "type": "string" },
+              "with": { "type": "object", "additionalProperties": { "type": "string" } },
+              "env": { "type": "object", "additionalProperties": { "type": "string" } }
+            }
+          }
+        },
+        "content": { "type": "string" }
+      }
+    },
+    "Deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "targets": { "type": "array", "items": { "$ref": "#/$defs/DeployTarget" } }
+      }
+    },
+    "DeployTarget": {
+      "type": "object",
+      "required": ["name", "platform"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "platform": { "type": "string" },
+        "commands": { "type": "array", "items": { "$ref": "#/$defs/Command" } },
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "name"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string" },
+              "name": { "type": "string" },
+              "id": { "type": "string" },
+              "previewId": { "type": "string" },
+              "config": { "type": "object", "additionalProperties": true }
+            }
+          }
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["pattern"],
+            "additionalProperties": false,
+            "properties": {
+              "pattern": { "type": "string" },
+              "zone": { "type": "string" },
+              "customDomain": { "type": "boolean", "default": false }
+            }
+          }
+        },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "Standards": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "codingConventions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "naming": { "type": "object", "additionalProperties": { "type": "string" } },
+            "fileNaming": { "type": "string" },
+            "imports": { "type": "string" },
+            "formatting": { "type": "string" },
+            "linting": { "type": "string" },
+            "typeStrategy": { "type": "string" },
+            "errorHandling": { "type": "string" },
+            "testing": { "type": "string" },
+            "documentation": { "type": "string" },
+            "rules": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "commitConvention": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "format": { "type": "string" },
+            "types": { "type": "array", "items": { "type": "string" } },
+            "scopes": { "type": "array", "items": { "type": "string" } },
+            "enforced": { "type": "boolean", "default": false }
+          }
+        },
+        "branchStrategy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mainBranch": { "type": "string", "default": "main" },
+            "featureBranchPattern": { "type": "string" },
+            "protectedBranches": { "type": "array", "items": { "type": "string" } },
+            "mergeStrategy": { "type": "string", "enum": ["merge", "squash", "rebase"], "default": "squash" }
+          }
+        },
+        "releaseStrategy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tool": { "type": "string" },
+            "versioning": { "type": "string", "default": "semver" },
+            "changelog": { "type": "string" }
+          }
+        }
+      }
+    },
+    "Reference": {
+      "type": "object",
+      "required": ["title", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "kind": { "type": "string", "enum": ["documentation", "repository", "template", "specification", "blog-post", "awesome-list", "changelog", "other"] },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

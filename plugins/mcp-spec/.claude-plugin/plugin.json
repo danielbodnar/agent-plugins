@@ -1,0 +1,9 @@
+{
+  "name": "mcp-spec",
+  "version": "0.1.0",
+  "description": "Model Context Protocol specification tooling: GitHub search and SEP drafting.",
+  "keywords": [
+    "draft-sep",
+    "search-mcp-github"
+  ]
+}

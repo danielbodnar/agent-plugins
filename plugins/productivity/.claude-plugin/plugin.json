@@ -1,0 +1,11 @@
+{
+  "name": "productivity",
+  "version": "0.1.0",
+  "description": "Personal productivity system: task management, two-tier memory, and activity sync.",
+  "keywords": [
+    "memory-management",
+    "start",
+    "task-management",
+    "update"
+  ]
+}

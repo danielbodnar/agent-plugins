@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stars · Workbench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  (function() {
+    try {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+      var ui = localStorage.getItem('stars.ui');
+      if (ui) {
+        var p = JSON.parse(ui);
+        if (p.sidebarW) document.documentElement.style.setProperty('--sidebar-w', p.sidebarW + 'rem');
+        if (p.detailW) document.documentElement.style.setProperty('--detail-w', p.detailW + 'rem');
+      }
+    } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    color-scheme: light dark;
+    --font-display: 'Inter Tight', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --text-xs: 0.75rem;
+    --text-sm: 0.8125rem;
+    --text-base: 0.9375rem;
+    --text-lg: 1.0625rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.625rem;
+    --text-3xl: 2.125rem;
+
+    --color-paper: oklch(99% 0 0);
+    --color-paper-2: oklch(96.8% 0 0);
+    --color-paper-3: oklch(94% 0.003 240);
+    --color-paper-4: oklch(91% 0.005 240);
+    --color-ink: oklch(17% 0.012 240);
+    --color-ink-2: oklch(36% 0.008 240);
+    --color-ink-3: oklch(54% 0.005 240);
+    --color-ink-4: oklch(70% 0.004 240);
+    --color-rule: oklch(89% 0.003 240);
+    --color-rule-2: oklch(82% 0.005 240);
+    --color-accent: oklch(52% 0.17 244);
+    --color-accent-2: oklch(60% 0.16 244);
+    --color-accent-bg: oklch(96% 0.025 244);
+    --color-accent-bg-strong: oklch(92% 0.04 244);
+    --color-success: oklch(56% 0.14 148);
+    --color-warning: oklch(70% 0.16 75);
+    --color-danger: oklch(55% 0.18 25);
+    --color-focus: oklch(52% 0.17 244);
+    --color-row-hover: oklch(96.8% 0 0);
+    --color-row-selected: oklch(94% 0.025 244);
+    --color-row-selected-rule: oklch(82% 0.06 244);
+    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.04);
+    --shadow: 0 1px 2px oklch(0% 0 0 / 0.04), 0 8px 24px oklch(0% 0 0 / 0.06);
+    --shadow-lg: 0 1px 2px oklch(0% 0 0 / 0.04), 0 16px 48px oklch(0% 0 0 / 0.08);
+
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4.5rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-pill: 62.4375rem;
+    --hairline: 1px solid var(--color-rule);
+    --hairline-strong: 1px solid var(--color-rule-2);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 120ms;
+    --duration: 200ms;
+    --topbar-h: 3.5rem;
+    --sidebar-w: 17.5rem;
+    --detail-w: 25rem;
+    --list-w: 23.75rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --color-paper: oklch(13% 0.008 240);
+      --color-paper-2: oklch(16% 0.01 240);
+      --color-paper-3: oklch(20% 0.012 240);
+      --color-paper-4: oklch(25% 0.012 240);
+      --color-ink: oklch(95% 0.005 240);
+      --color-ink-2: oklch(76% 0.005 240);
+      --color-ink-3: oklch(58% 0.008 240);
+      --color-ink-4: oklch(42% 0.008 240);
+      --color-rule: oklch(26% 0.012 240);
+      --color-rule-2: oklch(34% 0.012 240);
+      --color-accent: oklch(72% 0.15 244);
+      --color-accent-2: oklch(78% 0.14 244);
+      --color-accent-bg: oklch(28% 0.07 244);
+      --color-accent-bg-strong: oklch(34% 0.09 244);
+      --color-success: oklch(70% 0.14 148);
+      --color-warning: oklch(78% 0.16 75);
+      --color-danger: oklch(70% 0.16 25);
+      --color-focus: oklch(72% 0.15 244);
+      --color-row-hover: oklch(18% 0.01 240);
+      --color-row-selected: oklch(24% 0.05 244);
+      --color-row-selected-rule: oklch(40% 0.08 244);
+      --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.3);
+      --shadow: 0 1px 2px oklch(0% 0 0 / 0.3), 0 8px 24px oklch(0% 0 0 / 0.4);
+      --shadow-lg: 0 1px 2px oklch(0% 0 0 / 0.3), 0 16px 48px oklch(0% 0 0 / 0.5);
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --color-paper: oklch(13% 0.008 240);
+    --color-paper-2: oklch(16% 0.01 240);
+    --color-paper-3: oklch(20% 0.012 240);
+    --color-paper-4: oklch(25% 0.012 240);
+    --color-ink: oklch(95% 0.005 240);
+    --color-ink-2: oklch(76% 0.005 240);
+    --color-ink-3: oklch(58% 0.008 240);
+    --color-ink-4: oklch(42% 0.008 240);
+    --color-rule: oklch(26% 0.012 240);
+    --color-rule-2: oklch(34% 0.012 240);
+    --color-accent: oklch(72% 0.15 244);
+    --color-accent-2: oklch(78% 0.14 244);
+    --color-accent-bg: oklch(28% 0.07 244);
+    --color-accent-bg-strong: oklch(34% 0.09 244);
+    --color-success: oklch(70% 0.14 148);
+    --color-warning: oklch(78% 0.16 75);
+    --color-danger: oklch(70% 0.16 25);
+    --color-focus: oklch(72% 0.15 244);
+    --color-row-hover: oklch(18% 0.01 240);
+    --color-row-selected: oklch(24% 0.05 244);
+    --color-row-selected-rule: oklch(40% 0.08 244);
+    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.3);
+    --shadow: 0 1px 2px oklch(0% 0 0 / 0.3), 0 8px 24px oklch(0% 0 0 / 0.4);
+    --shadow-lg: 0 1px 2px oklch(0% 0 0 / 0.3), 0 16px 48px oklch(0% 0 0 / 0.5);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+  html, body { height: 100%; overflow: hidden; -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--font-body); font-size: var(--text-base); line-height: 1.5; color: var(--color-ink); background: var(--color-paper); }
+  button { font: inherit; color: inherit; cursor: pointer; background: transparent; border: none; }
+  input { font: inherit; color: inherit; }
+  ul { list-style: none; }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; border-radius: var(--radius-sm); }
+  ::selection { background: var(--color-accent-bg); color: var(--color-ink); }
+
+  /* App shell */
+  .app { display: grid; grid-template-rows: var(--topbar-h) 1fr; height: 100vh; height: 100dvh; }
+
+  /* Topbar */
+  .topbar { display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-4); border-bottom: var(--hairline); background: var(--color-paper); position: relative; z-index: 20; }
+  .brand { display: inline-flex; align-items: center; gap: var(--space-2); padding-right: var(--space-3); font-family: var(--font-display); font-weight: 600; font-size: var(--text-sm); letter-spacing: -0.01em; height: 100%; }
+  .brand-glyph { width: 0.875rem; height: 0.875rem; background: var(--color-ink); -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2l2.65 7.04 7.35.6-5.6 4.8 1.75 7.16L12 17.8 5.85 21.6l1.75-7.16-5.6-4.8 7.35-.6L12 2z'/%3E%3C/svg%3E") center/contain no-repeat; mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2l2.65 7.04 7.35.6-5.6 4.8 1.75 7.16L12 17.8 5.85 21.6l1.75-7.16-5.6-4.8 7.35-.6L12 2z'/%3E%3C/svg%3E") center/contain no-repeat; }
+
+  /* Sidebar nav (Stars / Discover) */
+  .sidebar-nav { padding: var(--space-3); display: flex; flex-direction: column; gap: 0.125rem; border-bottom: var(--hairline); }
+  .sidebar-nav-item { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); color: var(--color-ink-2); font-size: var(--text-sm); font-weight: 500; cursor: pointer; transition: all var(--duration-fast) var(--ease-out); text-align: left; }
+  .sidebar-nav-item:hover { background: var(--color-paper-2); color: var(--color-ink); }
+  .sidebar-nav-item.is-active { background: var(--color-accent-bg); color: var(--color-accent); }
+  .sidebar-nav-item svg { width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
+  .sidebar-nav-item-label { flex: 1; }
+  .sidebar-nav-item-count { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-3); }
+  .sidebar-nav-item.is-active .sidebar-nav-item-count { color: var(--color-accent); }
+
+  .search-wrap { flex: 1; max-width: 45rem; display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); background: var(--color-paper-2); border-radius: var(--radius-md); border: 1px solid transparent; transition: all var(--duration) var(--ease-out); }
+  .search-wrap:focus-within { background: var(--color-paper); border-color: var(--color-accent); box-shadow: 0 0 0 4px var(--color-accent-bg); }
+  .search-icon { width: 0.875rem; height: 0.875rem; color: var(--color-ink-3); flex-shrink: 0; }
+  .search-input { flex: 1; border: none; background: transparent; outline: none; font-family: var(--font-mono); font-size: var(--text-sm); min-width: 0; }
+  .search-input::placeholder { color: var(--color-ink-3); }
+  .search-kbd { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-ink-3); padding: 0.125rem var(--space-2); border: 1px solid var(--color-rule); border-radius: var(--radius-sm); background: var(--color-paper); white-space: nowrap; }
+
+  .mode-toggle { display: flex; background: var(--color-paper-2); padding: 0.125rem; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: var(--text-xs); }
+  .mode { padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); color: var(--color-ink-3); transition: all var(--duration-fast) var(--ease-out); white-space: nowrap; }
+  .mode.is-active { background: var(--color-paper); color: var(--color-ink); box-shadow: var(--shadow-sm); }
+  .mode:hover:not(.is-active) { color: var(--color-ink); }
+  .mode-toggle.is-hidden { display: none; }
+
+  .topbar-spacer { flex: 1; }
+  .icon-btn { width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); color: var(--color-ink-2); transition: all var(--duration-fast) var(--ease-out); position: relative; }
+  .icon-btn:hover { background: var(--color-paper-2); color: var(--color-ink); }
+  .icon-btn svg { width: 1rem; height: 1rem; }
+  .icon-btn .icon-sun { display: none; }
+  :root[data-theme="dark"] .icon-btn .icon-moon { display: none; }
+  :root[data-theme="dark"] .icon-btn .icon-sun { display: block; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .icon-btn .icon-moon { display: none; }
+    :root:not([data-theme="light"]) .icon-btn .icon-sun { display: block; }
+  }
+
+  /* Body grid with resize handles */
+  .body { display: grid; grid-template-columns: min(var(--sidebar-w), 75vw) 0.375rem minmax(0, 1fr); min-height: 0; position: relative; }
+  .body.has-detail { grid-template-columns: min(var(--sidebar-w), 40vw) 0.375rem min(var(--list-w), 40vw) 0.375rem minmax(0, 1fr); }
+
+  /* Resize handles */
+  .resize-handle { background: transparent; cursor: col-resize; position: relative; transition: background var(--duration-fast) var(--ease-out); user-select: none; touch-action: none; z-index: 5; }
+  /* The detail resize handle only exists alongside the detail pane. Without this it would
+   * sit in flow as a 4th child of a 3-column grid and wrap to a phantom second row. */
+  .resize-handle[data-target="detail"] { display: none; }
+  .body.has-detail > .resize-handle[data-target="detail"] { display: block; }
+  .resize-handle::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 0.0625rem; background: var(--color-rule); transition: background var(--duration-fast) var(--ease-out), width var(--duration-fast) var(--ease-out); }
+  .resize-handle:hover::before, .resize-handle.is-active::before { background: var(--color-accent); width: 0.125rem; }
+  .resize-handle.is-active { background: var(--color-accent-bg); }
+  body.is-resizing { cursor: col-resize !important; }
+  body.is-resizing * { cursor: col-resize !important; user-select: none !important; pointer-events: none !important; }
+  body.is-resizing .resize-handle { pointer-events: auto !important; }
+
+  /* Sidebar */
+  .sidebar { border-right: none; background: var(--color-paper); overflow-y: auto; overscroll-behavior: contain; }
+  .sidebar-section { padding: var(--space-3) var(--space-3); border-bottom: var(--hairline); }
+  .sidebar-section:last-child { border-bottom: none; }
+
+  /* Tree */
+  .tree { padding: var(--space-2) 0; }
+  .tree-node { user-select: none; }
+  .tree-node-header { display: flex; align-items: center; gap: 0; padding: 0.25rem var(--space-3); cursor: pointer; transition: background var(--duration-fast) var(--ease-out); border-radius: var(--radius-sm); margin: 0 var(--space-2); position: relative; }
+  .tree-node-header:hover { background: var(--color-paper-2); }
+  .tree-node-header.is-action { padding-right: 0.375rem; }
+  .tree-caret { width: 1rem; height: 1rem; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--color-ink-3); transition: transform var(--duration-fast) var(--ease-out); }
+  .tree-caret svg { width: 0.5rem; height: 0.5rem; }
+  .tree-node.is-collapsed > .tree-node-header .tree-caret { transform: rotate(-90deg); }
+  .tree-node-label { flex: 1; display: flex; align-items: center; gap: var(--space-2); min-width: 0; font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink-3); font-weight: 500; }
+  .tree-node-label .tree-icon { width: 0.75rem; height: 0.75rem; color: var(--color-ink-4); flex-shrink: 0; }
+  .tree-node-label .tree-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tree-node-count { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-4); flex-shrink: 0; }
+  .tree-node-action { color: var(--color-ink-3); padding: 0.125rem var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-xs); font-family: var(--font-body); text-transform: none; letter-spacing: 0; opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
+  .tree-node-header:hover .tree-node-action { opacity: 1; }
+  .tree-node-action:hover { background: var(--color-paper-3); color: var(--color-accent); }
+  .tree-children { padding-left: 1rem; margin-left: calc(var(--space-3) + 0.4375rem); border-left: 1px solid var(--color-rule); transition: max-height var(--duration) var(--ease-out); position: relative; }
+  .tree-node.is-collapsed > .tree-children { display: none; }
+  .tree-children .tree-children { margin-left: 0.4375rem; }
+
+  /* Leaf items (collections + facet items) */
+  .tree-item { display: flex; align-items: center; gap: var(--space-2); padding: 0.25rem var(--space-3) 0.25rem var(--space-2); margin-right: var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm); color: var(--color-ink-2); cursor: pointer; transition: background var(--duration-fast) var(--ease-out); position: relative; }
+  .tree-item:hover { background: var(--color-paper-2); color: var(--color-ink); }
+  .tree-item.is-active { background: var(--color-accent-bg); color: var(--color-accent); }
+  .tree-item-icon { width: 0.75rem; height: 0.75rem; flex-shrink: 0; color: var(--color-ink-4); display: inline-flex; align-items: center; justify-content: center; }
+  .tree-item.is-active .tree-item-icon { color: var(--color-accent); }
+  .tree-item-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+  .tree-item-count { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-3); flex-shrink: 0; }
+  .tree-item.is-active .tree-item-count { color: var(--color-accent); }
+
+  /* Main pane */
+  .main { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--color-paper-2); }
+  .main > .toolbar, .main > .discover-banner, .main > .nl-hint { flex: 0 0 auto; }
+  .toolbar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-5); border-bottom: var(--hairline); background: var(--color-paper); min-height: 3.5rem; flex-wrap: wrap; }
+  .toolbar-meta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .toolbar-meta strong { color: var(--color-ink); font-weight: 500; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+  .chip { display: inline-flex; align-items: center; gap: var(--space-1); padding: 0.1875rem var(--space-2); background: var(--color-accent-bg); color: var(--color-accent); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--text-xs); line-height: 1.4; }
+  .chip button { color: var(--color-accent); opacity: 0.6; display: inline-flex; align-items: center; padding: 0; margin-left: 0.125rem; }
+  .chip button:hover { opacity: 1; }
+  .chip-clear { font-family: var(--font-body); font-size: var(--text-xs); color: var(--color-ink-3); padding: 0.1875rem var(--space-2); border-radius: var(--radius-sm); }
+  .chip-clear:hover { color: var(--color-danger); background: var(--color-paper-2); }
+  .toolbar-spacer { flex: 1; }
+
+  .select { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink); background: var(--color-paper-2); border: 1px solid transparent; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23888' stroke-width='1.5'%3E%3Cpath d='M2 4l3 3 3-3'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right var(--space-2) center; background-size: 0.5rem; padding-right: var(--space-6); cursor: pointer; }
+  .select:focus { border-color: var(--color-accent); outline: none; }
+  .view-toggle { display: flex; background: var(--color-paper-2); padding: 0.125rem; border-radius: var(--radius-sm); }
+  .view-toggle button { padding: var(--space-1) var(--space-2); border-radius: 0.1875rem; color: var(--color-ink-3); display: inline-flex; align-items: center; transition: all var(--duration-fast) var(--ease-out); }
+  .view-toggle button svg { width: 0.875rem; height: 0.875rem; }
+  .view-toggle button.is-active { background: var(--color-paper); color: var(--color-ink); box-shadow: var(--shadow-sm); }
+
+  /* Results */
+  .results { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; padding: var(--space-5); min-height: 0; }
+  .results.is-list, .results.is-table { padding: 0; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr)); gap: var(--space-3); }
+  .card { padding: var(--space-4); border: var(--hairline); border-radius: var(--radius-md); background: var(--color-paper); transition: all var(--duration-fast) var(--ease-out); cursor: pointer; display: flex; flex-direction: column; gap: var(--space-3); }
+  .card:hover { border-color: var(--color-rule-2); transform: translateY(-0.0625rem); box-shadow: var(--shadow-sm); }
+  .card.is-selected { border-color: var(--color-row-selected-rule); background: var(--color-row-selected); }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-3); }
+  .card-name { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 500; color: var(--color-ink); word-break: break-word; min-width: 0; }
+  .card-owner { color: var(--color-ink-3); }
+  .card-stars { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-3); display: inline-flex; align-items: center; gap: 0.1875rem; flex-shrink: 0; white-space: nowrap; }
+  .card-desc { font-size: var(--text-sm); color: var(--color-ink-2); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
+  .card-foot { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+  .tag { font-family: var(--font-mono); font-size: 0.6875rem; padding: 0.125rem var(--space-2); background: var(--color-paper-3); color: var(--color-ink-2); border-radius: var(--radius-sm); white-space: nowrap; }
+  .tag-lang { background: var(--color-accent-bg); color: var(--color-accent); }
+  .activity { margin-left: auto; font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-ink-3); display: inline-flex; align-items: center; gap: 0.1875rem; }
+  .activity-dot { width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--color-success); }
+  .activity.is-warm .activity-dot { background: var(--color-warning); }
+  .activity.is-cold .activity-dot { background: var(--color-ink-4); }
+
+  /* List */
+  .list { display: flex; flex-direction: column; }
+  .row { display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); padding: var(--space-4) var(--space-5); border-bottom: var(--hairline); cursor: pointer; transition: background var(--duration-fast) var(--ease-out); background: var(--color-paper); }
+  .row:hover { background: var(--color-row-hover); }
+  .row.is-selected { background: var(--color-row-selected); }
+  .row-main { min-width: 0; }
+  .row-head { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: 0.1875rem; flex-wrap: wrap; }
+  .row-name { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 500; color: var(--color-ink); }
+  .row-name .card-owner { color: var(--color-ink-3); }
+  .row-desc { font-size: var(--text-sm); color: var(--color-ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row-tags { display: inline-flex; gap: 0.1875rem; }
+  .row-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-3); white-space: nowrap; }
+
+  /* Table: resizable + reorderable columns */
+  .table-wrap { overflow: auto; height: 100%; }
+  .table { border-collapse: separate; border-spacing: 0; font-size: var(--text-sm); background: var(--color-paper); table-layout: fixed; width: max-content; min-width: 100%; }
+  .table thead { position: sticky; top: 0; background: var(--color-paper); z-index: 2; }
+  .table th { text-align: left; padding: var(--space-3) var(--space-4); font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-3); font-weight: 500; border-bottom: var(--hairline); white-space: nowrap; position: relative; user-select: none; background: var(--color-paper); }
+  .table th[draggable="true"] { cursor: grab; }
+  .table th.is-dragging { opacity: 0.4; cursor: grabbing; }
+  .table th.is-drop-before { box-shadow: inset 2px 0 0 var(--color-accent); }
+  .table th.is-drop-after { box-shadow: inset -2px 0 0 var(--color-accent); }
+  .table th.numeric { text-align: right; }
+  .col-resize { position: absolute; top: 0; right: -0.1875rem; bottom: 0; width: 0.375rem; cursor: col-resize; z-index: 1; }
+  .col-resize::after { content: ''; position: absolute; top: 25%; bottom: 25%; left: 50%; transform: translateX(-50%); width: 0.0625rem; background: transparent; transition: background var(--duration-fast) var(--ease-out); }
+  .col-resize:hover::after, .col-resize.is-active::after { background: var(--color-accent); width: 0.125rem; }
+  .table td { padding: var(--space-3) var(--space-4); border-bottom: var(--hairline); vertical-align: middle; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .table td.numeric { text-align: right; }
+  .table tr { cursor: pointer; transition: background var(--duration-fast) var(--ease-out); }
+  .table tbody tr:hover { background: var(--color-row-hover); }
+  .table tr.is-selected { background: var(--color-row-selected); }
+  .table .cell-name { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 500; color: var(--color-ink); }
+  .table .cell-num { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-2); }
+  .table .cell-tags { font-size: var(--text-xs); color: var(--color-ink-3); font-family: var(--font-mono); }
+
+  /* Empty state */
+  .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-8) var(--space-5); text-align: center; color: var(--color-ink-3); height: 100%; }
+  .empty svg { width: 2rem; height: 2rem; opacity: 0.4; margin-bottom: var(--space-4); }
+  .empty h3 { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-ink); margin-bottom: var(--space-2); }
+  .empty p { font-size: var(--text-sm); margin-bottom: var(--space-4); max-width: 36ch; }
+  .empty button { font-size: var(--text-sm); color: var(--color-accent); padding: var(--space-2) var(--space-4); border: 1px solid var(--color-accent); border-radius: var(--radius-pill); }
+  .empty button:hover { background: var(--color-accent-bg); }
+
+  /* Detail */
+  .detail { background: var(--color-paper); overflow-y: auto; overscroll-behavior: contain; display: none; min-width: 0; }
+  .body.has-detail .detail { display: block; }
+  .detail-head { padding: var(--space-5); border-bottom: var(--hairline); position: sticky; top: 0; background: var(--color-paper); z-index: 1; }
+  .detail-close { position: absolute; top: var(--space-3); right: var(--space-3); width: 1.75rem; height: 1.75rem; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); color: var(--color-ink-3); }
+  .detail-close:hover { background: var(--color-paper-2); color: var(--color-ink); }
+  .detail-close svg { width: 0.875rem; height: 0.875rem; }
+  .detail-name { font-family: var(--font-mono); font-size: var(--text-base); font-weight: 500; color: var(--color-ink); word-break: break-word; margin-bottom: var(--space-3); padding-right: var(--space-6); }
+  .detail-name .card-owner { color: var(--color-ink-3); }
+  .detail-stats { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-4); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-3); }
+  .detail-stat strong { color: var(--color-ink); font-weight: 500; }
+  .detail-body { padding: var(--space-5); }
+  .detail-desc { font-size: var(--text-sm); color: var(--color-ink-2); line-height: 1.55; margin-bottom: var(--space-5); }
+  .detail-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-5); }
+  .detail-actions { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); }
+  .btn { font-size: var(--text-sm); padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: var(--space-2); transition: all var(--duration-fast) var(--ease-out); flex: 1; justify-content: center; line-height: 1.4; }
+  .btn-primary { background: var(--color-ink); color: var(--color-paper); }
+  .btn-primary:hover { background: var(--color-accent); }
+  .btn-secondary { background: var(--color-paper-2); color: var(--color-ink); }
+  .btn-secondary:hover { background: var(--color-paper-3); }
+  .btn.is-starred { background: var(--color-accent-bg); color: var(--color-accent); }
+  .btn.is-starred:hover { background: var(--color-accent-bg-strong); }
+  .detail-section { margin-bottom: var(--space-6); }
+  .detail-section:last-child { margin-bottom: 0; }
+  .detail-section-title { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink-3); margin-bottom: var(--space-3); display: flex; align-items: center; justify-content: space-between; }
+  .neighbor { display: block; padding: var(--space-3); border: var(--hairline); border-radius: var(--radius-sm); margin-bottom: var(--space-2); transition: all var(--duration-fast) var(--ease-out); cursor: pointer; }
+  .neighbor:hover { border-color: var(--color-rule-2); background: var(--color-paper-2); }
+  .neighbor-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); margin-bottom: 0.1875rem; }
+  .neighbor-name { font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 500; color: var(--color-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .neighbor-name .card-owner { color: var(--color-ink-3); }
+  .neighbor-score { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-accent); flex-shrink: 0; }
+  .neighbor-desc { font-size: var(--text-xs); color: var(--color-ink-3); line-height: 1.45; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .nl-hint { padding: var(--space-3); background: var(--color-accent-bg); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-accent); margin: 0 var(--space-5) var(--space-3); border-left: 3px solid var(--color-accent); line-height: 1.5; }
+  .nl-hint code { background: var(--color-paper); padding: 0.0625rem 0.3125rem; border-radius: 0.1875rem; }
+
+  /* Discover specifics */
+  .discover-banner { padding: var(--space-4) var(--space-5); background: var(--color-accent-bg); border-bottom: var(--hairline); font-size: var(--text-sm); color: var(--color-ink-2); display: flex; align-items: center; gap: var(--space-3); }
+  .discover-banner-icon { width: 1.25rem; height: 1.25rem; color: var(--color-accent); flex-shrink: 0; }
+  .discover-banner strong { color: var(--color-ink); font-weight: 500; }
+  .star-btn { background: transparent; border: 1px solid var(--color-rule-2); color: var(--color-ink-2); font-family: var(--font-mono); font-size: var(--text-xs); padding: 0.25rem var(--space-2); border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 0.25rem; transition: all var(--duration-fast) var(--ease-out); }
+  .star-btn:hover { color: var(--color-accent); border-color: var(--color-accent); }
+  .star-btn.is-starred { background: var(--color-accent-bg); color: var(--color-accent); border-color: transparent; }
+  .star-btn.is-starred:hover { background: var(--color-accent-bg-strong); }
+  .star-btn svg { width: 0.625rem; height: 0.625rem; }
+  .card-action { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-top: auto; padding-top: var(--space-2); border-top: var(--hairline); }
+  .card-trending { font-family: var(--font-mono); font-size: 0.625rem; color: var(--color-warning); text-transform: uppercase; letter-spacing: 0.08em; display: inline-flex; align-items: center; gap: 0.25rem; }
+  .card-trending::before { content: '▲'; font-size: 0.6em; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: var(--space-5); left: 50%; transform: translateX(-50%) translateY(1.25rem); background: var(--color-ink); color: var(--color-paper); padding: var(--space-3) var(--space-5); border-radius: var(--radius-pill); font-size: var(--text-sm); font-family: var(--font-mono); box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: all var(--duration) var(--ease-out); z-index: 50; }
+  .toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Modal */
+  .modal-backdrop { position: fixed; inset: 0; background: oklch(0% 0 0 / 0.4); display: flex; align-items: center; justify-content: center; padding: var(--space-5); opacity: 0; pointer-events: none; z-index: 40; transition: opacity var(--duration) var(--ease-out); }
+  .modal-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .modal { background: var(--color-paper); border-radius: var(--radius-lg); padding: var(--space-5); max-width: 25rem; width: 100%; box-shadow: var(--shadow-lg); transform: translateY(0.5rem); transition: transform var(--duration) var(--ease-out); }
+  .modal-backdrop.is-open .modal { transform: translateY(0); }
+  .modal h3 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 600; margin-bottom: var(--space-2); }
+  .modal p { font-size: var(--text-sm); color: var(--color-ink-2); margin-bottom: var(--space-4); }
+  .modal input { width: 100%; padding: var(--space-3); border: 1px solid var(--color-rule-2); border-radius: var(--radius-sm); background: var(--color-paper); font-family: var(--font-mono); font-size: var(--text-sm); margin-bottom: var(--space-4); outline: none; transition: border-color var(--duration-fast) var(--ease-out); }
+  .modal input:focus { border-color: var(--color-accent); }
+  .modal-actions { display: flex; gap: var(--space-2); justify-content: flex-end; }
+
+  /* Responsive */
+  @media (max-width: 74.9375em) {
+    .body.has-detail { grid-template-columns: min(var(--sidebar-w), 40vw) 0.375rem minmax(0, 1fr); }
+    .body.has-detail > .resize-handle[data-target="detail"] { display: none; }
+    .body.has-detail .detail { position: fixed; top: var(--topbar-h); right: 0; bottom: 0; width: min(45rem, 90vw); box-shadow: var(--shadow-lg); z-index: 30; border-left: var(--hairline); }
+  }
+  @media (max-width: 56.25em) { .search-kbd { display: none; } }
+  @media (max-width: 47.9375em) {
+    :root { --sidebar-w: 15rem; }
+    .body { grid-template-columns: 1fr; }
+    .body.has-detail { grid-template-columns: 1fr; }
+    .resize-handle,
+    .body.has-detail > .resize-handle[data-target="detail"] { display: none; }
+    .sidebar { position: fixed; top: var(--topbar-h); left: 0; bottom: 0; width: 17.5rem; transform: translateX(-100%); transition: transform var(--duration) var(--ease-out); z-index: 30; box-shadow: var(--shadow-lg); border-right: var(--hairline); }
+    .sidebar.is-open { transform: translateX(0); }
+    .sidebar-backdrop { position: fixed; inset: var(--topbar-h) 0 0 0; background: oklch(0% 0 0 / 0.3); opacity: 0; pointer-events: none; transition: opacity var(--duration) var(--ease-out); z-index: 25; }
+    .sidebar-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .mode-toggle { display: none; }
+    .search-wrap { max-width: none; }
+    .toolbar { padding: var(--space-3); }
+    .results { padding: var(--space-3); }
+    .grid { grid-template-columns: 1fr; }
+    .body.has-detail { width: 100vw; }
+  }
+  @media (min-width: 48em) { .sidebar-toggle { display: none; } .sidebar-backdrop { display: none; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+  /* ─── Browser pane (file tree + README) ─────────────────── */
+  .browser-header { padding: var(--space-5); border-bottom: var(--hairline); position: sticky; top: 0; background: var(--color-paper); z-index: 2; }
+  .browser-section { border-bottom: var(--hairline); }
+  .browser-section:last-child { border-bottom: none; }
+  .browser-section-head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-5); background: var(--color-paper-2); font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink-3); border-bottom: var(--hairline); position: sticky; top: 0; z-index: 1; }
+  .browser-section-head strong { color: var(--color-ink); font-weight: 500; }
+  .browser-section-meta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-3); text-transform: none; letter-spacing: 0; }
+
+  /* File tree */
+  .file-tree { padding: var(--space-2) 0; }
+  .file-row { display: flex; align-items: center; gap: var(--space-2); padding: 0.25rem var(--space-5); font-size: var(--text-sm); cursor: pointer; transition: background var(--duration-fast) var(--ease-out); user-select: none; }
+  .file-row:hover { background: var(--color-row-hover); }
+  .file-row.is-folder { color: var(--color-ink); font-weight: 500; }
+  .file-row.is-file { color: var(--color-ink-2); }
+  .file-caret { width: 0.75rem; height: 0.75rem; display: inline-flex; align-items: center; justify-content: center; color: var(--color-ink-3); transition: transform var(--duration-fast) var(--ease-out); flex-shrink: 0; }
+  .file-caret svg { width: 0.5rem; height: 0.5rem; }
+  .file-caret.is-collapsed { transform: rotate(-90deg); }
+  .file-caret-spacer { width: 0.75rem; flex-shrink: 0; }
+  .file-icon { width: 0.875rem; height: 0.875rem; flex-shrink: 0; color: var(--color-ink-3); display: inline-flex; align-items: center; justify-content: center; }
+  .file-icon.is-folder { color: var(--color-accent); }
+  .file-icon.is-markdown { color: var(--color-success); }
+  .file-icon.is-config { color: var(--color-warning); }
+  .file-name { flex: 1; font-family: var(--font-mono); font-size: var(--text-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-size { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-ink-4); flex-shrink: 0; }
+  .file-children { /* indent handled by leading spacer per row */ }
+  .file-children .file-row { padding-left: calc(var(--space-5) + 1rem); }
+  .file-children .file-children .file-row { padding-left: calc(var(--space-5) + 2rem); }
+  .file-children .file-children .file-children .file-row { padding-left: calc(var(--space-5) + 3rem); }
+
+  /* README */
+  .readme { padding: var(--space-6) var(--space-5); max-width: 47.5rem; font-size: var(--text-sm); line-height: 1.65; color: var(--color-ink-2); }
+  .readme h1 { font-family: var(--font-display); font-size: var(--text-2xl); color: var(--color-ink); margin: 0 0 var(--space-3); padding-bottom: var(--space-3); border-bottom: var(--hairline); letter-spacing: -0.015em; }
+  .readme h2 { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-ink); margin: var(--space-6) 0 var(--space-3); padding-bottom: var(--space-2); border-bottom: var(--hairline); letter-spacing: -0.01em; }
+  .readme h3 { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-ink); margin: var(--space-5) 0 var(--space-2); }
+  .readme p { margin: 0 0 var(--space-3); }
+  .readme blockquote { padding: var(--space-3) var(--space-4); margin: var(--space-3) 0 var(--space-4); border-left: 3px solid var(--color-rule-2); color: var(--color-ink-2); background: var(--color-paper-2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-style: italic; }
+  .readme ul, .readme ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+  .readme li { margin-bottom: var(--space-1); }
+  .readme li strong { color: var(--color-ink); font-weight: 500; }
+  .readme code { font-family: var(--font-mono); font-size: 0.875em; background: var(--color-paper-2); padding: 0.0625rem 0.375rem; border-radius: 0.1875rem; color: var(--color-accent); }
+  .readme pre { background: var(--color-paper-2); border: var(--hairline); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); margin: 0 0 var(--space-4); overflow-x: auto; }
+  .readme pre code { background: transparent; padding: 0; color: var(--color-ink); font-size: 0.85em; line-height: 1.6; }
+  .readme a { color: var(--color-accent); text-decoration: underline; text-decoration-color: var(--color-rule-2); text-underline-offset: 0.125rem; }
+  .readme a:hover { text-decoration-color: var(--color-accent); }
+  .readme-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-5); }
+  .readme-badge { font-family: var(--font-mono); font-size: 0.6875rem; padding: 0.1875rem var(--space-2); background: var(--color-paper-3); color: var(--color-ink-2); border-radius: var(--radius-sm); }
+  .readme-badge.is-accent { background: var(--color-accent-bg); color: var(--color-accent); }
+  .readme-badge.is-good { background: oklch(94% 0.06 148); color: var(--color-success); }
+  :root[data-theme="dark"] .readme-badge.is-good { background: oklch(24% 0.05 148); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .readme-badge.is-good { background: oklch(24% 0.05 148); }
+  }
+
+  /* In browse mode (item selected), main pane becomes a narrow master list */
+  .body.has-detail .main .results { padding: 0; }
+  .body.has-detail .main .toolbar { padding: var(--space-3); gap: var(--space-2); flex-wrap: wrap; }
+  .body.has-detail .main .toolbar .view-toggle,
+  .body.has-detail .main .toolbar .select { display: none; }
+  .body.has-detail .main .toolbar-meta { font-size: 0.6875rem; }
+
+  /* When in browse mode, list row stays compact */
+  .body.has-detail .main .row { padding: var(--space-3) var(--space-4); }
+  .body.has-detail .main .row .row-tags { display: none; }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <button class="icon-btn sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+    </button>
+
+    <a href="#" class="brand">
+      <span class="brand-glyph" aria-hidden="true"></span>
+      stars
+    </a>
+
+    <label class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4.5"/><path d="M11 11l3 3"/></svg>
+      <input type="text" class="search-input" id="search" placeholder="Search starred repos" aria-label="Search">
+      <kbd class="search-kbd" id="search-kbd">⌘ K</kbd>
+    </label>
+
+    <div class="mode-toggle" id="mode-toggle" role="tablist" aria-label="Search mode">
+      <button class="mode is-active" role="tab" data-mode="keyword" aria-selected="true">Keyword</button>
+      <button class="mode" role="tab" data-mode="semantic">Semantic</button>
+      <button class="mode" role="tab" data-mode="natural">Natural</button>
+    </div>
+
+    <div class="topbar-spacer"></div>
+
+    <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+      <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 9.5A5.5 5.5 0 1 1 6.5 2.5a4.5 4.5 0 0 0 7 7z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M2.5 8H1M15 8h-1.5M3.8 3.8l1.05 1.05M11.15 11.15l1.05 1.05M3.8 12.2l1.05-1.05M11.15 4.85l1.05-1.05"/></svg>
+    </button>
+
+    <button class="icon-btn" aria-label="Settings" title="Settings">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.4 1.4M11.55 11.55l1.4 1.4M3.05 12.95l1.4-1.4M11.55 4.45l1.4-1.4"/></svg>
+    </button>
+  </header>
+
+  <div class="body" id="body">
+    <aside class="sidebar" id="sidebar">
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+      <div class="tree" id="tree"></div>
+    </aside>
+
+    <div class="resize-handle" data-target="sidebar" id="resize-sidebar"></div>
+
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <main class="main" id="main"></main>
+
+    <div class="resize-handle" data-target="detail" id="resize-detail"></div>
+
+    <aside class="detail" id="detail" aria-hidden="true">
+      <div class="detail-content" id="detail-content"></div>
+    </aside>
+  </div>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal">
+    <h3>Save collection</h3>
+    <p>Name this collection. It will save the current search query and filters.</p>
+    <input type="text" id="collection-name-input" placeholder="e.g. Rust TUI libraries" maxlength="40">
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="modal-cancel" style="flex: 0;">Cancel</button>
+      <button class="btn btn-primary" id="modal-save" style="flex: 0;">Save</button>
+    </div>
+  </div>
+</div>
+<script>
+// ─── Stars seed (your starred set) ──────────────────────────
+const STARS = [
+  { full_name: "ratatui/ratatui", owner: "ratatui", name: "ratatui", description: "A Rust crate for cooking up terminal user interfaces. Maintained fork of tui-rs with an active community.", language: "Rust", topics: ["tui", "cli", "terminal", "rust"], stars: 12400, license: "MIT", pushed_days_ago: 2, starred_days_ago: 14 },
+  { full_name: "crossterm-rs/crossterm", owner: "crossterm-rs", name: "crossterm", description: "Cross-platform terminal manipulation library written in Rust. Foundation for many TUI crates.", language: "Rust", topics: ["terminal", "tui", "cross-platform"], stars: 3400, license: "MIT", pushed_days_ago: 5, starred_days_ago: 90 },
+  { full_name: "extrawurst/gitui", owner: "extrawurst", name: "gitui", description: "Blazing fast terminal-ui for git written in Rust. Built on ratatui and crossterm.", language: "Rust", topics: ["git", "tui", "cli"], stars: 19800, license: "MIT", pushed_days_ago: 21, starred_days_ago: 180 },
+  { full_name: "helix-editor/helix", owner: "helix-editor", name: "helix", description: "A post-modern modal text editor with built-in language support and a terminal-first interface.", language: "Rust", topics: ["editor", "tui", "lsp"], stars: 35100, license: "MPL-2.0", pushed_days_ago: 1, starred_days_ago: 220 },
+  { full_name: "zellij-org/zellij", owner: "zellij-org", name: "zellij", description: "A terminal workspace with batteries included. Multiplexer, layout manager, and plugin system.", language: "Rust", topics: ["multiplexer", "terminal", "tui"], stars: 23600, license: "MIT", pushed_days_ago: 4, starred_days_ago: 145 },
+  { full_name: "sxyazi/yazi", owner: "sxyazi", name: "yazi", description: "Blazing fast terminal file manager written in Rust, based on async I/O. Image previews via Kitty graphics.", language: "Rust", topics: ["file-manager", "tui", "async"], stars: 16300, license: "MIT", pushed_days_ago: 3, starred_days_ago: 67 },
+  { full_name: "starship/starship", owner: "starship", name: "starship", description: "The minimal, blazing-fast, and infinitely customizable prompt for any shell.", language: "Rust", topics: ["shell", "prompt", "cli"], stars: 47800, license: "ISC", pushed_days_ago: 6, starred_days_ago: 340 },
+  { full_name: "nushell/nushell", owner: "nushell", name: "nushell", description: "A new type of shell. Structured data pipelines, cross-platform, written in Rust.", language: "Rust", topics: ["shell", "data", "cli"], stars: 33500, license: "MIT", pushed_days_ago: 1, starred_days_ago: 410 },
+  { full_name: "astral-sh/ruff", owner: "astral-sh", name: "ruff", description: "An extremely fast Python linter and code formatter, written in Rust.", language: "Rust", topics: ["python", "linter", "formatter"], stars: 36900, license: "MIT", pushed_days_ago: 1, starred_days_ago: 95 },
+  { full_name: "denoland/deno", owner: "denoland", name: "deno", description: "A modern runtime for JavaScript and TypeScript. Secure by default, written in Rust.", language: "Rust", topics: ["javascript", "typescript", "runtime"], stars: 97800, license: "MIT", pushed_days_ago: 1, starred_days_ago: 720 },
+  { full_name: "tokio-rs/tokio", owner: "tokio-rs", name: "tokio", description: "A runtime for writing reliable asynchronous applications with Rust. Provides I/O, networking, scheduling, timers.", language: "Rust", topics: ["async", "io", "networking"], stars: 27800, license: "MIT", pushed_days_ago: 2, starred_days_ago: 480 },
+  { full_name: "bevyengine/bevy", owner: "bevyengine", name: "bevy", description: "A refreshingly simple data-driven game engine built in Rust. Free and open source forever.", language: "Rust", topics: ["game-engine", "ecs", "graphics"], stars: 38400, license: "MIT", pushed_days_ago: 1, starred_days_ago: 290 },
+  { full_name: "honojs/hono", owner: "honojs", name: "hono", description: "Web framework built on web standards. Works on any JavaScript runtime: Cloudflare, Deno, Bun, Node.", language: "TypeScript", topics: ["web", "framework", "edge"], stars: 22100, license: "MIT", pushed_days_ago: 1, starred_days_ago: 180 },
+  { full_name: "oven-sh/bun", owner: "oven-sh", name: "bun", description: "Incredibly fast JavaScript runtime, bundler, transpiler, and package manager, all in one.", language: "TypeScript", topics: ["runtime", "javascript", "bundler"], stars: 75600, license: "MIT", pushed_days_ago: 1, starred_days_ago: 510 },
+  { full_name: "withastro/astro", owner: "withastro", name: "astro", description: "The web framework for content-driven websites. Server-first, islands architecture, ship less JS.", language: "TypeScript", topics: ["framework", "ssg", "web"], stars: 47200, license: "MIT", pushed_days_ago: 1, starred_days_ago: 310 },
+  { full_name: "vuejs/core", owner: "vuejs", name: "core", description: "Vue.js 3 core repository. Approachable, performant, versatile framework for building web interfaces.", language: "TypeScript", topics: ["framework", "web", "reactive"], stars: 47800, license: "MIT", pushed_days_ago: 2, starred_days_ago: 620 },
+  { full_name: "tailwindlabs/tailwindcss", owner: "tailwindlabs", name: "tailwindcss", description: "A utility-first CSS framework for rapid UI development.", language: "TypeScript", topics: ["css", "framework", "design"], stars: 83200, license: "MIT", pushed_days_ago: 1, starred_days_ago: 800 },
+  { full_name: "colinhacks/zod", owner: "colinhacks", name: "zod", description: "TypeScript-first schema validation with static type inference.", language: "TypeScript", topics: ["typescript", "validation", "schema"], stars: 35100, license: "MIT", pushed_days_ago: 3, starred_days_ago: 250 },
+  { full_name: "shadcn-ui/ui", owner: "shadcn-ui", name: "ui", description: "Beautifully designed components built with Radix UI and Tailwind CSS. Copy and paste into your apps.", language: "TypeScript", topics: ["components", "react", "design-system"], stars: 76400, license: "MIT", pushed_days_ago: 2, starred_days_ago: 140 },
+  { full_name: "trpc/trpc", owner: "trpc", name: "trpc", description: "End-to-end typesafe APIs made easy. Move fast and break nothing.", language: "TypeScript", topics: ["typescript", "api", "rpc"], stars: 35800, license: "MIT", pushed_days_ago: 4, starred_days_ago: 380 },
+  { full_name: "vitejs/vite", owner: "vitejs", name: "vite", description: "Next generation frontend tooling. Native ES module dev server with HMR.", language: "TypeScript", topics: ["build-tool", "frontend", "esm"], stars: 70900, license: "MIT", pushed_days_ago: 1, starred_days_ago: 580 },
+  { full_name: "gohugoio/hugo", owner: "gohugoio", name: "hugo", description: "The world's fastest framework for building websites. Static site generator written in Go.", language: "Go", topics: ["ssg", "go", "blog"], stars: 76100, license: "Apache-2.0", pushed_days_ago: 2, starred_days_ago: 920 },
+  { full_name: "charmbracelet/bubbletea", owner: "charmbracelet", name: "bubbletea", description: "A powerful little TUI framework based on The Elm Architecture. Go's answer to terminal interfaces.", language: "Go", topics: ["tui", "cli", "elm"], stars: 28900, license: "MIT", pushed_days_ago: 3, starred_days_ago: 210 },
+  { full_name: "spf13/cobra", owner: "spf13", name: "cobra", description: "A Commander for modern Go CLI interactions. Powers most major Go CLI tools.", language: "Go", topics: ["cli", "commands", "go"], stars: 38900, license: "Apache-2.0", pushed_days_ago: 5, starred_days_ago: 1100 },
+  { full_name: "kubernetes/kubernetes", owner: "kubernetes", name: "kubernetes", description: "Production-grade container orchestration. Automated deployment, scaling, management of containerized apps.", language: "Go", topics: ["containers", "orchestration", "cloud-native"], stars: 110200, license: "Apache-2.0", pushed_days_ago: 1, starred_days_ago: 1400 },
+  { full_name: "go-chi/chi", owner: "go-chi", name: "chi", description: "Lightweight, idiomatic and composable router for building Go HTTP services.", language: "Go", topics: ["router", "http", "go"], stars: 18900, license: "MIT", pushed_days_ago: 14, starred_days_ago: 720 },
+  { full_name: "encoredev/encore", owner: "encoredev", name: "encore", description: "Open source backend framework. Build distributed systems with Go and TypeScript, deploy anywhere.", language: "Go", topics: ["backend", "framework", "go"], stars: 9800, license: "MPL-2.0", pushed_days_ago: 1, starred_days_ago: 95 },
+  { full_name: "typesense/typesense", owner: "typesense", name: "typesense", description: "Open source alternative to Algolia and Elasticsearch. Fast, typo-tolerant search engine.", language: "C++", topics: ["search", "search-engine", "self-hosted"], stars: 21300, license: "GPL-3.0", pushed_days_ago: 2, starred_days_ago: 230 },
+  { full_name: "ggerganov/llama.cpp", owner: "ggerganov", name: "llama.cpp", description: "Inference of Meta LLaMA models in pure C/C++. CPU-first, GPU optional, runs anywhere.", language: "C++", topics: ["llm", "inference", "ai"], stars: 69200, license: "MIT", pushed_days_ago: 1, starred_days_ago: 170 },
+  { full_name: "duckdb/duckdb", owner: "duckdb", name: "duckdb", description: "An in-process SQL OLAP database management system. Embedded analytics, vectorized execution.", language: "C++", topics: ["database", "olap", "sql"], stars: 23400, license: "MIT", pushed_days_ago: 1, starred_days_ago: 410 },
+  { full_name: "pola-rs/polars", owner: "pola-rs", name: "polars", description: "Dataframes powered by a multithreaded, vectorized query engine, written in Rust.", language: "Rust", topics: ["dataframe", "data", "arrow"], stars: 31800, license: "MIT", pushed_days_ago: 1, starred_days_ago: 290 },
+  { full_name: "psf/black", owner: "psf", name: "black", description: "The uncompromising Python code formatter. Reformats entire codebases consistently.", language: "Python", topics: ["python", "formatter", "linter"], stars: 39400, license: "MIT", pushed_days_ago: 9, starred_days_ago: 1200 },
+  { full_name: "pytorch/pytorch", owner: "pytorch", name: "pytorch", description: "Tensors and dynamic neural networks in Python with strong GPU acceleration.", language: "Python", topics: ["machine-learning", "deep-learning", "gpu"], stars: 84900, license: "BSD-3-Clause", pushed_days_ago: 1, starred_days_ago: 1500 },
+  { full_name: "tiangolo/fastapi", owner: "tiangolo", name: "fastapi", description: "FastAPI framework, high performance, easy to learn, fast to code, ready for production.", language: "Python", topics: ["framework", "api", "python"], stars: 78200, license: "MIT", pushed_days_ago: 4, starred_days_ago: 880 },
+  { full_name: "huggingface/transformers", owner: "huggingface", name: "transformers", description: "State-of-the-art Machine Learning for PyTorch, TensorFlow, and JAX. Pretrained models for NLP, vision, audio.", language: "Python", topics: ["nlp", "transformers", "machine-learning"], stars: 134000, license: "Apache-2.0", pushed_days_ago: 1, starred_days_ago: 1100 },
+  { full_name: "langchain-ai/langchain", owner: "langchain-ai", name: "langchain", description: "Build context-aware reasoning applications. Framework for developing LLM-powered applications.", language: "Python", topics: ["llm", "ai", "agents"], stars: 93800, license: "MIT", pushed_days_ago: 1, starred_days_ago: 320 },
+  { full_name: "anthropics/claude-code", owner: "anthropics", name: "claude-code", description: "Claude Code is an agentic coding tool that lives in your terminal. Delegate tasks from the CLI.", language: "TypeScript", topics: ["ai", "cli", "agents"], stars: 8200, license: "Apache-2.0", pushed_days_ago: 1, starred_days_ago: 45 },
+  { full_name: "cloudflare/workers-sdk", owner: "cloudflare", name: "workers-sdk", description: "Monorepo for Cloudflare Workers. Wrangler CLI, types, Miniflare, and all tooling.", language: "TypeScript", topics: ["cloudflare", "workers", "edge"], stars: 3100, license: "Apache-2.0", pushed_days_ago: 1, starred_days_ago: 88 },
+  { full_name: "modelcontextprotocol/servers", owner: "modelcontextprotocol", name: "servers", description: "Reference implementations of MCP servers. Connect Claude and other LLMs to your tools and data.", language: "TypeScript", topics: ["mcp", "ai", "agents"], stars: 14800, license: "MIT", pushed_days_ago: 1, starred_days_ago: 32 },
+  { full_name: "openai/openai-python", owner: "openai", name: "openai-python", description: "The official Python library for the OpenAI API. Synchronous and async clients, streaming, typed responses.", language: "Python", topics: ["ai", "openai", "sdk"], stars: 22400, license: "Apache-2.0", pushed_days_ago: 2, starred_days_ago: 160 },
+  { full_name: "getzola/zola", owner: "getzola", name: "zola", description: "A fast static site generator in a single binary. Tera templates, Sass, taxonomies built in.", language: "Rust", topics: ["ssg", "static-site", "rust"], stars: 14200, license: "MIT", pushed_days_ago: 8, starred_days_ago: 540 },
+  { full_name: "tursodatabase/libsql", owner: "tursodatabase", name: "libsql", description: "libSQL is a fork of SQLite extended with replication, branching, and embedded replicas.", language: "C", topics: ["database", "sqlite", "edge"], stars: 11200, license: "MIT", pushed_days_ago: 1, starred_days_ago: 110 }
+];
+
+// ─── Discover seed (mocked GitHub search results) ────────────
+const DISCOVER = [
+  { full_name: "biomejs/biome", owner: "biomejs", name: "biome", description: "One toolchain for your web project. Format, lint, and more. Successor to Rome Tools.", language: "Rust", topics: ["formatter", "linter", "web", "toolchain"], stars: 17800, trending: "week", category: "tools" },
+  { full_name: "facebook/react", owner: "facebook", name: "react", description: "The library for web and native user interfaces. Component-based, declarative.", language: "JavaScript", topics: ["library", "frontend", "react"], stars: 234000, trending: "month", category: "frameworks" },
+  { full_name: "sveltejs/svelte", owner: "sveltejs", name: "svelte", description: "Cybernetically enhanced web apps. Compile-time framework with no virtual DOM.", language: "TypeScript", topics: ["framework", "compiler", "web"], stars: 81200, trending: "week", category: "frameworks" },
+  { full_name: "solidjs/solid", owner: "solidjs", name: "solid", description: "A declarative, efficient, and flexible JavaScript library for building user interfaces.", language: "TypeScript", topics: ["framework", "reactive", "fine-grained"], stars: 33800, category: "frameworks" },
+  { full_name: "sst/opencode", owner: "sst", name: "opencode", description: "AI coding agent built for the terminal. Multi-model support, plan mode, project memory.", language: "Go", topics: ["ai", "cli", "agents"], stars: 9400, trending: "today", category: "ai" },
+  { full_name: "Aider-AI/aider", owner: "Aider-AI", name: "aider", description: "AI pair programming in your terminal. Edit code in your local git repo with LLMs.", language: "Python", topics: ["ai", "cli", "agents", "llm"], stars: 28200, trending: "week", category: "ai" },
+  { full_name: "chroma-core/chroma", owner: "chroma-core", name: "chroma", description: "The AI-native open-source embedding database. Build LLM apps with vector search.", language: "Python", topics: ["vector-database", "ai", "embeddings"], stars: 17900, category: "data" },
+  { full_name: "qdrant/qdrant", owner: "qdrant", name: "qdrant", description: "High-performance, massive-scale vector database written in Rust.", language: "Rust", topics: ["vector-database", "search", "ai"], stars: 22100, trending: "month", category: "data" },
+  { full_name: "valkey-io/valkey", owner: "valkey-io", name: "valkey", description: "A new project to resume development on the formerly open-source Redis project.", language: "C", topics: ["database", "cache", "key-value"], stars: 19800, trending: "month", category: "data" },
+  { full_name: "pgvector/pgvector", owner: "pgvector", name: "pgvector", description: "Open-source vector similarity search for Postgres. Embeddings as a first-class type.", language: "C", topics: ["postgres", "vector", "ai"], stars: 13400, category: "data" },
+  { full_name: "tursodatabase/turso", owner: "tursodatabase", name: "turso", description: "Edge-hosted, distributed branched SQLite. Free tier, generous limits.", language: "Rust", topics: ["database", "sqlite", "edge"], stars: 8200, trending: "today", category: "data" },
+  { full_name: "gleam-lang/gleam", owner: "gleam-lang", name: "gleam", description: "A friendly language for building type-safe, scalable systems. Compiles to Erlang or JS.", language: "Rust", topics: ["language", "type-system", "beam"], stars: 17600, trending: "week", category: "languages" },
+  { full_name: "roc-lang/roc", owner: "roc-lang", name: "roc", description: "A fast, friendly, functional language. Inspired by Elm, designed for modern hardware.", language: "Rust", topics: ["language", "functional", "compiler"], stars: 4100, category: "languages" },
+  { full_name: "ziglang/zig", owner: "ziglang", name: "zig", description: "General-purpose programming language and toolchain for maintaining robust, optimal software.", language: "Zig", topics: ["language", "compiler", "systems"], stars: 36500, category: "languages" },
+  { full_name: "neovim/neovim", owner: "neovim", name: "neovim", description: "Vim-fork focused on extensibility and usability. Lua scripting, LSP, treesitter.", language: "C", topics: ["editor", "vim", "lua"], stars: 86700, category: "tools" },
+  { full_name: "wezterm/wezterm", owner: "wezterm", name: "wezterm", description: "A GPU-accelerated cross-platform terminal emulator and multiplexer written in Rust.", language: "Rust", topics: ["terminal", "gpu", "multiplexer"], stars: 17400, category: "tools" },
+  { full_name: "atuinsh/atuin", owner: "atuinsh", name: "atuin", description: "Magical shell history. Sync, search, and backup shell history across machines.", language: "Rust", topics: ["shell", "history", "cli"], stars: 22900, category: "tools" },
+  { full_name: "harlan-zw/nuxt-seo", owner: "harlan-zw", name: "nuxt-seo", description: "All the boring SEO work for Nuxt done. Sitemap, robots, OG image, schema.org.", language: "TypeScript", topics: ["nuxt", "seo", "web"], stars: 1800, category: "frameworks" },
+  { full_name: "facebook/lexical", owner: "facebook", name: "lexical", description: "Extensible JavaScript text-editor framework. Used by Facebook for rich text everywhere.", language: "TypeScript", topics: ["editor", "rich-text", "framework"], stars: 21000, trending: "week", category: "frameworks" },
+  { full_name: "tldraw/tldraw", owner: "tldraw", name: "tldraw", description: "Whiteboard SDK / infinite canvas. Build collaborative tools with React.", language: "TypeScript", topics: ["canvas", "sdk", "collaboration"], stars: 41200, trending: "month", category: "frameworks" },
+  { full_name: "outlines-dev/outlines", owner: "outlines-dev", name: "outlines", description: "Structured generation for LLMs. Guarantee JSON, regex, and grammar conformance.", language: "Python", topics: ["llm", "ai", "structured-output"], stars: 11800, trending: "week", category: "ai" },
+  { full_name: "mlc-ai/mlc-llm", owner: "mlc-ai", name: "mlc-llm", description: "Universal LLM Deployment Engine with ML Compilation. Run LLMs on any device.", language: "Python", topics: ["llm", "inference", "compiler"], stars: 21100, category: "ai" },
+  { full_name: "ollama/ollama", owner: "ollama", name: "ollama", description: "Get up and running with large language models locally. Models served via HTTP API.", language: "Go", topics: ["llm", "local", "inference"], stars: 145000, trending: "today", category: "ai" },
+  { full_name: "vercel/ai", owner: "vercel", name: "ai", description: "Build AI-powered apps with React, Svelte, Vue. SDK for streaming text, structured data.", language: "TypeScript", topics: ["ai", "sdk", "streaming"], stars: 12900, category: "ai" },
+  { full_name: "rerun-io/rerun", owner: "rerun-io", name: "rerun", description: "Visualize multimodal data over time. Built for robotics, computer vision, AR.", language: "Rust", topics: ["visualization", "robotics", "ml"], stars: 9100, category: "tools" }
+];
+
+const DISCOVER_CATEGORIES = {
+  frameworks: 'Frameworks & UI',
+  ai: 'AI & ML',
+  data: 'Databases & Data',
+  languages: 'Languages',
+  tools: 'Developer Tools'
+};
+
+// ─── State ───────────────────────────────────────────────────
+const state = {
+  view: 'stars',  // 'stars' | 'discover'
+  query: '',
+  mode: 'keyword',
+  filters: {
+    language: new Set(),
+    topic: new Set(),
+    activity: new Set(),
+    license: new Set()
+  },
+  selectionAnchor: { language: null, topic: null, activity: null, license: null },
+  sort: 'stars',
+  resultView: 'table',
+  previousResultView: null,
+  selectedId: null,
+  collections: [],
+  expanded: {
+    'collections': true,
+    'filters': true,
+    'filter:language': true,
+    'filter:topic': true,
+    'filter:activity': false,
+    'filter:license': false,
+    'discover-trending': true,
+    'discover-categories': true,
+    'discover-languages': false
+  },
+  discoverFilter: 'all',  // 'all' | 'trending-today' | 'trending-week' | 'cat:ai' | 'lang:Rust' etc.
+  starred: new Set(STARS.map(s => s.full_name)),  // tracks what's starred (incl. newly starred in Discover)
+  tableColumns: [
+    { key: 'name', label: 'Repository', width: 280, render: r => `<span class="card-owner">${escapeHtml(r.owner)}/</span>${escapeHtml(r.name)}`, cls: 'cell-name' },
+    { key: 'language', label: 'Language', width: 110, render: r => escapeHtml(r.language), cls: 'cell-num' },
+    { key: 'topics', label: 'Topics', width: 200, render: r => r.topics.slice(0, 3).join(', '), cls: 'cell-tags' },
+    { key: 'updated', label: 'Updated', width: 90, render: r => activityLabel(r), cls: 'cell-num numeric' },
+    { key: 'stars', label: 'Stars', width: 80, render: r => formatStars(r.stars), cls: 'cell-num numeric' }
+  ]
+};
+
+// Persistence
+function loadUI() {
+  try {
+    const raw = localStorage.getItem('stars.ui');
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (p.expanded) Object.assign(state.expanded, p.expanded);
+    if (p.tableColumns) {
+      const saved = p.tableColumns;
+      const byKey = Object.fromEntries(state.tableColumns.map(c => [c.key, c]));
+      const valid = saved.filter(s => byKey[s.key]).map(s => ({ ...byKey[s.key], width: s.width || byKey[s.key].width }));
+      if (valid.length === state.tableColumns.length) state.tableColumns = valid;
+    }
+    if (p.theme) document.documentElement.setAttribute('data-theme', p.theme);
+  } catch (e) {}
+}
+function saveUI() {
+  try {
+    const cs = window.getComputedStyle(document.documentElement);
+    // Stored as rem (the restore appends 'rem'); parseFloat keeps the fractional part.
+    const sidebarW = parseFloat(cs.getPropertyValue('--sidebar-w'));
+    const detailW = parseFloat(cs.getPropertyValue('--detail-w'));
+    const data = {
+      sidebarW, detailW,
+      expanded: state.expanded,
+      tableColumns: state.tableColumns.map(c => ({ key: c.key, width: c.width }))
+    };
+    localStorage.setItem('stars.ui', JSON.stringify(data));
+  } catch (e) {}
+}
+
+// ─── Activity + format helpers ──────────────────────────────
+function activityTier(repo) {
+  if (repo.pushed_days_ago == null) return { key: 'active', label: 'Active', cls: '' };
+  if (repo.pushed_days_ago <= 7) return { key: 'active', label: 'Active', cls: '' };
+  if (repo.pushed_days_ago <= 30) return { key: 'recent', label: 'Recent', cls: '' };
+  if (repo.pushed_days_ago <= 90) return { key: 'warm', label: 'Warm', cls: 'is-warm' };
+  return { key: 'cold', label: 'Stale', cls: 'is-cold' };
+}
+function activityLabel(repo) {
+  const d = repo.pushed_days_ago;
+  if (d == null) return '—';
+  if (d === 0) return 'today';
+  if (d === 1) return '1d';
+  if (d < 30) return d + 'd';
+  if (d < 365) return Math.round(d / 30) + 'mo';
+  return Math.round(d / 365) + 'y';
+}
+function formatStars(n) {
+  if (n >= 1000) return (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k';
+  return String(n);
+}
+
+// ─── Scoring (keyword / semantic / natural) ─────────────────
+function keywordScore(repo, q) {
+  if (!q) return 0;
+  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  let score = 0;
+  for (const t of terms) {
+    if (repo.name.toLowerCase().includes(t)) score += 10;
+    if (repo.full_name.toLowerCase().includes(t)) score += 6;
+    if (repo.description.toLowerCase().includes(t)) score += 3;
+    if (repo.topics.some(tp => tp.includes(t))) score += 5;
+    if (repo.language.toLowerCase() === t) score += 4;
+  }
+  return score;
+}
+const CLUSTERS = {
+  terminal: ['tui', 'terminal', 'cli', 'shell', 'prompt', 'multiplexer', 'file-manager'],
+  web: ['web', 'framework', 'frontend', 'css', 'ssg', 'router', 'http', 'edge', 'api', 'rpc', 'workers'],
+  ai: ['ai', 'llm', 'ml', 'machine-learning', 'deep-learning', 'nlp', 'agents', 'inference', 'transformers', 'mcp', 'openai', 'embeddings'],
+  data: ['data', 'database', 'sql', 'dataframe', 'olap', 'sqlite', 'arrow', 'search', 'search-engine', 'vector-database', 'vector'],
+  build: ['build-tool', 'bundler', 'formatter', 'linter', 'esm', 'runtime', 'compiler', 'toolchain'],
+  systems: ['async', 'io', 'networking', 'containers', 'orchestration', 'cloud-native', 'game-engine', 'graphics', 'ecs', 'systems'],
+  components: ['components', 'react', 'design-system', 'design']
+};
+function repoClusters(repo) {
+  const out = new Set();
+  for (const [c, ts] of Object.entries(CLUSTERS)) if (repo.topics.some(t => ts.includes(t))) out.add(c);
+  return out;
+}
+function semanticScore(repo, q) {
+  if (!q) return 0;
+  const ql = q.toLowerCase();
+  let score = keywordScore(repo, q) * 0.4;
+  const qc = new Set();
+  for (const [c, ts] of Object.entries(CLUSTERS)) {
+    if (ts.some(t => ql.includes(t))) qc.add(c);
+    if (c === 'terminal' && (ql.includes('command') || ql.includes('console'))) qc.add(c);
+    if (c === 'web' && ql.includes('http')) qc.add(c);
+    if (c === 'ai' && (ql.includes('language model') || ql.includes('intelligence'))) qc.add(c);
+    if (c === 'data' && (ql.includes('analytics') || ql.includes('store'))) qc.add(c);
+  }
+  const rc = repoClusters(repo);
+  for (const c of qc) if (rc.has(c)) score += 8;
+  return score;
+}
+function parseNL(q) {
+  const ql = q.toLowerCase();
+  const r = { languages: [], topics: [], minStars: null, maxAge: null, sortHint: null };
+  for (const l of ['rust', 'typescript', 'go', 'python', 'c++', 'c']) {
+    if (new RegExp(`\\b${l}\\b`, 'i').test(q)) r.languages.push(l === 'c++' ? 'C++' : l === 'c' ? 'C' : l[0].toUpperCase() + l.slice(1));
+  }
+  if (/\b(active|recently updated|recent|fresh)\b/i.test(q)) r.maxAge = 30;
+  if (/\b(this week|past week|last week)\b/i.test(q)) r.maxAge = 7;
+  if (/\b(this month|past month|last month)\b/i.test(q)) r.maxAge = 30;
+  if (/\b(popular|trending|big|huge)\b/i.test(q)) { r.minStars = 10000; r.sortHint = 'stars'; }
+  const m = q.match(/\bover (\d+)k\b/i);
+  if (m) r.minStars = parseInt(m[1]) * 1000;
+  for (const [, ts] of Object.entries(CLUSTERS)) {
+    for (const t of ts) if (ql.includes(t)) r.topics.push(t);
+  }
+  return r;
+}
+function naturalFilter(repos, q) {
+  if (!q) return repos;
+  const p = parseNL(q);
+  return repos.filter(r => {
+    if (p.languages.length && !p.languages.includes(r.language)) return false;
+    if (p.minStars && r.stars < p.minStars) return false;
+    if (p.maxAge && r.pushed_days_ago > p.maxAge) return false;
+    if (p.topics.length && !p.topics.some(t => r.topics.includes(t))) return false;
+    return true;
+  });
+}
+
+// ─── Filter + rank ──────────────────────────────────────────
+function applyFilters(repos) {
+  return repos.filter(r => {
+    if (state.filters.language.size && !state.filters.language.has(r.language)) return false;
+    if (state.filters.topic.size && !r.topics.some(t => state.filters.topic.has(t))) return false;
+    if (state.filters.license.size && !state.filters.license.has(r.license)) return false;
+    if (state.filters.activity.size && !state.filters.activity.has(activityTier(r).key)) return false;
+    return true;
+  });
+}
+function rankAndSort(repos) {
+  let list = repos;
+  if (state.query) {
+    if (state.mode === 'natural') list = naturalFilter(list, state.query);
+    list = list.map(r => {
+      let s = 0;
+      if (state.mode === 'keyword') s = keywordScore(r, state.query);
+      else if (state.mode === 'semantic') s = semanticScore(r, state.query);
+      else s = keywordScore(r, state.query) + 1;
+      return { ...r, _score: s };
+    });
+    if (state.mode === 'keyword') list = list.filter(r => r._score > 0);
+    else if (state.mode === 'semantic') list = list.filter(r => r._score >= 3);
+  }
+  const cmp = {
+    stars: (a, b) => b.stars - a.stars,
+    recent: (a, b) => a.pushed_days_ago - b.pushed_days_ago,
+    starred: (a, b) => (a.starred_days_ago || 0) - (b.starred_days_ago || 0),
+    name: (a, b) => a.full_name.localeCompare(b.full_name)
+  }[state.sort];
+  if (state.query && state.mode !== 'natural') list.sort((a, b) => (b._score - a._score) || cmp(a, b));
+  else list.sort(cmp);
+  return list;
+}
+
+// ─── Facet counts ───────────────────────────────────────────
+function facetCounts(facet) {
+  const saved = state.filters[facet];
+  state.filters[facet] = new Set();
+  let base = applyFilters(STARS);
+  state.filters[facet] = saved;
+  if (state.query) {
+    if (state.mode === 'natural') base = naturalFilter(base, state.query);
+    else if (state.mode === 'keyword') base = base.filter(r => keywordScore(r, state.query) > 0);
+    else if (state.mode === 'semantic') base = base.filter(r => semanticScore(r, state.query) >= 3);
+  }
+  const c = {};
+  for (const r of base) {
+    if (facet === 'language') c[r.language] = (c[r.language] || 0) + 1;
+    else if (facet === 'topic') for (const t of r.topics) c[t] = (c[t] || 0) + 1;
+    else if (facet === 'license') c[r.license] = (c[r.license] || 0) + 1;
+    else if (facet === 'activity') { const k = activityTier(r).key; c[k] = (c[k] || 0) + 1; }
+  }
+  return c;
+}
+
+function neighbors(repo, k = 5) {
+  const rc = new Set(repo.topics);
+  return STARS.filter(r => r.full_name !== repo.full_name).map(r => {
+    const sc = new Set(r.topics);
+    const inter = [...rc].filter(t => sc.has(t)).length;
+    const union = new Set([...rc, ...sc]).size;
+    const jac = union > 0 ? inter / union : 0;
+    return { ...r, _sim: jac + (r.language === repo.language ? 0.1 : 0) };
+  }).filter(r => r._sim > 0).sort((a, b) => b._sim - a._sim).slice(0, k);
+}
+
+// Helpers
+function escapeHtml(s) { return String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function escapeAttr(s) { return String(s ?? '').replace(/["&]/g, c => ({ '&': '&amp;', '"': '&quot;' }[c])); }
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+let toastTimer;
+function toast(msg) { const el = $('#toast'); el.textContent = msg; el.classList.add('is-visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('is-visible'), 1800); }
+</script>
+<script>
+// ─── Main pane scaffolds ─────────────────────────────────────
+function viewToggleBtn(v, label, svgPath) {
+  const active = state.resultView === v ? 'is-active' : '';
+  return `<button data-result-view="${v}" class="${active}" title="${label}">${svgPath}</button>`;
+}
+function viewToggleStars() {
+  return `
+    <div class="view-toggle" role="tablist">
+      ${viewToggleBtn('table', 'Table', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6.5h12M6 6.5v6.5"/></svg>')}
+      ${viewToggleBtn('grid', 'Grid', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>')}
+      ${viewToggleBtn('list', 'List', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h12"/></svg>')}
+    </div>
+  `;
+}
+function viewToggleDiscover() {
+  return `
+    <div class="view-toggle" role="tablist">
+      ${viewToggleBtn('grid', 'Grid', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>')}
+      ${viewToggleBtn('list', 'List', '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h12"/></svg>')}
+    </div>
+  `;
+}
+function mainScaffoldStars() {
+  return `
+    <div class="toolbar">
+      <div class="toolbar-meta"><strong id="result-count">0</strong> of <span id="total-count">0</span></div>
+      <div class="chip-row" id="chips"></div>
+      <div class="toolbar-spacer"></div>
+      <select class="select" id="sort">
+        <option value="stars">Sort: stars</option>
+        <option value="recent">Sort: recently updated</option>
+        <option value="starred">Sort: recently starred</option>
+        <option value="name">Sort: name</option>
+      </select>
+      ${viewToggleStars()}
+    </div>
+    <div class="nl-hint" id="nl-hint" style="display: none;"></div>
+    <div class="results" id="results"></div>
+  `;
+}
+function mainScaffoldDiscover() {
+  return `
+    <div class="discover-banner">
+      <svg class="discover-banner-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M13 7l-2 4-4 2 2-4 4-2z"/></svg>
+      <div><strong>Discover mode</strong> — searching across GitHub, not your stars. Star a repo to add it to your collection.</div>
+    </div>
+    <div class="toolbar">
+      <div class="toolbar-meta"><strong id="result-count">0</strong> results</div>
+      <div class="chip-row" id="chips"></div>
+      <div class="toolbar-spacer"></div>
+      <select class="select" id="sort">
+        <option value="stars">Sort: stars</option>
+        <option value="trending">Sort: trending</option>
+        <option value="name">Sort: name</option>
+      </select>
+      ${viewToggleDiscover()}
+    </div>
+    <div class="results" id="results"></div>
+  `;
+}
+
+// ─── Sidebar nav (Stars / Discover) ──────────────────────────
+function renderSidebarNav() {
+  const el = $('#sidebar-nav');
+  if (!el) return;
+  el.innerHTML = `
+    <button class="sidebar-nav-item ${state.view === 'stars' ? 'is-active' : ''}" data-nav-view="stars">
+      <svg viewBox="0 0 16 16" fill="${state.view === 'stars' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5l2 4.5 5 .5-3.7 3.3 1.1 4.7L8 12l-4.4 2.5 1.1-4.7L1 6.5l5-.5L8 1.5z"/></svg>
+      <span class="sidebar-nav-item-label">Stars</span>
+      <span class="sidebar-nav-item-count">${STARS.length}</span>
+    </button>
+    <button class="sidebar-nav-item ${state.view === 'discover' ? 'is-active' : ''}" data-nav-view="discover">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M11 5l-2 4-4 2 2-4 4-2z"/></svg>
+      <span class="sidebar-nav-item-label">Discover</span>
+      <span class="sidebar-nav-item-count">${DISCOVER.length}</span>
+    </button>
+  `;
+  $$('[data-nav-view]').forEach(b => {
+    b.addEventListener('click', () => switchView(b.dataset.navView));
+  });
+}
+
+function switchView(v) {
+  if (state.view === v) return;
+  state.view = v;
+  state.selectedId = null;
+  state.activeCollection = null;
+  $('#body').classList.remove('has-detail');
+  $('#search').value = '';
+  state.query = '';
+  // Sensible default per view
+  if (v === 'discover' && state.resultView === 'table') state.resultView = 'grid';
+  if (v === 'stars' && state.resultView === 'grid') state.resultView = 'table';
+  render();
+}
+
+// ─── Collections ─────────────────────────────────────────────
+function loadCollections() {
+  try {
+    const raw = localStorage.getItem('stars.collections');
+    state.collections = raw ? JSON.parse(raw) : defaultCollections();
+  } catch (e) { state.collections = defaultCollections(); }
+}
+function defaultCollections() {
+  return [
+    { id: 'all', name: 'All stars', filters: {}, query: '', mode: 'keyword', isDefault: true },
+    { id: 'rust-tui', name: 'Rust TUI', filters: { language: ['Rust'], topic: ['tui'] }, query: '', mode: 'keyword' },
+    { id: 'recent', name: 'Updated this week', filters: { activity: ['active'] }, query: '', mode: 'keyword' },
+    { id: 'ai-agents', name: 'AI / Agents', filters: { topic: ['ai', 'agents', 'llm'] }, query: '', mode: 'keyword' }
+  ];
+}
+function saveCollections() { try { localStorage.setItem('stars.collections', JSON.stringify(state.collections)); } catch (e) {} }
+function loadCollection(id) {
+  const c = state.collections.find(x => x.id === id);
+  if (!c) return;
+  state.filters = {
+    language: new Set(c.filters.language || []),
+    topic: new Set(c.filters.topic || []),
+    activity: new Set(c.filters.activity || []),
+    license: new Set(c.filters.license || [])
+  };
+  state.query = c.query || '';
+  state.mode = c.mode || 'keyword';
+  state.activeCollection = id;
+  $('#search').value = state.query;
+  $$('.mode').forEach(b => b.classList.toggle('is-active', b.dataset.mode === state.mode));
+  render();
+}
+function saveCurrentAsCollection(name) {
+  state.collections.push({
+    id: 'c_' + Date.now(), name,
+    filters: {
+      language: [...state.filters.language],
+      topic: [...state.filters.topic],
+      activity: [...state.filters.activity],
+      license: [...state.filters.license]
+    },
+    query: state.query, mode: state.mode
+  });
+  saveCollections();
+  render();
+  toast(`Saved: ${name}`);
+}
+
+// ─── Tree rendering (sidebar) ────────────────────────────────
+function caretSvg() {
+  return `<span class="tree-caret"><svg viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3l3 3 3-3"/></svg></span>`;
+}
+function treeIcon(name) {
+  const icons = {
+    folder: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 3a1 1 0 0 1 1-1h2.5l1 1.5H10a1 1 0 0 1 1 1V9a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3z"/></svg>',
+    star: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1.5l1.4 3.3L11 5l-2.7 2 .8 3.4L6 8.7 2.9 10.4l.8-3.4L1 5l3.6-.2L6 1.5z"/></svg>',
+    filter: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 2h10l-4 5v3l-2 1V7L1 2z"/></svg>',
+    tag: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 6l5-5h5v5L6 11 1 6z"/><circle cx="8" cy="4" r="0.75"/></svg>',
+    clock: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><path d="M6 3.5V6l1.5 1"/></svg>',
+    scale: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1.5v9M2 4h8M3.5 4l-2 3a2 2 0 0 0 4 0l-2-3zM8.5 4l-2 3a2 2 0 0 0 4 0l-2-3z"/></svg>',
+    lang: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><path d="M1.5 6h9M6 1.5c1.5 1.5 2 3 2 4.5s-.5 3-2 4.5c-1.5-1.5-2-3-2-4.5s.5-3 2-4.5z"/></svg>',
+    flame: '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1c1 2 3 3 3 6a3 3 0 0 1-6 0c0-2 2-2 3-6z"/></svg>'
+  };
+  return icons[name] || icons.folder;
+}
+
+function renderTree() {
+  if (state.view === 'stars') renderTreeStars();
+  else renderTreeDiscover();
+}
+
+function renderTreeStars() {
+  const tree = $('#tree');
+  const langCounts = facetCounts('language');
+  const topicCounts = facetCounts('topic');
+  const actCounts = facetCounts('activity');
+  const licCounts = facetCounts('license');
+
+  const collExpanded = state.expanded['collections'];
+  const filtExpanded = state.expanded['filters'];
+
+  const collectionItems = state.collections.map(c => {
+    const saved = { f: state.filters, q: state.query, m: state.mode };
+    state.filters = { language: new Set(c.filters.language || []), topic: new Set(c.filters.topic || []), activity: new Set(c.filters.activity || []), license: new Set(c.filters.license || []) };
+    state.query = c.query || ''; state.mode = c.mode || 'keyword';
+    let count = 0;
+    try { const f = applyFilters(STARS); count = state.query ? rankAndSort(f).length : f.length; } catch (e) {}
+    state.filters = saved.f; state.query = saved.q; state.mode = saved.m;
+    const active = state.activeCollection === c.id ? 'is-active' : '';
+    return `
+      <button class="tree-item ${active}" data-collection="${escapeAttr(c.id)}">
+        <span class="tree-item-icon">${treeIcon(c.isDefault ? 'star' : 'folder')}</span>
+        <span class="tree-item-label">${escapeHtml(c.name)}</span>
+        <span class="tree-item-count">${count}</span>
+      </button>
+    `;
+  }).join('');
+
+  const facetGroup = (facet, iconName, label, counts, sortLimit) => {
+    const k = `filter:${facet}`;
+    const expanded = state.expanded[k];
+    let items;
+    if (facet === 'activity') {
+      const ord = [
+        { key: 'active', label: 'Active (7d)' },
+        { key: 'recent', label: 'Recent (30d)' },
+        { key: 'warm', label: 'Warm (90d)' },
+        { key: 'cold', label: 'Stale (90d+)' }
+      ];
+      items = ord.filter(x => counts[x.key]);
+    } else {
+      items = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, sortLimit).map(([k]) => ({ key: k, label: k }));
+    }
+    const totalSelected = state.filters[facet].size;
+    const itemHTML = items.map(it => {
+      const active = state.filters[facet].has(it.key) ? 'is-active' : '';
+      return `<button class="tree-item ${active}" data-facet="${facet}" data-facet-key="${escapeAttr(it.key)}"><span class="tree-item-label">${escapeHtml(it.label)}</span><span class="tree-item-count">${counts[it.key] || 0}</span></button>`;
+    }).join('');
+    return `
+      <div class="tree-node ${expanded ? '' : 'is-collapsed'}" data-node="${k}">
+        <div class="tree-node-header" data-toggle="${k}">
+          ${caretSvg()}
+          <span class="tree-node-label"><span class="tree-icon">${treeIcon(iconName)}</span><span class="tree-name">${label}</span></span>
+          <span class="tree-node-count">${totalSelected || ''}</span>
+        </div>
+        <div class="tree-children">${itemHTML || '<div style="padding: 0.25rem 0.5rem; font-size: var(--text-xs); color: var(--color-ink-4);">No matches</div>'}</div>
+      </div>
+    `;
+  };
+
+  tree.innerHTML = `
+    <div class="tree-node ${collExpanded ? '' : 'is-collapsed'}" data-node="collections">
+      <div class="tree-node-header is-action" data-toggle="collections">
+        ${caretSvg()}
+        <span class="tree-node-label"><span class="tree-icon">${treeIcon('folder')}</span><span class="tree-name">Collections</span></span>
+        <button class="tree-node-action" id="new-collection" title="New collection from current filter">+ New</button>
+      </div>
+      <div class="tree-children">${collectionItems}</div>
+    </div>
+    <div class="tree-node ${filtExpanded ? '' : 'is-collapsed'}" data-node="filters">
+      <div class="tree-node-header is-action" data-toggle="filters">
+        ${caretSvg()}
+        <span class="tree-node-label"><span class="tree-icon">${treeIcon('filter')}</span><span class="tree-name">Filters</span></span>
+        <button class="tree-node-action" id="clear-filters">Clear</button>
+      </div>
+      <div class="tree-children">
+        ${facetGroup('language', 'lang', 'Language', langCounts, 12)}
+        ${facetGroup('topic', 'tag', 'Topic', topicCounts, 16)}
+        ${facetGroup('activity', 'clock', 'Activity', actCounts, 4)}
+        ${facetGroup('license', 'scale', 'License', licCounts, 10)}
+      </div>
+    </div>
+  `;
+  attachTreeHandlers();
+}
+
+function renderTreeDiscover() {
+  const tree = $('#tree');
+  const trendExpanded = state.expanded['discover-trending'];
+  const catExpanded = state.expanded['discover-categories'];
+  const langExpanded = state.expanded['discover-languages'];
+
+  const f = state.discoverFilter;
+  const isAct = (k) => f === k ? 'is-active' : '';
+
+  const trending = [
+    { key: 'all', label: 'All discover' },
+    { key: 'trending-today', label: 'Today' },
+    { key: 'trending-week', label: 'This week' },
+    { key: 'trending-month', label: 'This month' }
+  ];
+  const trendingItems = trending.map(t => {
+    let count;
+    if (t.key === 'all') count = DISCOVER.length;
+    else if (t.key === 'trending-today') count = DISCOVER.filter(r => r.trending === 'today').length;
+    else if (t.key === 'trending-week') count = DISCOVER.filter(r => r.trending === 'week' || r.trending === 'today').length;
+    else count = DISCOVER.filter(r => r.trending).length;
+    return `<button class="tree-item ${isAct(t.key)}" data-discover-filter="${t.key}"><span class="tree-item-label">${escapeHtml(t.label)}</span><span class="tree-item-count">${count}</span></button>`;
+  }).join('');
+
+  const cats = Object.entries(DISCOVER_CATEGORIES).map(([key, label]) => {
+    const count = DISCOVER.filter(r => r.category === key).length;
+    const fkey = `cat:${key}`;
+    return `<button class="tree-item ${isAct(fkey)}" data-discover-filter="${fkey}"><span class="tree-item-label">${escapeHtml(label)}</span><span class="tree-item-count">${count}</span></button>`;
+  }).join('');
+
+  const langs = [...new Set(DISCOVER.map(r => r.language))].sort();
+  const langItems = langs.map(l => {
+    const count = DISCOVER.filter(r => r.language === l).length;
+    const fkey = `lang:${l}`;
+    return `<button class="tree-item ${isAct(fkey)}" data-discover-filter="${fkey}"><span class="tree-item-label">${escapeHtml(l)}</span><span class="tree-item-count">${count}</span></button>`;
+  }).join('');
+
+  tree.innerHTML = `
+    <div class="tree-node ${trendExpanded ? '' : 'is-collapsed'}" data-node="discover-trending">
+      <div class="tree-node-header" data-toggle="discover-trending">
+        ${caretSvg()}
+        <span class="tree-node-label"><span class="tree-icon">${treeIcon('flame')}</span><span class="tree-name">Trending</span></span>
+      </div>
+      <div class="tree-children">${trendingItems}</div>
+    </div>
+    <div class="tree-node ${catExpanded ? '' : 'is-collapsed'}" data-node="discover-categories">
+      <div class="tree-node-header" data-toggle="discover-categories">
+        ${caretSvg()}
+        <span class="tree-node-label"><span class="tree-icon">${treeIcon('folder')}</span><span class="tree-name">Categories</span></span>
+      </div>
+      <div class="tree-children">${cats}</div>
+    </div>
+    <div class="tree-node ${langExpanded ? '' : 'is-collapsed'}" data-node="discover-languages">
+      <div class="tree-node-header" data-toggle="discover-languages">
+        ${caretSvg()}
+        <span class="tree-node-label"><span class="tree-icon">${treeIcon('lang')}</span><span class="tree-name">Languages</span></span>
+      </div>
+      <div class="tree-children">${langItems}</div>
+    </div>
+  `;
+  attachTreeHandlers();
+}
+
+function attachTreeHandlers() {
+  $$('.tree-node-header').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.tree-node-action')) return;
+      const k = el.dataset.toggle;
+      if (!k) return;
+      state.expanded[k] = !state.expanded[k];
+      saveUI();
+      renderTree();
+    });
+  });
+  $$('[data-collection]').forEach(el => el.addEventListener('click', () => loadCollection(el.dataset.collection)));
+  $$('[data-facet]').forEach(el => el.addEventListener('click', (e) => handleFacetClick(el.dataset.facet, el.dataset.facetKey, e)));
+  $$('[data-discover-filter]').forEach(el => el.addEventListener('click', () => { state.discoverFilter = el.dataset.discoverFilter; render(); }));
+  $('#new-collection')?.addEventListener('click', (e) => { e.stopPropagation(); $('#modal-backdrop').classList.add('is-open'); setTimeout(() => $('#collection-name-input').focus(), 50); });
+  $('#clear-filters')?.addEventListener('click', (e) => { e.stopPropagation(); clearFilters(); });
+}
+
+function handleFacetClick(facet, key, e) {
+  const buttons = $$(`[data-facet="${facet}"]`);
+  const keys = buttons.map(b => b.dataset.facetKey);
+  const set = state.filters[facet];
+  if (e.shiftKey && state.selectionAnchor[facet] !== null) {
+    const ai = keys.indexOf(state.selectionAnchor[facet]);
+    const ki = keys.indexOf(key);
+    if (ai >= 0 && ki >= 0) {
+      const [lo, hi] = ai <= ki ? [ai, ki] : [ki, ai];
+      set.clear();
+      for (let i = lo; i <= hi; i++) set.add(keys[i]);
+    }
+  } else if (e.ctrlKey || e.metaKey) {
+    if (set.has(key)) set.delete(key);
+    else set.add(key);
+    state.selectionAnchor[facet] = key;
+  } else {
+    if (set.size === 1 && set.has(key)) {
+      set.clear();
+      state.selectionAnchor[facet] = null;
+    } else {
+      set.clear();
+      set.add(key);
+      state.selectionAnchor[facet] = key;
+    }
+  }
+  render();
+}
+
+function clearFilters() {
+  state.filters = { language: new Set(), topic: new Set(), activity: new Set(), license: new Set() };
+  state.selectionAnchor = { language: null, topic: null, activity: null, license: null };
+  render();
+}
+
+// ─── Chips ───────────────────────────────────────────────────
+function renderChips() {
+  const chipsEl = $('#chips');
+  if (!chipsEl) return;
+  if (state.view === 'discover') {
+    if (state.discoverFilter === 'all') { chipsEl.innerHTML = ''; return; }
+    const labels = { 'trending-today': 'Trending today', 'trending-week': 'Trending this week', 'trending-month': 'Trending this month' };
+    let label = labels[state.discoverFilter];
+    if (state.discoverFilter.startsWith('cat:')) label = DISCOVER_CATEGORIES[state.discoverFilter.slice(4)];
+    if (state.discoverFilter.startsWith('lang:')) label = state.discoverFilter.slice(5);
+    chipsEl.innerHTML = `<span class="chip">${escapeHtml(label)}<button id="clear-discover-chip" aria-label="Clear"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l6 6M8 2l-6 6"/></svg></button></span>`;
+    $('#clear-discover-chip')?.addEventListener('click', () => { state.discoverFilter = 'all'; render(); });
+    return;
+  }
+  const chips = [];
+  for (const [facet, set] of Object.entries(state.filters)) for (const v of set) chips.push({ facet, value: v });
+  chipsEl.innerHTML = chips.map(c => `<span class="chip">${escapeHtml(c.value)}<button data-remove="${c.facet}|${escapeAttr(c.value)}" aria-label="Remove"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l6 6M8 2l-6 6"/></svg></button></span>`).join('');
+  if (chips.length) {
+    chipsEl.insertAdjacentHTML('beforeend', `<button class="chip-clear" id="chip-clear-all">Clear all</button>`);
+    $('#chip-clear-all')?.addEventListener('click', clearFilters);
+  }
+  $$('.chip button[data-remove]').forEach(b => b.addEventListener('click', () => {
+    const [facet, val] = b.dataset.remove.split('|');
+    state.filters[facet].delete(val);
+    if (state.selectionAnchor[facet] === val) state.selectionAnchor[facet] = null;
+    render();
+  }));
+}
+
+// ─── Results ─────────────────────────────────────────────────
+function renderResults() {
+  if (state.view === 'discover') return renderDiscoverResults();
+  const filtered = applyFilters(STARS);
+  const results = rankAndSort(filtered);
+  $('#result-count') && ($('#result-count').textContent = results.length);
+  $('#total-count') && ($('#total-count').textContent = STARS.length);
+
+  const hintEl = $('#nl-hint');
+  if (hintEl) {
+    if (state.mode === 'natural' && state.query) {
+      const p = parseNL(state.query);
+      const parts = [];
+      if (p.languages.length) parts.push(`<code>language: ${p.languages.join(', ')}</code>`);
+      if (p.minStars) parts.push(`<code>stars >= ${formatStars(p.minStars)}</code>`);
+      if (p.maxAge) parts.push(`<code>updated within ${p.maxAge}d</code>`);
+      if (p.topics.length) parts.push(`<code>topic: ${[...new Set(p.topics)].slice(0, 4).join(', ')}</code>`);
+      hintEl.innerHTML = parts.length ? `<strong>Interpreted query →</strong> ${parts.join(' · ')}` : `<strong>Interpreted query →</strong> falling back to text search`;
+      hintEl.style.display = 'block';
+    } else hintEl.style.display = 'none';
+  }
+
+  const el = $('#results');
+  // In browse mode (item selected), force list view (single column)
+  const effectiveView = state.selectedId ? 'list' : state.resultView;
+  el.className = 'results is-' + effectiveView;
+
+  if (results.length === 0) {
+    el.innerHTML = `
+      <div class="empty">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="14" cy="14" r="9"/><path d="M22 22l6 6"/></svg>
+        <h3>Nothing matches</h3>
+        <p>Try widening the filters or switching search mode. Semantic mode often catches what keyword mode misses.</p>
+        <button onclick="clearFilters()">Clear filters</button>
+      </div>
+    `;
+    return;
+  }
+
+  if (effectiveView === 'grid') renderGrid(el, results);
+  else if (effectiveView === 'list') renderList(el, results);
+  else if (effectiveView === 'table') renderTable(el, results);
+}
+
+function renderDiscoverResults() {
+  let results = DISCOVER.slice();
+  const f = state.discoverFilter;
+  if (f === 'trending-today') results = results.filter(r => r.trending === 'today');
+  else if (f === 'trending-week') results = results.filter(r => r.trending === 'today' || r.trending === 'week');
+  else if (f === 'trending-month') results = results.filter(r => r.trending);
+  else if (f.startsWith('cat:')) results = results.filter(r => r.category === f.slice(4));
+  else if (f.startsWith('lang:')) results = results.filter(r => r.language === f.slice(5));
+
+  if (state.query) results = results.filter(r => keywordScore(r, state.query) > 0).map(r => ({ ...r, _score: keywordScore(r, state.query) }));
+
+  const cmp = {
+    stars: (a, b) => b.stars - a.stars,
+    trending: (a, b) => { const w = { today: 3, week: 2, month: 1 }; return (w[b.trending] || 0) - (w[a.trending] || 0) || b.stars - a.stars; },
+    name: (a, b) => a.full_name.localeCompare(b.full_name)
+  }[state.sort] || ((a, b) => b.stars - a.stars);
+  if (state.query) results.sort((a, b) => (b._score - a._score) || cmp(a, b));
+  else results.sort(cmp);
+
+  $('#result-count').textContent = results.length;
+  const el = $('#results');
+  const effectiveView = state.selectedId ? 'list' : state.resultView;
+  el.className = 'results is-' + effectiveView;
+
+  if (results.length === 0) {
+    el.innerHTML = `<div class="empty"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="14" cy="14" r="9"/><path d="M22 22l6 6"/></svg><h3>No results</h3><p>Try a different category or clear the search.</p></div>`;
+    return;
+  }
+
+  if (effectiveView === 'grid') el.innerHTML = `<div class="grid">${results.map(discoverCardHTML).join('')}</div>`;
+  else el.innerHTML = `<div class="list">${results.map(discoverRowHTML).join('')}</div>`;
+  attachCardHandlers();
+  attachStarButtons();
+}
+
+function cardHTML(r) {
+  const tier = activityTier(r);
+  const isSel = state.selectedId === r.full_name;
+  return `
+    <article class="card ${isSel ? 'is-selected' : ''}" data-id="${escapeAttr(r.full_name)}">
+      <div class="card-head">
+        <div class="card-name"><span class="card-owner">${escapeHtml(r.owner)}/</span>${escapeHtml(r.name)}</div>
+        <div class="card-stars">★ ${formatStars(r.stars)}</div>
+      </div>
+      <p class="card-desc">${escapeHtml(r.description)}</p>
+      <div class="card-foot">
+        <span class="tag tag-lang">${escapeHtml(r.language)}</span>
+        ${r.topics.slice(0, 2).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+        <span class="activity ${tier.cls}"><span class="activity-dot"></span>${activityLabel(r)}</span>
+      </div>
+    </article>
+  `;
+}
+
+function discoverCardHTML(r) {
+  const isSel = state.selectedId === r.full_name;
+  const starred = state.starred.has(r.full_name);
+  return `
+    <article class="card ${isSel ? 'is-selected' : ''}" data-id="${escapeAttr(r.full_name)}">
+      <div class="card-head">
+        <div class="card-name"><span class="card-owner">${escapeHtml(r.owner)}/</span>${escapeHtml(r.name)}</div>
+        <div class="card-stars">★ ${formatStars(r.stars)}</div>
+      </div>
+      <p class="card-desc">${escapeHtml(r.description)}</p>
+      <div class="card-foot">
+        <span class="tag tag-lang">${escapeHtml(r.language)}</span>
+        ${r.topics.slice(0, 2).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+      </div>
+      <div class="card-action">
+        ${r.trending ? `<span class="card-trending">${r.trending}</span>` : '<span></span>'}
+        <button class="star-btn ${starred ? 'is-starred' : ''}" data-star="${escapeAttr(r.full_name)}">
+          <svg viewBox="0 0 12 12" fill="${starred ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.2"><path d="M6 1.5l1.4 3.3L11 5l-2.7 2 .8 3.4L6 8.7 2.9 10.4l.8-3.4L1 5l3.6-.2L6 1.5z"/></svg>
+          ${starred ? 'Starred' : 'Star'}
+        </button>
+      </div>
+    </article>
+  `;
+}
+
+function discoverRowHTML(r) {
+  const isSel = state.selectedId === r.full_name;
+  const starred = state.starred.has(r.full_name);
+  return `
+    <div class="row ${isSel ? 'is-selected' : ''}" data-id="${escapeAttr(r.full_name)}">
+      <div class="row-main">
+        <div class="row-head">
+          <span class="row-name"><span class="card-owner">${escapeHtml(r.owner)}/</span>${escapeHtml(r.name)}</span>
+          <span class="tag tag-lang">${escapeHtml(r.language)}</span>
+          ${r.trending ? `<span class="card-trending">${r.trending}</span>` : ''}
+        </div>
+        <p class="row-desc">${escapeHtml(r.description)}</p>
+      </div>
+      <div class="row-meta">
+        <span>★ ${formatStars(r.stars)}</span>
+        <button class="star-btn ${starred ? 'is-starred' : ''}" data-star="${escapeAttr(r.full_name)}" onclick="event.stopPropagation()">
+          <svg viewBox="0 0 12 12" fill="${starred ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.2"><path d="M6 1.5l1.4 3.3L11 5l-2.7 2 .8 3.4L6 8.7 2.9 10.4l.8-3.4L1 5l3.6-.2L6 1.5z"/></svg>
+          ${starred ? 'Starred' : 'Star'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderGrid(el, results) { el.innerHTML = `<div class="grid">${results.map(cardHTML).join('')}</div>`; attachCardHandlers(); }
+function renderList(el, results) {
+  el.innerHTML = `<div class="list">${results.map(r => {
+    const tier = activityTier(r);
+    const isSel = state.selectedId === r.full_name;
+    return `<div class="row ${isSel ? 'is-selected' : ''}" data-id="${escapeAttr(r.full_name)}"><div class="row-main"><div class="row-head"><span class="row-name"><span class="card-owner">${escapeHtml(r.owner)}/</span>${escapeHtml(r.name)}</span><span class="tag tag-lang">${escapeHtml(r.language)}</span><span class="row-tags">${r.topics.slice(0, 3).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</span></div><p class="row-desc">${escapeHtml(r.description)}</p></div><div class="row-meta"><span>★ ${formatStars(r.stars)}</span><span class="activity ${tier.cls}"><span class="activity-dot"></span>${activityLabel(r)}</span></div></div>`;
+  }).join('')}</div>`;
+  attachCardHandlers();
+}
+
+function renderTable(el, results) {
+  const cols = state.tableColumns;
+  const totalWidth = cols.reduce((sum, c) => sum + c.width, 0);
+  el.innerHTML = `
+    <div class="table-wrap">
+      <table class="table" style="width: ${totalWidth}px;">
+        <colgroup>${cols.map(c => `<col style="width: ${(c.width / (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16)).toFixed(4)}rem;">`).join('')}</colgroup>
+        <thead>
+          <tr>
+            ${cols.map(c => `<th draggable="true" data-col="${c.key}" class="${c.cls?.includes('numeric') ? 'numeric' : ''}">${escapeHtml(c.label)}<span class="col-resize" data-resize-col="${c.key}"></span></th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${results.map(r => {
+            const isSel = state.selectedId === r.full_name;
+            return `<tr class="${isSel ? 'is-selected' : ''}" data-id="${escapeAttr(r.full_name)}">${cols.map(c => `<td class="${c.cls || ''}">${c.render(r)}</td>`).join('')}</tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+  attachCardHandlers();
+  attachColumnHandlers();
+}
+
+function attachCardHandlers() {
+  $$('.card, .row, .table tbody tr').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.star-btn')) return;
+      selectRepo(el.dataset.id);
+    });
+  });
+}
+
+function attachStarButtons() {
+  $$('.star-btn[data-star]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.star;
+      if (state.starred.has(id)) { state.starred.delete(id); toast(`Unstarred ${id}`); }
+      else { state.starred.add(id); toast(`★ Starred ${id}`); }
+      renderResults();
+      if (state.selectedId === id) renderDetail();
+    });
+  });
+}
+
+// ─── Table column reorder + resize ──────────────────────────
+function attachColumnHandlers() {
+  let dragKey = null;
+  $$('.table th[draggable="true"]').forEach(th => {
+    th.addEventListener('dragstart', (e) => {
+      dragKey = th.dataset.col;
+      th.classList.add('is-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', dragKey);
+    });
+    th.addEventListener('dragend', () => {
+      th.classList.remove('is-dragging');
+      $$('.table th').forEach(x => x.classList.remove('is-drop-before', 'is-drop-after'));
+      dragKey = null;
+    });
+    th.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragKey || dragKey === th.dataset.col) return;
+      const rect = th.getBoundingClientRect();
+      const before = (e.clientX - rect.left) < rect.width / 2;
+      $$('.table th').forEach(x => x.classList.remove('is-drop-before', 'is-drop-after'));
+      th.classList.add(before ? 'is-drop-before' : 'is-drop-after');
+    });
+    th.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (!dragKey || dragKey === th.dataset.col) return;
+      const rect = th.getBoundingClientRect();
+      const before = (e.clientX - rect.left) < rect.width / 2;
+      const from = state.tableColumns.findIndex(c => c.key === dragKey);
+      let to = state.tableColumns.findIndex(c => c.key === th.dataset.col);
+      if (from < 0 || to < 0) return;
+      const [moved] = state.tableColumns.splice(from, 1);
+      to = state.tableColumns.findIndex(c => c.key === th.dataset.col);
+      if (!before) to += 1;
+      state.tableColumns.splice(to, 0, moved);
+      saveUI();
+      renderResults();
+    });
+  });
+
+  $$('.col-resize').forEach(h => {
+    h.addEventListener('mousedown', (e) => {
+      e.stopPropagation(); e.preventDefault();
+      const key = h.dataset.resizeCol;
+      const col = state.tableColumns.find(c => c.key === key);
+      if (!col) return;
+      const startX = e.clientX;
+      const startW = col.width;
+      h.classList.add('is-active');
+      document.body.classList.add('is-resizing');
+      const onMove = (ev) => {
+        col.width = Math.max(60, Math.min(800, startW + (ev.clientX - startX)));
+        const rootFont = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        const cols = $$('.table colgroup col');
+        const idx = state.tableColumns.findIndex(c => c.key === key);
+        if (cols[idx]) cols[idx].style.width = (col.width / rootFont) + 'rem';
+        const total = state.tableColumns.reduce((s, c) => s + c.width, 0);
+        const tbl = $('.table');
+        if (tbl) tbl.style.width = (total / rootFont) + 'rem';
+      };
+      const onUp = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        h.classList.remove('is-active');
+        document.body.classList.remove('is-resizing');
+        saveUI();
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
+}
+
+// ─── Mock file tree per repo ────────────────────────────────
+function fileTreeFor(repo) {
+  const lang = repo.language;
+  const manifest = {
+    Rust: [{ name: 'Cargo.toml', size: 920 }, { name: 'Cargo.lock', size: 48200 }],
+    TypeScript: [{ name: 'package.json', size: 1840 }, { name: 'tsconfig.json', size: 620 }, { name: 'bun.lockb', size: 124000 }],
+    JavaScript: [{ name: 'package.json', size: 1240 }, { name: '.eslintrc.json', size: 480 }],
+    Go: [{ name: 'go.mod', size: 380 }, { name: 'go.sum', size: 14200 }],
+    Python: [{ name: 'pyproject.toml', size: 1240 }, { name: 'requirements.txt', size: 320 }],
+    'C++': [{ name: 'CMakeLists.txt', size: 2400 }],
+    C: [{ name: 'Makefile', size: 1840 }, { name: 'configure', size: 8400 }],
+    Zig: [{ name: 'build.zig', size: 1200 }],
+    Lua: [{ name: 'init.lua', size: 1240 }]
+  };
+  const srcExt = { Rust: 'rs', TypeScript: 'ts', JavaScript: 'js', Go: 'go', Python: 'py', 'C++': 'cpp', C: 'c', Zig: 'zig', Lua: 'lua' };
+  const ext = srcExt[lang] || 'js';
+
+  const srcFiles = lang === 'Rust'
+    ? [{ name: 'lib.rs', size: 4520 }, { name: 'main.rs', size: 840 }, { name: 'parser.rs', size: 3200 }]
+    : lang === 'Go'
+    ? [{ name: 'main.go', size: 4200 }, { name: `${repo.name}.go`, size: 6800 }, { name: 'config.go', size: 1840 }]
+    : lang === 'Python'
+    ? [{ name: '__init__.py', size: 240 }, { name: 'core.py', size: 5400 }, { name: 'utils.py', size: 1840 }]
+    : [{ name: `index.${ext}`, size: 4520 }, { name: `types.${ext}`, size: 2840 }, { name: `core.${ext}`, size: 6200 }];
+
+  return [
+    { type: 'folder', name: '.github', children: [
+      { type: 'folder', name: 'workflows', children: [
+        { type: 'file', name: 'ci.yml', size: 1240 },
+        { type: 'file', name: 'release.yml', size: 845 }
+      ]},
+      { type: 'file', name: 'ISSUE_TEMPLATE.md', size: 680 },
+      { type: 'file', name: 'PULL_REQUEST_TEMPLATE.md', size: 420 }
+    ]},
+    { type: 'folder', name: 'docs', children: [
+      { type: 'file', name: 'getting-started.md', size: 3200 },
+      { type: 'file', name: 'api-reference.md', size: 12400 },
+      { type: 'file', name: 'architecture.md', size: 8200 }
+    ]},
+    { type: 'folder', name: 'examples', children: [
+      { type: 'file', name: `basic.${ext}`, size: 850 },
+      { type: 'file', name: `advanced.${ext}`, size: 2350 }
+    ]},
+    { type: 'folder', name: 'src', children: srcFiles.map(f => ({ type: 'file', ...f })) },
+    { type: 'folder', name: 'tests', children: [
+      { type: 'file', name: `integration.${ext}`, size: 3400 },
+      { type: 'file', name: `unit.${ext}`, size: 5200 }
+    ]},
+    { type: 'file', name: '.gitignore', size: 240 },
+    { type: 'file', name: 'CHANGELOG.md', size: 5200 },
+    { type: 'file', name: 'CONTRIBUTING.md', size: 2100 },
+    { type: 'file', name: 'LICENSE', size: 1100 },
+    { type: 'file', name: 'README.md', size: 8700 },
+    ...(manifest[lang] || [{ name: 'package.json', size: 920 }]).map(m => ({ type: 'file', ...m }))
+  ];
+}
+
+function fileTypeClass(name) {
+  if (name.endsWith('.md')) return 'is-markdown';
+  if (/\.(json|toml|yaml|yml|lock|lockb|mod|sum)$/.test(name) || name === 'Makefile' || name === 'CMakeLists.txt' || name === 'configure' || name === '.gitignore') return 'is-config';
+  return '';
+}
+
+function fileIconSvg(name) {
+  if (name.endsWith('.md')) return '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 1.5h6l3 3v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1z"/><path d="M9 1.5v3h3"/><path d="M4.5 10v-3l1.5 1.5L7.5 7v3M9 10V7M8.5 9l.5.5.5-.5"/></svg>';
+  return '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 1.5h6l3 3v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1z"/><path d="M9 1.5v3h3"/></svg>';
+}
+function folderIconSvg(open) {
+  return open
+    ? '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 4a1 1 0 0 1 1-1h3l1 1.5h6a1 1 0 0 1 1 1v0H1V4z"/><path d="M1 5.5h12l-1 6a1 1 0 0 1-1 .5H3a1 1 0 0 1-1-.5l-1-6z"/></svg>'
+    : '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 4a1 1 0 0 1 1-1h3l1 1.5h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4z"/></svg>';
+}
+
+function formatSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return Math.round(b / 1024) + ' KB';
+  return (b / 1024 / 1024).toFixed(1) + ' MB';
+}
+
+function initFileTreeState(nodes, path) {
+  for (const n of nodes) {
+    if (n.type === 'folder') {
+      const id = path + '/' + n.name;
+      if (state.fileTreeExpanded[id] === undefined) {
+        // Default: top-level src expanded, dot-folders collapsed
+        state.fileTreeExpanded[id] = !n.name.startsWith('.') && path === '';
+      }
+      initFileTreeState(n.children, id);
+    }
+  }
+}
+
+function renderFileTreeNodes(nodes, path) {
+  return nodes.map(node => {
+    if (node.type === 'folder') {
+      const id = path + '/' + node.name;
+      const expanded = state.fileTreeExpanded[id];
+      return `
+        <div class="file-row is-folder" data-folder="${escapeAttr(id)}">
+          <span class="file-caret ${expanded ? '' : 'is-collapsed'}"><svg viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3l3 3 3-3"/></svg></span>
+          <span class="file-icon is-folder">${folderIconSvg(expanded)}</span>
+          <span class="file-name">${escapeHtml(node.name)}</span>
+        </div>
+        ${expanded ? `<div class="file-children">${renderFileTreeNodes(node.children, id)}</div>` : ''}
+      `;
+    } else {
+      return `
+        <div class="file-row is-file" data-file="${escapeAttr(path + '/' + node.name)}">
+          <span class="file-caret-spacer"></span>
+          <span class="file-icon ${fileTypeClass(node.name)}">${fileIconSvg(node.name)}</span>
+          <span class="file-name">${escapeHtml(node.name)}</span>
+          <span class="file-size">${formatSize(node.size)}</span>
+        </div>
+      `;
+    }
+  }).join('');
+}
+
+function attachFileTreeHandlers(repo) {
+  $$('.file-row.is-folder').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.folder;
+      state.fileTreeExpanded[id] = !state.fileTreeExpanded[id];
+      renderDetail();
+    });
+  });
+  $$('.file-row.is-file').forEach(el => {
+    el.addEventListener('click', () => {
+      const name = el.dataset.file.split('/').pop();
+      toast(`Would open ${name} (mock)`);
+    });
+  });
+}
+
+// ─── README generator ───────────────────────────────────────
+function installCmd(repo) {
+  const cmds = {
+    Rust: `cargo add ${repo.name}`,
+    TypeScript: `bun add ${repo.name}`,
+    JavaScript: `npm install ${repo.name}`,
+    Go: `go get github.com/${repo.full_name}@latest`,
+    Python: `pip install ${repo.name}`,
+    'C++': `# Add to CMakeLists.txt\nfind_package(${repo.name} REQUIRED)\ntarget_link_libraries(your_app PRIVATE ${repo.name}::${repo.name})`,
+    C: `# Build from source\nmake && sudo make install`,
+    Zig: `zig fetch --save https://github.com/${repo.full_name}/archive/main.tar.gz`,
+    Lua: `# Via luarocks\nluarocks install ${repo.name}`
+  };
+  return cmds[repo.language] || `# See repository README for installation`;
+}
+
+function usageCode(repo) {
+  const safe = repo.name.replace(/[-.]/g, '_');
+  const samples = {
+    Rust: `use ${safe}::*;\n\nfn main() {\n    // Your code here\n    let result = ${safe}::run();\n    println!("{:?}", result);\n}`,
+    TypeScript: `import { ${safe} } from '${repo.name}';\n\nconst result = await ${safe}({\n  // options\n});\n\nconsole.log(result);`,
+    JavaScript: `const ${safe} = require('${repo.name}');\n\nconst result = ${safe}({\n  // options\n});`,
+    Go: `package main\n\nimport (\n    "fmt"\n    "github.com/${repo.full_name}"\n)\n\nfunc main() {\n    result := ${safe}.Run()\n    fmt.Println(result)\n}`,
+    Python: `from ${repo.name.replace(/-/g, '_')} import core\n\nresult = core.run()\nprint(result)`,
+    'C++': `#include <${repo.name}/${repo.name}.hpp>\n\nint main() {\n    ${safe}::Client client;\n    return client.run();\n}`,
+    C: `#include "${repo.name}.h"\n\nint main(void) {\n    ${safe}_init();\n    return 0;\n}`,
+    Zig: `const std = @import("std");\nconst ${safe} = @import("${repo.name}");\n\npub fn main() !void {\n    try ${safe}.run();\n}`,
+    Lua: `local ${safe} = require('${repo.name}')\n\n${safe}.setup({})`
+  };
+  return samples[repo.language] || `// See repository README for usage`;
+}
+
+function generateReadme(repo) {
+  const topicFeatures = repo.topics.slice(0, 4).map(t => `<li>Built-in support for <strong>${escapeHtml(t)}</strong></li>`);
+  const extraFeatures = [
+    '<li>Cross-platform compatibility</li>',
+    '<li>Comprehensive documentation</li>',
+    '<li>Active community and ongoing maintenance</li>'
+  ];
+  const features = [...topicFeatures, ...extraFeatures].slice(0, 6);
+  const buildPass = repo.pushed_days_ago != null && repo.pushed_days_ago <= 14;
+  const fresh = repo.pushed_days_ago != null && repo.pushed_days_ago <= 7;
+
+  return `
+    <h1>${escapeHtml(repo.name)}</h1>
+    <div class="readme-badges">
+      <span class="readme-badge is-accent">★ ${formatStars(repo.stars)}</span>
+      <span class="readme-badge">${escapeHtml(repo.language)}</span>
+      ${repo.license ? `<span class="readme-badge">${escapeHtml(repo.license)}</span>` : ''}
+      ${buildPass ? '<span class="readme-badge is-good">build passing</span>' : ''}
+      ${fresh ? '<span class="readme-badge is-good">actively maintained</span>' : ''}
+    </div>
+    <blockquote>${escapeHtml(repo.description)}</blockquote>
+
+    <h2>Features</h2>
+    <ul>${features.join('')}</ul>
+
+    <h2>Installation</h2>
+    <pre><code>${escapeHtml(installCmd(repo))}</code></pre>
+
+    <h2>Usage</h2>
+    <pre><code>${escapeHtml(usageCode(repo))}</code></pre>
+
+    <h2>Documentation</h2>
+    <p>Comprehensive documentation lives in the <code>docs/</code> folder. For the API reference, examples, and architectural notes, see <a href="https://github.com/${escapeAttr(repo.full_name)}#readme">the full README on GitHub</a>.</p>
+
+    <h2>Contributing</h2>
+    <p>Contributions are welcome. Please read <code>CONTRIBUTING.md</code> for the development workflow, code style conventions, and pull request process. We use the <code>.github/workflows/ci.yml</code> pipeline for automated testing.</p>
+
+    <h2>License</h2>
+    <p>This project is licensed under <strong>${escapeHtml(repo.license || 'MIT')}</strong>. See <code>LICENSE</code> for the full text.</p>
+  `;
+}
+
+// ─── Detail / browser pane ──────────────────────────────────
+function getRepo(id) { return STARS.find(r => r.full_name === id) || DISCOVER.find(r => r.full_name === id); }
+
+function selectRepo(id) {
+  if (state.selectedId === id) { closeDetail(); return; }
+  if (!state.selectedId) {
+    // First selection — remember view so we can restore
+    state.previousResultView = state.resultView;
+  }
+  state.selectedId = id;
+  $('#body').classList.add('has-detail');
+  $('#detail').setAttribute('aria-hidden', 'false');
+  // Init file tree expansion state for this repo
+  const repo = getRepo(id);
+  if (repo) initFileTreeState(fileTreeFor(repo), '');
+  renderDetail();
+  renderResults();
+}
+
+function closeDetail() {
+  state.selectedId = null;
+  if (state.previousResultView) {
+    state.resultView = state.previousResultView;
+    state.previousResultView = null;
+  }
+  $('#body').classList.remove('has-detail');
+  $('#detail').setAttribute('aria-hidden', 'true');
+  // Re-render scaffold so the view-toggle re-appears
+  const main = $('#main');
+  main.innerHTML = state.view === 'discover' ? mainScaffoldDiscover() : mainScaffoldStars();
+  attachMainHandlers();
+  renderChips();
+  renderResults();
+}
+
+function renderDetail() {
+  const r = getRepo(state.selectedId);
+  if (!r) return closeDetail();
+  const starred = state.starred.has(r.full_name);
+  const tier = activityTier(r);
+  const tree = fileTreeFor(r);
+
+  $('#detail-content').innerHTML = `
+    <div class="browser-header">
+      <button class="detail-close" id="detail-close" aria-label="Close"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3l8 8M11 3l-8 8"/></svg></button>
+      <div class="detail-name"><span class="card-owner">${escapeHtml(r.owner)}/</span>${escapeHtml(r.name)}</div>
+      <div class="detail-stats" style="margin-bottom: var(--space-4);">
+        <span class="detail-stat">★ <strong>${formatStars(r.stars)}</strong></span>
+        <span class="detail-stat">${escapeHtml(r.language)}</span>
+        ${r.pushed_days_ago != null ? `<span class="detail-stat"><span class="activity ${tier.cls}" style="margin: 0; gap: 0.25rem;"><span class="activity-dot"></span>${tier.label}</span></span>` : ''}
+        ${r.license ? `<span class="detail-stat">${escapeHtml(r.license)}</span>` : ''}
+      </div>
+      <p style="font-size: var(--text-sm); color: var(--color-ink-2); margin-bottom: var(--space-4); line-height: 1.55;">${escapeHtml(r.description)}</p>
+      <div class="detail-actions" style="margin: 0;">
+        <a class="btn btn-primary" href="https://github.com/${escapeAttr(r.full_name)}" target="_blank" rel="noopener">View on GitHub
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h6m0 0L6.5 3.5M9 6L6.5 8.5"/></svg>
+        </a>
+        <button class="btn ${starred ? 'is-starred' : 'btn-secondary'}" data-action="toggle-star">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="${starred ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.2"><path d="M6 1.5l1.4 3.3L11 5l-2.7 2 .8 3.4L6 8.7 2.9 10.4l.8-3.4L1 5l3.6-.2L6 1.5z"/></svg>
+          ${starred ? 'Starred' : 'Star'}
+        </button>
+      </div>
+    </div>
+
+    <div class="browser-section">
+      <div class="browser-section-head">
+        <span>Files</span>
+        <span class="browser-section-meta">main branch · ${tree.length} entries</span>
+      </div>
+      <div class="file-tree">${renderFileTreeNodes(tree, '')}</div>
+    </div>
+
+    <div class="browser-section">
+      <div class="browser-section-head">
+        <span>README<strong>.md</strong></span>
+        <span class="browser-section-meta">8.7 KB</span>
+      </div>
+      <div class="readme">${generateReadme(r)}</div>
+    </div>
+  `;
+
+  $('#detail-close').addEventListener('click', closeDetail);
+  $('[data-action="toggle-star"]')?.addEventListener('click', () => {
+    if (state.starred.has(r.full_name)) { state.starred.delete(r.full_name); toast(`Unstarred ${r.full_name}`); }
+    else { state.starred.add(r.full_name); toast(`★ Starred ${r.full_name}`); }
+    renderDetail();
+    renderResults();
+  });
+  attachFileTreeHandlers(r);
+}
+
+// ─── Panel resize ───────────────────────────────────────────
+function attachPanelResize(handleId, varName, invert) {
+  const handle = $('#' + handleId);
+  if (!handle) return;
+  handle.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    // The layout tokens are in rem, but pointer movement is in px. Convert the rem token
+    // widths to px for the duration of the drag (so the math tracks the cursor 1:1), then
+    // write the result back as rem to keep the panels scaling with the user's font-size.
+    const rootFont = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    const remToPx = (v) => parseFloat(v) * rootFont;
+    const rs = getComputedStyle(document.documentElement);
+    const startW = remToPx(rs.getPropertyValue(varName));
+    const startX = e.clientX;
+    handle.classList.add('is-active');
+    document.body.classList.add('is-resizing');
+    const onMove = (ev) => {
+      const delta = invert ? (startX - ev.clientX) : (ev.clientX - startX);
+      // No min/max bounds: a panel can be dragged to any size. The only floor is 0,
+      // which just keeps the width non-negative so the grid track stays valid.
+      const w = Math.max(0, startW + delta);
+      document.documentElement.style.setProperty(varName, (w / rootFont) + 'rem');
+    };
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      handle.classList.remove('is-active');
+      document.body.classList.remove('is-resizing');
+      saveUI();
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+  handle.addEventListener('dblclick', () => {
+    document.documentElement.style.removeProperty(varName);
+    saveUI();
+  });
+}
+
+// ─── Top-level render ───────────────────────────────────────
+function render() {
+  renderSidebarNav();
+  renderTree();
+  const main = $('#main');
+  const isDiscover = state.view === 'discover';
+  if (main.dataset.currentView !== state.view) {
+    main.innerHTML = isDiscover ? mainScaffoldDiscover() : mainScaffoldStars();
+    main.dataset.currentView = state.view;
+    attachMainHandlers();
+  }
+  $('#mode-toggle').classList.toggle('is-hidden', isDiscover);
+  const placeholders = isDiscover
+    ? 'Search GitHub for new repos'
+    : ({ keyword: 'Search starred repos by name, description, or topic', semantic: 'Describe what you are looking for — concepts, not just keywords', natural: 'Ask in plain English: "active Rust CLI tools" or "popular Python frameworks"' })[state.mode];
+  $('#search').placeholder = placeholders;
+  renderChips();
+  renderResults();
+  if (state.selectedId) renderDetail();
+}
+
+function attachMainHandlers() {
+  $('#sort')?.addEventListener('change', (e) => { state.sort = e.target.value; renderResults(); });
+  $$('[data-result-view]').forEach(b => {
+    b.addEventListener('click', () => {
+      $$('[data-result-view]').forEach(x => x.classList.remove('is-active'));
+      b.classList.add('is-active');
+      state.resultView = b.dataset.resultView;
+      renderResults();
+    });
+  });
+}
+
+// ─── Event wiring ───────────────────────────────────────────
+let searchDebounce;
+function wireSearch() {
+  const input = $('#search');
+  input.addEventListener('input', (e) => {
+    state.query = e.target.value;
+    state.activeCollection = null;
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => { renderTree(); renderResults(); }, 120);
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.target.value = ''; state.query = '';
+      renderTree(); renderResults();
+      e.target.blur();
+    }
+  });
+}
+function wireModes() {
+  $$('.mode').forEach(b => {
+    b.addEventListener('click', () => {
+      $$('.mode').forEach(x => x.classList.remove('is-active'));
+      b.classList.add('is-active');
+      state.mode = b.dataset.mode;
+      render();
+    });
+  });
+}
+function wireModal() {
+  $('#modal-cancel').addEventListener('click', () => $('#modal-backdrop').classList.remove('is-open'));
+  $('#modal-backdrop').addEventListener('click', (e) => { if (e.target === $('#modal-backdrop')) $('#modal-backdrop').classList.remove('is-open'); });
+  $('#modal-save').addEventListener('click', () => {
+    const name = $('#collection-name-input').value.trim();
+    if (!name) return;
+    saveCurrentAsCollection(name);
+    $('#collection-name-input').value = '';
+    $('#modal-backdrop').classList.remove('is-open');
+  });
+  $('#collection-name-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') $('#modal-save').click();
+    if (e.key === 'Escape') $('#modal-backdrop').classList.remove('is-open');
+  });
+}
+function wireTheme() {
+  $('#theme-toggle').addEventListener('click', () => {
+    const root = document.documentElement;
+    const current = root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+}
+function wireSidebar() {
+  $('#sidebar-toggle').addEventListener('click', () => {
+    $('#sidebar').classList.toggle('is-open');
+    $('#sidebar-backdrop').classList.toggle('is-open');
+  });
+  $('#sidebar-backdrop').addEventListener('click', () => {
+    $('#sidebar').classList.remove('is-open');
+    $('#sidebar-backdrop').classList.remove('is-open');
+  });
+}
+function wireKeyboard() {
+  document.addEventListener('keydown', (e) => {
+    const isMac = navigator.platform.includes('Mac');
+    const mod = isMac ? e.metaKey : e.ctrlKey;
+    if (mod && e.key === 'k') { e.preventDefault(); $('#search').focus(); $('#search').select(); }
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT') { e.preventDefault(); $('#search').focus(); }
+    if (e.key === 'Escape' && state.selectedId && document.activeElement.tagName !== 'INPUT') closeDetail();
+  });
+  if (!navigator.platform.includes('Mac')) $('#search-kbd').textContent = 'Ctrl K';
+}
+
+// ─── Init ───────────────────────────────────────────────────
+state.fileTreeExpanded = state.fileTreeExpanded || {};
+loadUI();
+loadCollections();
+attachPanelResize('resize-sidebar', '--sidebar-w', false);
+attachPanelResize('resize-detail', '--list-w', false);
+wireSearch();
+wireModes();
+wireModal();
+wireTheme();
+wireSidebar();
+wireKeyboard();
+render();
+</script>
+
+</body>
+</html>

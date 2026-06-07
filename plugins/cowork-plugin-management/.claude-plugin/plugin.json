@@ -1,0 +1,9 @@
+{
+  "name": "cowork-plugin-management",
+  "version": "0.1.0",
+  "description": "Author and customize Claude Code plugins inside Cowork sessions.",
+  "keywords": [
+    "cowork-plugin-customizer",
+    "create-cowork-plugin"
+  ]
+}

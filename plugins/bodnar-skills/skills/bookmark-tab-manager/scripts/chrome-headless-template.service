@@ -1,0 +1,42 @@
+[Unit]
+Description=Chrome Headless for Bookmark Management (Profile: %i)
+Documentation=https://github.com/danielbodnar/bookmark-tab-manager
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/google-chrome \
+  --headless=new \
+  --remote-debugging-port=9222 \
+  --user-data-dir=%h/.config/google-chrome \
+  --profile-directory="%i" \
+  --disable-dev-shm-usage \
+  --disable-software-rasterizer \
+  --disable-extensions \
+  --disk-cache-size=1 \
+  --media-cache-size=1 \
+  --no-first-run \
+  --no-default-browser-check \
+  --disable-background-networking \
+  --disable-sync
+
+# Resource limits
+IOSchedulingClass=best-effort
+IOSchedulingPriority=4
+CPUWeight=100
+MemoryHigh=80%
+MemoryMax=90%
+
+# Restart policy
+Restart=on-failure
+RestartSec=10s
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Environment
+Environment="CHROME_USER_DATA_DIR=%h/.config/google-chrome"
+
+[Install]
+WantedBy=default.target

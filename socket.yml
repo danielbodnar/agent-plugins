@@ -1,0 +1,29 @@
+# Socket.dev configuration — https://docs.socket.dev/docs/socket-yml
+# Supply-chain / dependency and security scanning for this marketplace.
+version: 2
+
+# Vendored third-party skill *assets* (demo decks, prototype HTML/JS, example
+# apps, reference fixtures) are bundled reference material, not first-party or
+# deployed code. Scan first-party logic, scripts and workflows; ignore the
+# imported demo fixtures so the signal stays on code we actually ship/run.
+projectIgnorePaths:
+  - "plugins/**/skills/**/assets/**"
+  - "plugins/**/skills/**/references/**"
+  - "plugins/**/skills/**/examples/**"
+  - "external_plugins/**/skills/**/assets/**"
+  - "**/*.min.js"
+
+# Block (fail the check) on the supply-chain issues that actually matter for a
+# plugin directory: install/runtime code execution, known malware, telemetry,
+# and credential exfiltration. Lower-signal hygiene issues warn but do not block.
+issueRules:
+  malware: { action: error }
+  gptMalware: { action: error }
+  installScripts: { action: error }
+  telemetry: { action: error }
+  shellAccess: { action: error }
+  networkAccess: { action: warn }
+  envVars: { action: warn }
+  filesystemAccess: { action: warn }
+  unmaintained: { action: warn }
+  deprecated: { action: warn }

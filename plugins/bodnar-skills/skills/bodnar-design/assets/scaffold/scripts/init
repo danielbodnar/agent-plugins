@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+# scripts/init — bootstrap the toolchain for an Astro + Vue + Workers project.
+# POSIX sh, no bashisms. Run from the project root: sh scripts/init
+set -eu
+
+if ! command -v bun >/dev/null 2>&1; then
+  echo "bun not found, installing..."
+  curl -fsSL https://bun.sh/install | sh
+  # bun installs to ~/.bun/bin by default
+  PATH="$HOME/.bun/bin:$PATH"
+  export PATH
+fi
+
+echo "bun $(bun --version) ready"
+
+# install project dependencies from package.json
+bun install
+
+# ensure the cloudflare CLIs are present as dev deps
+bun add -d cf@latest wrangler@latest
+
+echo "init complete. next: bun run dev"

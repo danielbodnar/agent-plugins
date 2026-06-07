@@ -1,0 +1,140 @@
+#!/usr/bin/env bun
+// parse-zabbix-export: normalize a Zabbix XML export into JSON for the
+// zabbix-to-netdata-alerts skill. Emits one record per trigger with its
+// referenced items resolved and attached, the functions it uses, template
+// macros, and dependencies. The skill consumes this; the semantic mapping
+// is done by the model, not here.
+//
+// Handles both expression dialects and, critically, the item-level
+// shorthand common in Zabbix 4.x/5.x exports where a trigger lives inside
+// its item and the expression is a bare {last()} / {avg(5m)} that refers to
+// the enclosing item. A recursive walk resolves that enclosing key wherever
+// the trigger is nested (item, item_prototype, discovery_rule, top level).
+//
+// Usage: ./parse-zabbix-export <export.xml> [> out.json]
+
+import { XMLParser } from "fast-xml-parser"
+
+const path = process.argv[2]
+if (!path) {
+  console.error("usage: parse-zabbix-export <export.xml>")
+  process.exit(2)
+}
+
+const xml = await Bun.file(path).text()
+const parser = new XMLParser({
+  ignoreAttributes: false,
+  trimValues: true,
+  isArray: (name) =>
+    ["template", "host", "item", "item_prototype", "trigger", "trigger_prototype",
+     "discovery_rule", "macro", "dependency"].includes(name),
+})
+const doc = parser.parse(xml)
+const root = doc.zabbix_export ?? doc
+
+const arr = (x: unknown): any[] => (x == null ? [] : Array.isArray(x) ? x : [x])
+
+const SEVERITY: Record<string, number> = {
+  NOT_CLASSIFIED: 0, INFORMATION: 1, INFO: 1, WARNING: 2, AVERAGE: 3, HIGH: 4, DISASTER: 5,
+}
+const SEVERITY_NAME = ["Not classified", "Information", "Warning", "Average", "High", "Disaster"]
+const severity = (p: unknown): number => {
+  if (p == null) return 0
+  const s = String(p).toUpperCase()
+  if (s in SEVERITY) return SEVERITY[s]
+  const n = Number(p)
+  return Number.isFinite(n) ? n : 0
+}
+
+// Key references and function names from either dialect.
+const KEY = "[A-Za-z0-9._]+(?:\\[[^\\]]*\\])?"
+const reNew = new RegExp(`/[^/,)]+/(${KEY})`, "g")           // function(/host/key,...)
+const reOldKey = new RegExp(`\\{[^:{}]+:(${KEY})\\.[a-z]+\\(`, "g")  // {host:key.func(
+const reOldFn = new RegExp(`\\{[^:{}]+:${KEY}\\.([a-z_]+)\\(`, "g")  // {host:key.FUNC(
+const reBareFn = /\{([a-z_]+)\(/g                           // {func(  (item-level shorthand)
+
+const referencedKeys = (expr: string): string[] => {
+  const keys = new Set<string>()
+  for (const m of expr.matchAll(reNew)) keys.add(m[1])
+  for (const m of expr.matchAll(reOldKey)) keys.add(m[1])
+  return [...keys]
+}
+const functionsIn = (expr: string): string[] => {
+  const fns = new Set<string>()
+  for (const m of expr.matchAll(reOldFn)) fns.add(m[1])
+  for (const m of expr.matchAll(reBareFn)) fns.add(m[1])
+  // new-dialect leading function: avg(/h/k,..)
+  const lead = expr.match(/^\s*([a-z_]+)\(/)
+  if (lead) fns.add(lead[1])
+  return [...fns]
+}
+
+type Item = { name?: string; key: string; delay?: string; value_type?: string; units?: string }
+const items = new Map<string, Item>()
+const macros: Record<string, string> = {}
+const triggers: any[] = []
+
+const recordItem = (n: any) => {
+  if (typeof n.key !== "string") return
+  items.set(n.key, {
+    name: n.name, key: n.key,
+    delay: n.delay != null ? String(n.delay) : undefined,
+    value_type: n.value_type, units: n.units != null ? String(n.units) : undefined,
+  })
+}
+const collectTrigger = (raw: any, source: string, enclosingKey?: string) => {
+  const expr = String(raw.expression ?? "")
+  const explicit = referencedKeys(expr)
+  const resolvedFromEnclosing = explicit.length === 0 && !!enclosingKey
+  const keys = explicit.length ? explicit : enclosingKey ? [enclosingKey] : []
+  triggers.push({
+    name: raw.name,
+    expression: expr,
+    recovery_expression: raw.recovery_expression ? String(raw.recovery_expression) : undefined,
+    severity: severity(raw.priority),
+    severity_name: SEVERITY_NAME[severity(raw.priority)] ?? "Unknown",
+    description: raw.description,
+    source,
+    item_level_shorthand: resolvedFromEnclosing,
+    functions: functionsIn(expr),
+    dependencies: arr(raw.dependencies?.dependency).map((d) => ({
+      name: d?.name, expression: d?.expression ? String(d.expression) : undefined,
+    })),
+    referenced_keys: keys,
+    items: keys.map((k) => items.get(k) ?? { key: k }),
+  })
+}
+
+// First pass: record every item/prototype anywhere so trigger resolution can
+// see keys defined later in the document.
+const findItems = (n: any) => {
+  if (Array.isArray(n)) return n.forEach(findItems)
+  if (!n || typeof n !== "object") return
+  if (typeof n.key === "string") recordItem(n)
+  if (n.macro != null && n.value !== undefined && typeof n.macro === "string") macros[n.macro] = String(n.value)
+  for (const v of Object.values(n)) findItems(v)
+}
+findItems(root)
+
+// Second pass: walk for triggers, carrying the nearest enclosing item key.
+const walk = (n: any, enclosingKey?: string) => {
+  if (Array.isArray(n)) return n.forEach((x) => walk(x, enclosingKey))
+  if (!n || typeof n !== "object") return
+  const nextKey = typeof n.key === "string" ? n.key : enclosingKey
+  for (const [k, v] of Object.entries(n)) {
+    if (k === "trigger" || k === "trigger_prototype") {
+      for (const t of arr(v)) collectTrigger(t, k === "trigger" ? "trigger" : "lld_prototype", nextKey)
+    } else {
+      walk(v, nextKey)
+    }
+  }
+}
+walk(root)
+
+console.log(JSON.stringify({
+  version: root.version,
+  macros,
+  item_count: items.size,
+  trigger_count: triggers.length,
+  triggers,
+}, null, 2))

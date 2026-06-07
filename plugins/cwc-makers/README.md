@@ -16,7 +16,7 @@ Then ask Claude to build whatever you want next — a magic 8-ball, a pixel pet,
 ## Install
 
 ```
-/plugin install cwc-makers@claude-plugins-official
+/plugin install cwc-makers@bodnar-agent-plugins
 ```
 
 ## Components

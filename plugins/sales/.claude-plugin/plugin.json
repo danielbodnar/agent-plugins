@@ -1,0 +1,16 @@
+{
+  "name": "sales",
+  "version": "0.1.0",
+  "description": "Sales workflows: account research, call prep, forecasting, outreach, pipeline review, and competitive battlecards.",
+  "keywords": [
+    "account-research",
+    "call-prep",
+    "call-summary",
+    "competitive-intelligence",
+    "create-an-asset",
+    "daily-briefing",
+    "draft-outreach",
+    "forecast",
+    "pipeline-review"
+  ]
+}

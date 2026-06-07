@@ -1,0 +1,470 @@
+/**
+ * BitBuilder Proposal Preview Worker
+ * Slug: {{SLUG}}
+ * Business: {{BUSINESS_NAME}}
+ * Client: {{CLIENT_EMAIL}}
+ *
+ * Owns the full lifecycle for one preview proposal:
+ *   - Serves static assets from R2 under previews/{{SLUG}}/dist/
+ *   - Beacon endpoint tracks review progress
+ *   - CTA endpoints handle purchase, schedule, extend
+ *   - Stripe webhook finalizes purchases, generates source bundle
+ *   - Goodbye page + restore request post-soft-delete
+ *   - Delegates state transitions to the ProposalLifecycle DO
+ */
+
+export interface Env {
+  PROPOSAL: DurableObjectNamespace;
+  OUTREACH: D1Database;
+  BUCKET: R2Bucket;
+  STRIPE_SECRET_KEY: string;
+  STRIPE_WEBHOOK_SECRET: string;
+  CALCOM_LINK: string;
+  HOSTING_SIGNUP_LINK: string;
+  PURCHASE_LINK_URL: string;
+  ADMIN_TOKEN: string;
+}
+
+const SLUG = "{{SLUG}}";
+const BUSINESS_NAME = "{{BUSINESS_NAME}}";
+const CLIENT_EMAIL = "{{CLIENT_EMAIL}}";
+const REVIEW_DWELL_MS = 60_000;
+const REVIEW_SCROLL_PCT = 50;
+
+export default {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    const url = new URL(request.url);
+    const id = env.PROPOSAL.idFromName(SLUG);
+    const proposal = env.PROPOSAL.get(id);
+    const state = await proposal.fetch("https://do/state").then((r) => r.json<{ state: string }>());
+
+    // If soft-deleted or later, all paths except a few return the goodbye page
+    const terminalExceptions = new Set([
+      "/goodbye",
+      "/goodbye/restore-request",
+      "/webhook/stripe",
+      "/admin/archive",
+    ]);
+    if (
+      ["soft_deleted", "archived", "hard_deleted"].includes(state.state) &&
+      !terminalExceptions.has(url.pathname)
+    ) {
+      return servegoodbye(env);
+    }
+
+    // Route
+    switch (url.pathname) {
+      case "/_beacon":
+        return handleBeacon(request, proposal);
+      case "/cta/purchase":
+        return handlePurchase(env, proposal);
+      case "/cta/schedule":
+        return handleSchedule(env, proposal);
+      case "/cta/extend":
+        return renderExtendForm();
+      case "/cta/extend/submit":
+        return handleExtendSubmit(request, proposal);
+      case "/purchased":
+        return renderPurchasedPage(url, env);
+      case "/goodbye":
+        return servegoodbye(env);
+      case "/goodbye/restore-request":
+        return handleRestoreRequest(request, env);
+      case "/webhook/stripe":
+        return handleStripeWebhook(request, env, proposal, ctx);
+      case "/admin/archive":
+        return handleAdminArchive(request, env, proposal);
+      default:
+        return serveAsset(url.pathname, env);
+    }
+  },
+};
+
+// -----------------------------------------------------------------------------
+// Static assets from R2
+// -----------------------------------------------------------------------------
+async function serveAsset(pathname: string, env: Env): Promise<Response> {
+  const key = `previews/${SLUG}/dist${pathname === "/" ? "/index.html" : pathname}`;
+  const obj = await env.BUCKET.get(key);
+  if (!obj) {
+    // Try directory index
+    const indexKey = `previews/${SLUG}/dist${pathname.replace(/\/$/, "")}/index.html`;
+    const indexObj = await env.BUCKET.get(indexKey);
+    if (indexObj) return new Response(indexObj.body, { headers: contentType(indexKey) });
+    return new Response("Not found", { status: 404 });
+  }
+  return new Response(obj.body, { headers: contentType(key) });
+}
+
+function contentType(key: string): HeadersInit {
+  const ext = key.split(".").pop()?.toLowerCase();
+  const map: Record<string, string> = {
+    html: "text/html; charset=utf-8",
+    css: "text/css; charset=utf-8",
+    js: "application/javascript; charset=utf-8",
+    png: "image/png",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    webp: "image/webp",
+    svg: "image/svg+xml",
+    woff2: "font/woff2",
+  };
+  return { "Content-Type": map[ext ?? ""] ?? "application/octet-stream" };
+}
+
+// -----------------------------------------------------------------------------
+// Beacon: tracks dwell_ms, scroll_pct; triggers review-confirmed transition
+// -----------------------------------------------------------------------------
+async function handleBeacon(request: Request, proposal: DurableObjectStub): Promise<Response> {
+  if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
+  const body = await request.json<{ slug: string; dwell_ms: number; scroll_pct: number }>();
+  return proposal.fetch("https://do/beacon", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+// -----------------------------------------------------------------------------
+// CTAs
+// -----------------------------------------------------------------------------
+async function handlePurchase(env: Env, proposal: DurableObjectStub): Promise<Response> {
+  await proposal.fetch("https://do/event", {
+    method: "POST",
+    body: JSON.stringify({ type: "cta_purchase_clicked" }),
+  });
+  return Response.redirect(env.PURCHASE_LINK_URL, 302);
+}
+
+async function handleSchedule(env: Env, proposal: DurableObjectStub): Promise<Response> {
+  await proposal.fetch("https://do/transition", {
+    method: "POST",
+    body: JSON.stringify({ to: "scheduled" }),
+  });
+  return Response.redirect(env.CALCOM_LINK, 302);
+}
+
+function renderExtendForm(): Response {
+  const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Extend preview</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-stone-50 min-h-screen flex items-center justify-center p-6">
+<div class="max-w-md w-full bg-white rounded-lg shadow p-8">
+<h1 class="text-2xl font-semibold mb-3">Extend this preview</h1>
+<p class="text-stone-600 mb-6">For legal reasons, this preview will be deleted at the end of your session. Confirm your email to extend it for 5 days so you can share it with a designer or IT contact.</p>
+<form method="POST" action="/cta/extend/submit" class="space-y-4">
+<input name="email" type="email" required placeholder="your email" class="w-full border rounded px-3 py-2">
+<button type="submit" class="w-full bg-stone-900 text-white rounded py-2 font-medium">Verify and extend</button>
+</form>
+</div></body></html>`;
+  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+}
+
+async function handleExtendSubmit(request: Request, proposal: DurableObjectStub): Promise<Response> {
+  const form = await request.formData();
+  const email = form.get("email");
+  if (typeof email !== "string" || !email.includes("@")) {
+    return new Response("Invalid email", { status: 400 });
+  }
+  // The Access layer already proved the user controls CLIENT_EMAIL; we
+  // accept that as the verification. Additional verification could send
+  // a separate one-time code; for now, Access is sufficient.
+  await proposal.fetch("https://do/transition", {
+    method: "POST",
+    body: JSON.stringify({ to: "extended", verified_email: email }),
+  });
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Extended</title>
+<script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-stone-50 min-h-screen flex items-center justify-center p-6">
+<div class="max-w-md w-full bg-white rounded-lg shadow p-8 text-center">
+<h1 class="text-2xl font-semibold mb-3">Extended for 5 days</h1>
+<p class="text-stone-600 mb-6">The preview will remain available through ${new Date(Date.now() + 5 * 864e5).toLocaleDateString()}.</p>
+<a href="/" class="text-stone-900 underline">Back to the preview</a>
+</div></body></html>`;
+  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+}
+
+// -----------------------------------------------------------------------------
+// Purchased confirmation page
+// -----------------------------------------------------------------------------
+function renderPurchasedPage(url: URL, env: Env): Response {
+  const sessionId = url.searchParams.get("session_id") ?? "";
+  const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Thanks for launching</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-stone-50 min-h-screen p-6">
+<div class="max-w-xl mx-auto bg-white rounded-lg shadow p-8 mt-12">
+<h1 class="text-3xl font-semibold mb-3">Thanks for launching.</h1>
+<p class="text-stone-600 mb-4">A delivery email with your source-code download is on its way. Daniel will reach out within one business day to coordinate the domain switchover.</p>
+<p class="text-stone-600 mb-6">Session: <code class="bg-stone-100 px-1 rounded">${sessionId}</code></p>
+<h2 class="text-xl font-semibold mb-2">Keep hosting with us?</h2>
+<p class="text-stone-600 mb-4">Your first 3 months are included. After that, managed Cloudflare hosting is available at a flat monthly rate. Sign up any time in the next 90 days.</p>
+<a href="${env.HOSTING_SIGNUP_LINK}" class="inline-block bg-stone-900 text-white rounded px-4 py-2 font-medium">Set up hosting subscription</a>
+</div></body></html>`;
+  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+}
+
+// -----------------------------------------------------------------------------
+// Goodbye (soft-deleted) + restore request
+// -----------------------------------------------------------------------------
+async function servegoodbye(env: Env): Promise<Response> {
+  const obj = await env.BUCKET.get(`previews/${SLUG}/dist/goodbye.html`);
+  if (obj) return new Response(obj.body, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+  // Fallback inline
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Preview no longer available</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-stone-50 min-h-screen flex items-center justify-center p-6">
+<div class="max-w-md w-full bg-white rounded-lg shadow p-8">
+<h1 class="text-2xl font-semibold mb-3">This preview has ended.</h1>
+<p class="text-stone-600 mb-6">For legal reasons the demo site was deleted after the review window closed. If you'd like it restored from a backup, request it below and Daniel will follow up personally.</p>
+<form method="POST" action="/goodbye/restore-request" class="space-y-3">
+<input name="name" placeholder="Your name" class="w-full border rounded px-3 py-2" required>
+<input name="email" type="email" placeholder="Email" class="w-full border rounded px-3 py-2" required>
+<input name="phone" placeholder="Phone (optional)" class="w-full border rounded px-3 py-2">
+<select name="preferred_contact" class="w-full border rounded px-3 py-2">
+<option value="email">Prefer email</option>
+<option value="phone">Prefer phone</option>
+</select>
+<button type="submit" class="w-full bg-stone-900 text-white rounded py-2 font-medium">Request restore</button>
+</form>
+</div></body></html>`;
+  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+}
+
+async function handleRestoreRequest(request: Request, env: Env): Promise<Response> {
+  if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
+  const form = await request.formData();
+  const payload = {
+    name: form.get("name"),
+    email: form.get("email"),
+    phone: form.get("phone"),
+    preferred_contact: form.get("preferred_contact"),
+  };
+  await env.OUTREACH.prepare(
+    `INSERT INTO events (slug, event_type, payload_json) VALUES (?, 'restore_requested', ?)`,
+  )
+    .bind(SLUG, JSON.stringify(payload))
+    .run();
+  return new Response(
+    "Thanks. Daniel will follow up within one business day.",
+    { headers: { "Content-Type": "text/plain" } },
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Stripe webhook
+// -----------------------------------------------------------------------------
+async function handleStripeWebhook(
+  request: Request,
+  env: Env,
+  proposal: DurableObjectStub,
+  ctx: ExecutionContext,
+): Promise<Response> {
+  // Verify signature (simplified; use Stripe.webhooks.constructEventAsync in prod)
+  const sig = request.headers.get("stripe-signature");
+  const body = await request.text();
+  if (!sig) return new Response("Missing signature", { status: 400 });
+  // TODO: signature verification using env.STRIPE_WEBHOOK_SECRET
+
+  const event = JSON.parse(body);
+  if (event.type !== "checkout.session.completed") {
+    return new Response("Ignored", { status: 200 });
+  }
+  const session = event.data.object;
+  if (session.metadata?.slug !== SLUG) {
+    return new Response("Slug mismatch", { status: 400 });
+  }
+
+  // Transition DO and generate source bundle in the background
+  ctx.waitUntil(
+    (async () => {
+      await proposal.fetch("https://do/transition", {
+        method: "POST",
+        body: JSON.stringify({ to: "purchased", stripe_session_id: session.id }),
+      });
+      await generateSourceBundle(env);
+    })(),
+  );
+  return new Response("OK", { status: 200 });
+}
+
+async function generateSourceBundle(env: Env): Promise<void> {
+  // Note: zip generation inside a Worker requires a library like fflate.
+  // For now, we write a manifest pointing at dist/ and defer zipping to a
+  // scheduled task or a Cloudflare Container. See phase-6-deploy.md.
+  const manifest = {
+    slug: SLUG,
+    business_name: BUSINESS_NAME,
+    generated_at: new Date().toISOString(),
+    note: "Source bundle generation runs out-of-band. See delivery.eml.",
+  };
+  await env.BUCKET.put(
+    `source-bundles/${SLUG}/manifest.json`,
+    JSON.stringify(manifest, null, 2),
+    { httpMetadata: { contentType: "application/json" } },
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Admin: archive action (from Daniel's notification email)
+// -----------------------------------------------------------------------------
+async function handleAdminArchive(
+  request: Request,
+  env: Env,
+  proposal: DurableObjectStub,
+): Promise<Response> {
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token");
+  if (token !== env.ADMIN_TOKEN) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  await proposal.fetch("https://do/transition", {
+    method: "POST",
+    body: JSON.stringify({ to: "archived" }),
+  });
+  return new Response("Archived. 30-day hard-delete clock started.", {
+    headers: { "Content-Type": "text/plain" },
+  });
+}
+
+// =============================================================================
+// Durable Object: ProposalLifecycle
+// =============================================================================
+export class ProposalLifecycle {
+  state: DurableObjectState;
+  env: Env;
+
+  constructor(state: DurableObjectState, env: Env) {
+    this.state = state;
+    this.env = env;
+  }
+
+  async fetch(request: Request): Promise<Response> {
+    const url = new URL(request.url);
+    switch (url.pathname) {
+      case "/state":
+        return Response.json(await this.getState());
+      case "/beacon":
+        return this.onBeacon(request);
+      case "/transition":
+        return this.onTransition(request);
+      case "/event":
+        return this.onEvent(request);
+      default:
+        return new Response("Not found", { status: 404 });
+    }
+  }
+
+  async getState() {
+    return (await this.state.storage.get<any>("state")) ?? { state: "pending" };
+  }
+
+  async setState(patch: Record<string, unknown>) {
+    const cur = await this.getState();
+    const next = { ...cur, ...patch, state_changed_at: new Date().toISOString() };
+    await this.state.storage.put("state", next);
+    return next;
+  }
+
+  async onBeacon(request: Request): Promise<Response> {
+    const { dwell_ms, scroll_pct } = await request.json<{ dwell_ms: number; scroll_pct: number }>();
+    const cur = await this.getState();
+    const patch: Record<string, unknown> = {
+      total_dwell_ms: Math.max(cur.total_dwell_ms ?? 0, dwell_ms),
+      max_scroll_pct: Math.max(cur.max_scroll_pct ?? 0, scroll_pct),
+    };
+    if (cur.state === "pending") {
+      patch.state = "active";
+      patch.first_click_at = new Date().toISOString();
+      await this.logEvent("first_click");
+    }
+    if (
+      (patch.state === "active" || cur.state === "active") &&
+      (patch.total_dwell_ms as number) >= REVIEW_DWELL_MS &&
+      (patch.max_scroll_pct as number) >= REVIEW_SCROLL_PCT
+    ) {
+      patch.state = "review_confirmed";
+      patch.review_confirmed_at = new Date().toISOString();
+      await this.state.storage.setAlarm(Date.now() + 7 * 86400 * 1000);
+      await this.logEvent("review_confirmed");
+    }
+    await this.setState(patch);
+    return Response.json({ ok: true, state: patch.state ?? cur.state });
+  }
+
+  async onTransition(request: Request): Promise<Response> {
+    const { to, ...payload } = await request.json<{ to: string; [k: string]: unknown }>();
+    switch (to) {
+      case "scheduled":
+        await this.setState({ state: "scheduled", scheduled_at: new Date().toISOString() });
+        await this.state.storage.deleteAlarm();
+        await this.logEvent("scheduled");
+        break;
+      case "extended":
+        await this.setState({
+          state: "extended",
+          extended_until: new Date(Date.now() + 5 * 86400 * 1000).toISOString(),
+        });
+        await this.state.storage.setAlarm(Date.now() + 5 * 86400 * 1000);
+        await this.logEvent("extended", payload);
+        break;
+      case "purchased":
+        await this.setState({ state: "purchased", purchased_at: new Date().toISOString() });
+        await this.state.storage.deleteAlarm();
+        await this.logEvent("purchased", payload);
+        break;
+      case "archived":
+        await this.setState({ state: "archived", archived_at: new Date().toISOString() });
+        await this.state.storage.setAlarm(Date.now() + 30 * 86400 * 1000);
+        await this.logEvent("archived");
+        break;
+      case "restored":
+        await this.setState({ state: "active" });
+        await this.state.storage.deleteAlarm();
+        await this.logEvent("restored");
+        break;
+    }
+    return Response.json({ ok: true, state: to });
+  }
+
+  async onEvent(request: Request): Promise<Response> {
+    const { type, ...payload } = await request.json<{ type: string; [k: string]: unknown }>();
+    await this.logEvent(type, payload);
+    return Response.json({ ok: true });
+  }
+
+  async alarm() {
+    const cur = await this.getState();
+    switch (cur.state) {
+      case "review_confirmed":
+        await this.setState({ state: "soft_deleted", soft_deleted_at: new Date().toISOString() });
+        await this.logEvent("soft_deleted");
+        // Email notification to Daniel with one-click archive is handled by
+        // a scheduled Worker (not shown here) reading D1 events.
+        break;
+      case "extended":
+        await this.setState({ state: "review_confirmed" });
+        await this.state.storage.setAlarm(Date.now() + 7 * 86400 * 1000);
+        await this.logEvent("extension_expired");
+        break;
+      case "archived":
+        await this.setState({ state: "hard_deleted", hard_deleted_at: new Date().toISOString() });
+        await this.logEvent("hard_deleted");
+        // Caller cleanup (delete R2 archive, DNS, Access app) runs in a
+        // scheduled Worker reading D1 events.
+        break;
+    }
+  }
+
+  async logEvent(type: string, payload?: Record<string, unknown>) {
+    await this.env.OUTREACH.prepare(
+      `INSERT INTO events (slug, event_type, payload_json) VALUES (?, ?, ?)`,
+    )
+      .bind(SLUG, type, JSON.stringify(payload ?? {}))
+      .run();
+  }
+}

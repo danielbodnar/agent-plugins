@@ -1,0 +1,136 @@
+/* Stars Workbench design tokens — generated from theme.config.ts. Do not edit by hand.
+ * theme: Quiet · macrostructure: Workbench · accent hue: 244
+ * Units: type, spacing, radius, and layout are rem so they scale with the user's font-size.
+ * Borders and shadow offsets stay in px on purpose (hairlines must not sub-pixel-round away).
+ */
+
+:root {
+  color-scheme: light dark;
+  /* Typography */
+  --font-display: "Inter Tight", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: 2.125rem;
+
+  /* Spacing (4-pt scale, in rem) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  /* Radius (rem) */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-pill: 62.5rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration: 200ms;
+
+  /* Layout contracts (rem, so panels scale with user font-size) */
+  --topbar-h: 3.5rem;
+  --sidebar-w: 17.5rem;
+  --detail-w: 25rem;
+  --list-w: 23.75rem;
+
+  /* Composed rules (borders stay in px: sub-pixel rem rounding can drop a hairline) */
+  --hairline: 1px solid var(--color-rule);
+  --hairline-strong: 1px solid var(--color-rule-2);
+
+  /* Light scheme (default) */
+  --color-paper: oklch(99% 0 0);
+  --color-paper-2: oklch(96.8% 0 0);
+  --color-paper-3: oklch(94% 0.003 240);
+  --color-paper-4: oklch(91% 0.005 240);
+  --color-ink: oklch(17% 0.012 240);
+  --color-ink-2: oklch(36% 0.008 240);
+  --color-ink-3: oklch(54% 0.005 240);
+  --color-ink-4: oklch(70% 0.004 240);
+  --color-rule: oklch(89% 0.003 240);
+  --color-rule-2: oklch(82% 0.005 240);
+  --color-accent: oklch(52% 0.17 244);
+  --color-accent-2: oklch(60% 0.16 244);
+  --color-accent-bg: oklch(96% 0.025 244);
+  --color-accent-bg-strong: oklch(92% 0.04 244);
+  --color-success: oklch(56% 0.14 148);
+  --color-warning: oklch(70% 0.16 75);
+  --color-danger: oklch(55% 0.18 25);
+  --color-focus: oklch(52% 0.17 244);
+  --color-row-hover: oklch(96.8% 0 0);
+  --color-row-selected: oklch(94% 0.025 244);
+  --color-row-selected-rule: oklch(82% 0.06 244);
+  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.04);
+  --shadow: 0 1px 2px oklch(0% 0 0 / 0.04), 0 8px 24px oklch(0% 0 0 / 0.06);
+  --shadow-lg: 0 1px 2px oklch(0% 0 0 / 0.04), 0 16px 48px oklch(0% 0 0 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-paper: oklch(13% 0.008 240);
+    --color-paper-2: oklch(16% 0.01 240);
+    --color-paper-3: oklch(20% 0.012 240);
+    --color-paper-4: oklch(25% 0.012 240);
+    --color-ink: oklch(95% 0.005 240);
+    --color-ink-2: oklch(76% 0.005 240);
+    --color-ink-3: oklch(58% 0.008 240);
+    --color-ink-4: oklch(42% 0.008 240);
+    --color-rule: oklch(26% 0.012 240);
+    --color-rule-2: oklch(34% 0.012 240);
+    --color-accent: oklch(72% 0.15 244);
+    --color-accent-2: oklch(78% 0.14 244);
+    --color-accent-bg: oklch(28% 0.07 244);
+    --color-accent-bg-strong: oklch(34% 0.09 244);
+    --color-success: oklch(70% 0.14 148);
+    --color-warning: oklch(78% 0.16 75);
+    --color-danger: oklch(70% 0.16 25);
+    --color-focus: oklch(72% 0.15 244);
+    --color-row-hover: oklch(18% 0.01 240);
+    --color-row-selected: oklch(24% 0.05 244);
+    --color-row-selected-rule: oklch(40% 0.08 244);
+    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.3);
+    --shadow: 0 1px 2px oklch(0% 0 0 / 0.3), 0 8px 24px oklch(0% 0 0 / 0.4);
+    --shadow-lg: 0 1px 2px oklch(0% 0 0 / 0.3), 0 16px 48px oklch(0% 0 0 / 0.5);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-paper: oklch(13% 0.008 240);
+  --color-paper-2: oklch(16% 0.01 240);
+  --color-paper-3: oklch(20% 0.012 240);
+  --color-paper-4: oklch(25% 0.012 240);
+  --color-ink: oklch(95% 0.005 240);
+  --color-ink-2: oklch(76% 0.005 240);
+  --color-ink-3: oklch(58% 0.008 240);
+  --color-ink-4: oklch(42% 0.008 240);
+  --color-rule: oklch(26% 0.012 240);
+  --color-rule-2: oklch(34% 0.012 240);
+  --color-accent: oklch(72% 0.15 244);
+  --color-accent-2: oklch(78% 0.14 244);
+  --color-accent-bg: oklch(28% 0.07 244);
+  --color-accent-bg-strong: oklch(34% 0.09 244);
+  --color-success: oklch(70% 0.14 148);
+  --color-warning: oklch(78% 0.16 75);
+  --color-danger: oklch(70% 0.16 25);
+  --color-focus: oklch(72% 0.15 244);
+  --color-row-hover: oklch(18% 0.01 240);
+  --color-row-selected: oklch(24% 0.05 244);
+  --color-row-selected-rule: oklch(40% 0.08 244);
+  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.3);
+  --shadow: 0 1px 2px oklch(0% 0 0 / 0.3), 0 8px 24px oklch(0% 0 0 / 0.4);
+  --shadow-lg: 0 1px 2px oklch(0% 0 0 / 0.3), 0 16px 48px oklch(0% 0 0 / 0.5);
+  color-scheme: dark;
+}
+

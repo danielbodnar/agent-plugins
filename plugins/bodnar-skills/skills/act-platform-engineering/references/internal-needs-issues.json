@@ -1,0 +1,145 @@
+[
+  {
+    "type": "task",
+    "title": "Platform Engineering & Automation",
+    "description": "Infrastructure-as-code, server config management, script consolidation, and provisioning automation.",
+    "priority": "High"
+  },
+  {
+    "type": "issue",
+    "title": "Platform Engineering Repository",
+    "description": "Sysadmin and server management lacks automation. Restoring access and provisioning a new user currently requires significant manual effort across multiple systems.<br><br>A GitLab repo needs to become the source of truth for all server configs and infrastructure. If a server crashes tomorrow, there should be a way to redeploy it from this repo.<br><br>Start by migrating one server as a proof of concept, then move the rest over one at a time. This also means copying all existing server configs into the repo so there is actually a record of whats running where.<br><br>Addresses failover readiness (Miller) and script cleanup and efficiency improvements (Zach) by giving us a foundation to build on."
+  },
+  {
+    "type": "issue",
+    "title": "General Cleanup and Consolidation",
+    "description": "Reports and scripts are scattered everywhere. The naming is inconsistent and its not always obvious what they do.<br><br>There needs to be a centralized place these all run thats clean and easy to understand and maintain.<br><br>Catalog whats out there, remove whats dead, and consolidate into the platform engineering repo with consistent naming."
+  },
+  {
+    "type": "issue",
+    "title": "Automate User Provisioning and VPN Setup",
+    "description": "Provisioning a new sysadmin with access across all servers is a multi-day manual process. An automated workflow is needed that handles user accounts, SSH keys, and WireGuard profiles across the full fleet.<br><br>Builds on the platform engineering repo work."
+  },
+  {
+    "type": "task",
+    "title": "Reliability & Failover",
+    "description": "Failover readiness, backup restoration, database HA, horizontal scaling, alerting, and DNS/routing.",
+    "priority": "High"
+  },
+  {
+    "type": "issue",
+    "title": "Failover and Reliability",
+    "description": "Keeping the payment gateway service and pimsserver instances online and available is key.<br><br>The pimsserver db can be overloaded by data traffic which could result in instability that spills over into payments. DNS and routing issues also need to be addressed.<br><br>There is no clear answer to what happens if a server crashes or whether db backups are current. There is no defined alerting. If something goes wrong, its unclear who gets notified and how.<br><br>This is a long burn and can be worked in tandem with other tasks."
+  },
+  {
+    "type": "issue",
+    "title": "Automatic Database Failover",
+    "description": "If dbprimary goes down, failover is currently manual or undefined. Automated promotion and connection routing are needed so there is no scramble during an outage.<br><br>Ties directly into the broader failover and reliability work."
+  },
+  {
+    "type": "issue",
+    "title": "Dead Backup Servers",
+    "description": "Backup servers have been non-functional for an extended period. This is a data safety gap that needs to be resolved before anything else can be confidently addressed.<br><br>The hardware needs to be diagnosed as recoverable or replaced, and backups need to be functional again."
+  },
+  {
+    "type": "issue",
+    "title": "Horizontal Scaling Plan",
+    "description": "Pimsserver, payment gateway, and appserver are all single-instance. If one goes down, everything it supports goes with it.<br><br>A plan is needed for how these services scale beyond single instances. This is a planning exercise now but it feeds into the long term reliability picture."
+  },
+  {
+    "type": "task",
+    "title": "Database Performance & Scaling",
+    "description": "Query optimization, filesystem tuning, report automation, and long-term scaling strategy.",
+    "priority": "Medium"
+  },
+  {
+    "type": "issue",
+    "title": "Reporting Performance",
+    "description": "Report queries need to be improved so the reports themselves take less time.<br><br>Miller's report scripts should be converted into efficient materialized views. This was investigated last week and proposed solutions are ready to implement. Indexes need to be vacuumed and missing indexes identified in the investigation need to be added.<br><br>Reports should be fully automated so everyone who needs them gets them. This is also a good time to consider whether any reports could be replaced with a dashboard or other solution (requires PM input)."
+  },
+  {
+    "type": "issue",
+    "title": "Filesystem Tuning on DB Primary",
+    "description": "When dbprimary was upgraded to add storage, several significant filesystem tuning mechanisms were overlooked. ZFS recordsize, compression, kernel parameters, all of which directly impact database performance.<br><br>Current settings need to be audited against best practices and a remediation plan developed. Some changes require careful planning."
+  },
+  {
+    "type": "issue",
+    "title": "Database Sharding and Scaling Strategy",
+    "description": "Longer term, there should be a documented plan for what database scaling looks like beyond single-primary replication. Read replica routing for reports, connection pooling, whether sharding makes sense for current and projected data volumes.<br><br>No urgency but the conversation should be documented."
+  },
+  {
+    "type": "task",
+    "title": "Observability & Monitoring",
+    "description": "Grafana, Netdata, centralized logging, and alerting across all infrastructure.",
+    "priority": "High"
+  },
+  {
+    "type": "issue",
+    "title": "Deploy Observability Stack",
+    "description": "There is no centralized visibility into the infrastructure. Grafana, Netdata on all servers, and centralized log management all need to be deployed.<br><br>Once this is up, most monitoring needs become straightforward. Without it the team is flying blind."
+  },
+  {
+    "type": "issue",
+    "title": "Centralized Log Management",
+    "description": "There is no aggregated view of logs across the infrastructure. Troubleshooting currently means SSH-ing into individual boxes and grepping through journals.<br><br>Should tie into the Grafana and Netdata observability work."
+  },
+  {
+    "type": "task",
+    "title": "Infrastructure & Hardware",
+    "description": "Physical server maintenance, drive replacements, new hardware provisioning, and VM fleet expansion.",
+    "priority": "High"
+  },
+  {
+    "type": "issue",
+    "title": "Failing Hard Drives in PVE3",
+    "description": "PVE3 has drives that are failing or already failed. Replacements need to go in and pool health needs to be verified after resilver.<br><br>Work with Miller."
+  },
+  {
+    "type": "issue",
+    "title": "Provision and Install New Dell PowerEdge 730",
+    "description": "This is the new machine for expanding the VM fleet. Needs Proxmox installed, ZFS storage configured, and cluster membership established.<br><br>Work with Miller."
+  },
+  {
+    "type": "issue",
+    "title": "Virtual Environment (Pims Garden)",
+    "description": "VMs have become increasingly important as test environments for dev, QA, and PIMS experts. The VM list is expanding and moving to a new machine.<br><br>Current plans should be evaluated for improvements. The goal is to be able to deploy new VMs and give devs and non-devs access to these machines internally."
+  },
+  {
+    "type": "task",
+    "title": "CI/CD & Deployment",
+    "description": "Pipeline improvements, standardized test environments, and Windows build automation.",
+    "priority": "Low"
+  },
+  {
+    "type": "issue",
+    "title": "Pipeline and Deployment Improvement",
+    "description": "There is a general CI/CD pipeline now but standardized test environments are needed.<br><br>Parts of VSmartClient are dependent on a Windows GitLab runner and have to be manually built for current publishes. A Windows runner is needed so the full build process has no manual steps where devs can make mistakes."
+  },
+  {
+    "type": "issue",
+    "title": "Pimsserver Branch Consolidation",
+    "description": "The pimsserver is split between the master and betabeta images due to a divergence long ago around processing data. A safe plan is needed to confirm these can now be merged while preserving data fidelity.<br><br>Receiving new data, updates, deletes, and relations all need to work properly before any migration."
+  },
+  {
+    "type": "task",
+    "title": "Documentation",
+    "description": "Internal documentation platform, runbooks, and knowledge base.",
+    "priority": "Medium"
+  },
+  {
+    "type": "issue",
+    "title": "Internal Documentation Platform",
+    "description": "There is no single source of truth for internal documentation. A platform is needed thats searchable, version-controlled, and accessible to dev and non-dev staff.<br><br>Start with a prototype covering one area (like sysadmin runbooks) and expand from there."
+  },
+  {
+    "type": "task",
+    "title": "Security",
+    "description": "Secrets management, credential rotation, and CI/CD security posture.",
+    "priority": "Medium"
+  },
+  {
+    "type": "issue",
+    "title": "Secrets Management",
+    "description": "Service accounts and credentials are managed ad-hoc. A proper secrets management solution is needed for CI/CD pipelines and production environments.<br><br>This also needs to address rotation policies so credentials arent running unchanged indefinitely."
+  }
+]

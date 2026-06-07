@@ -1,0 +1,73 @@
+name: Fork Sync (On Demand)
+
+# Triggered by a comment containing "@claude /fork-sync".
+# Uses Claude Code Action with track_progress for live progress updates.
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  fork-sync:
+    if: |
+      contains(github.event.comment.body, '@claude /fork-sync') ||
+      contains(github.event.comment.body, '@claude /fork-sync-status') ||
+      contains(github.event.comment.body, '@claude /fork-skip')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Restore state DB
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.local/share/github-fork-sync/state.db
+          key: fork-sync-state-on-demand-${{ github.run_id }}
+          restore-keys: |
+            fork-sync-state-
+
+      - name: Init skill
+        run: ./scripts/init
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Claude with fork-sync skill
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          track_progress: true
+          # The slash commands in commands/ are exposed via experimental_slash_commands_dir
+          # in the action. The user's `@claude /fork-sync danielbodnar mode=audit`
+          # comment invokes the appropriate command, which delegates to the CLI.
+          prompt: |
+            REPO: ${{ github.repository }}
+            COMMENT: ${{ github.event.comment.body }}
+            COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+
+            The user invoked a fork-sync slash command in a comment. Parse the
+            comment body, identify which command was invoked (/fork-sync,
+            /fork-sync-status, or /fork-skip), and execute it as defined in
+            the skill's commands/ directory.
+
+            Important constraints:
+            - Use the skill's CLI exclusively. Do not implement sync logic yourself.
+            - For audit mode, dispatch parallel sub-agents using the Task tool.
+            - Post the final summary as a comment reply on this thread.
+          claude_args: |
+            --max-turns 25
+            --allowedTools "Read,Glob,Bash(./scripts/orchestrate:*),Bash(./scripts/list-forks:*),Bash(./scripts/sync-fork:*),Bash(./scripts/skip:*),Bash(./scripts/status:*),Bash(./scripts/init:*),Bash(jq:*),Task,mcp__github_comment__update_claude_comment"
+
+      - name: Save state DB
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.local/share/github-fork-sync/state.db
+          key: fork-sync-state-on-demand-${{ github.run_id }}

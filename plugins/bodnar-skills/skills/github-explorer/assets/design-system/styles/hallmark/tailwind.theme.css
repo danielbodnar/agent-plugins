@@ -1,0 +1,64 @@
+/* tailwind.theme.css — Tailwind v4 @theme translation of the Quiet token system.
+ *
+ * Paste into your Tailwind v4 entry (typically app.css / globals.css). v4 reads @theme
+ * directly and generates utilities: bg-paper, text-ink, font-display, text-2xl, p-4, etc.
+ * Spacing is mirrored to --spacing-* (Tailwind's expected name) alongside Hallmark's --space-*.
+ *
+ * Dark mode: Tailwind v4 reads tokens from :root. To get the dark scheme, set the dark
+ * values under your dark selector (.dark or [data-theme="dark"]) using tokens.css as the source.
+ */
+
+@theme {
+  /* Colours — light scheme */
+  --color-paper: oklch(99% 0 0);
+  --color-paper-2: oklch(96.8% 0 0);
+  --color-paper-3: oklch(94% 0.003 240);
+  --color-paper-4: oklch(91% 0.005 240);
+  --color-ink: oklch(17% 0.012 240);
+  --color-ink-2: oklch(36% 0.008 240);
+  --color-ink-3: oklch(54% 0.005 240);
+  --color-ink-4: oklch(70% 0.004 240);
+  --color-rule: oklch(89% 0.003 240);
+  --color-rule-2: oklch(82% 0.005 240);
+  --color-accent: oklch(52% 0.17 244);
+  --color-accent-2: oklch(60% 0.16 244);
+  --color-accent-bg: oklch(96% 0.025 244);
+  --color-accent-bg-strong: oklch(92% 0.04 244);
+  --color-success: oklch(56% 0.14 148);
+  --color-warning: oklch(70% 0.16 75);
+  --color-danger: oklch(55% 0.18 25);
+  --color-focus: oklch(52% 0.17 244);
+
+  /* Fonts */
+  --font-display: "Inter Tight", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: 2.125rem;
+
+  /* Spacing — mirror to --spacing-* for Tailwind utilities, keep --space-* for parity */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.5rem;
+  --spacing-6: 2rem;
+  --spacing-7: 3rem;
+  --spacing-8: 4.5rem;
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-pill: 62.5rem;
+
+  /* Easings */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

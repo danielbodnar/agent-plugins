@@ -1,0 +1,6 @@
+[install]
+exact = false
+frozenLockfile = false
+
+[install.cache]
+disable = false

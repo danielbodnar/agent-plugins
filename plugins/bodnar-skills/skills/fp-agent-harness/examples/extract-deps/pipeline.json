@@ -1,0 +1,3 @@
+{
+  "pipeline": ["00-parse-manifest", "01-classify-deps", "02-render-summary"]
+}

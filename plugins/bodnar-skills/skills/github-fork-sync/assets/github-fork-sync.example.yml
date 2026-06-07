@@ -1,0 +1,38 @@
+# .github-fork-sync.yml
+#
+# Drop this at the root of the host repo where the github-fork-sync skill is installed.
+# The Routine (or local CLI via ./scripts/load-skip-yaml) reads it on every run.
+# All fields are optional; defaults are sane.
+
+# Target owner (user or org). Default: authenticated gh user.
+owner: danielbodnar
+
+# Sync strategy. One of:
+#   skip   (default) - only fast-forward via merge-upstream; record diverged forks but don't touch them
+#   rebase           - clone, rebase, force-push-with-lease (DESTRUCTIVE; opt in deliberately)
+#   pr               - open a cross-fork PR for divergence
+strategy: skip
+
+# Which branches to sync per fork.
+#   default - just the fork's default branch (recommended)
+#   all     - every branch the fork shares with its parent
+branches: default
+
+# How many forks to process in parallel. 8 is a good default; bump to 16-32 for hundreds of forks.
+concurrency: 8
+
+# Skip list. Repos here are excluded from every run.
+# Each entry needs a `repo` (full_name) and a `reason`. `expires_at` is optional ISO-8601 date;
+# after the expiry the skip lapses and the repo enters the rotation again.
+skip:
+  - repo: danielbodnar/example-vendored
+    reason: vendored deps, intentionally diverged
+  - repo: danielbodnar/short-term-experiment
+    reason: actively rebasing this branch by hand right now
+    expires_at: 2026-12-31
+
+# Tracking issue. When the Routine finds failures or diverged forks, it posts the summary here.
+tracking_issue:
+  enabled: true
+  label: fork-sync
+  title: "Fork sync status"

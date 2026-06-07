@@ -1,0 +1,144 @@
+{
+  "mcpServers": {
+    "google-drive": {
+      "type": "http",
+      "url": "https://drivemcp.googleapis.com/mcp/v1"
+    },
+    "stytch": {
+      "type": "http",
+      "url": "https://mcp.stytch.dev/mcp"
+    },
+    "google-calendar": {
+      "type": "http",
+      "url": "https://calendarmcp.googleapis.com/mcp/v1"
+    },
+    "gmail": {
+      "type": "http",
+      "url": "https://gmailmcp.googleapis.com/mcp/v1"
+    },
+    "motherduck": {
+      "type": "http",
+      "url": "https://api.motherduck.com/mcp"
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "cloudflare-api": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-bindings": {
+      "type": "http",
+      "url": "https://bindings.mcp.cloudflare.com/mcp"
+    },
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "huggingface": {
+      "type": "http",
+      "url": "https://huggingface.co/mcp"
+    },
+    "learning-commons-kg": {
+      "type": "http",
+      "url": "https://kg.mcp.learningcommons.org/mcp"
+    },
+    "mermaid-chart": {
+      "type": "http",
+      "url": "https://chatgpt.mermaid.ai/anthropic/mcp"
+    },
+    "linear": {
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
+    },
+    "socket-dev": {
+      "type": "http",
+      "url": "https://mcp.socket.dev"
+    },
+    "cloudflare-builds": {
+      "type": "http",
+      "url": "https://builds.mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-containers": {
+      "type": "http",
+      "url": "https://containers.mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-observability": {
+      "type": "http",
+      "url": "https://observability.mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-docs": {
+      "type": "http",
+      "url": "https://docs.mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-agents": {
+      "type": "http",
+      "url": "https://agents.cloudflare.com/mcp"
+    },
+    "tldraw": {
+      "type": "http",
+      "url": "https://tldraw-mcp-app.tldraw.workers.dev/mcp"
+    },
+    "cloudflare-autorag": {
+      "type": "http",
+      "url": "https://autorag.mcp.cloudflare.com/mcp"
+    },
+    "zoho-projects": {
+      "type": "http",
+      "url": "https://claude-zohoprojects.zohomcp.com/mcp/message"
+    },
+    "cloudflare-browser": {
+      "type": "http",
+      "url": "https://browser.mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-radar": {
+      "type": "http",
+      "url": "https://radar.mcp.cloudflare.com/mcp"
+    },
+    "bun": {
+      "type": "http",
+      "url": "https://bun.sh/docs/mcp"
+    },
+    "zoho-tasks": {
+      "type": "http",
+      "url": "https://projects-task-management-921179259.zohomcp.com/mcp/${ZOHO_TASKS_MCP_TOKEN}/message"
+    },
+    "astro-docs": {
+      "type": "http",
+      "url": "https://mcp.docs.astro.build/mcp"
+    },
+    "plaid": {
+      "type": "sse",
+      "url": "https://api.dashboard.plaid.com/mcp/sse"
+    },
+    "excalidraw": {
+      "type": "http",
+      "url": "https://mcp.excalidraw.com/mcp"
+    },
+    "flux": {
+      "type": "http",
+      "url": "https://mcp.bfl.ai"
+    },
+    "wolfram": {
+      "type": "http",
+      "url": "https://agenttools.wolfram.com/mcp"
+    },
+    "prompts-chat": {
+      "type": "http",
+      "url": "https://prompts.chat/api/mcp"
+    },
+    "mcp-docs": {
+      "type": "http",
+      "url": "https://modelcontextprotocol.io/mcp"
+    },
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    },
+    "instacart": {
+      "type": "http",
+      "url": "https://fig-mcp.instacart.com/mcp"
+    }
+  }
+}

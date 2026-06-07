@@ -1,0 +1,21 @@
+{
+  "name": "Preview: {{SLUG}}",
+  "domain": "{{SLUG}}.bitbuilder.cloud",
+  "type": "self_hosted",
+  "session_duration": "24h",
+  "auto_redirect_to_identity": false,
+  "allowed_idps": [],
+  "policies": [
+    {
+      "name": "Owner + Daniel (one-time PIN)",
+      "decision": "allow",
+      "precedence": 1,
+      "include": [
+        { "email": { "email": "{{CLIENT_EMAIL}}" } },
+        { "email": { "email": "daniel@bitbuilder.io" } }
+      ],
+      "require": [],
+      "exclude": []
+    }
+  ]
+}

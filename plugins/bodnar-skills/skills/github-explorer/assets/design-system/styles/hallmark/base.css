@@ -1,0 +1,102 @@
+/* base.css — reset and element defaults for the Stars Workbench.
+ *
+ * Imports the generated tokens, then sets the global resets and the element-level
+ * defaults (body type, focus ring, selection, scrollbars). No component classes here;
+ * those live in primitives.css. Everything references a token by name.
+ */
+
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* 100%, not a fixed px value: this is the anchor for every rem in the system, so it must
+   * honor the reader's browser font-size setting. Hardcoding 16px here silently overrides
+   * a user who has set a larger default for legibility, which is an accessibility regression. */
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  height: 100%;
+  /* clip, not hidden: preserves programmatic scroll while killing horizontal overflow */
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+input {
+  font: inherit;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: var(--color-accent-bg);
+  color: var(--color-ink);
+}
+
+/* Thin, theme-aware scrollbars for the dense panels */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rule-2) transparent;
+}
+*::-webkit-scrollbar {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-rule-2);
+  border-radius: var(--radius-pill);
+  /* px border stays crisp regardless of zoom; it is decorative thumb padding, not layout */
+  border: 2px solid var(--color-paper);
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
