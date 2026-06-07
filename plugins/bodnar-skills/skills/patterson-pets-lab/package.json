@@ -1,0 +1,21 @@
+{
+  "name": "patterson-skill-creator",
+  "version": "0.1.0",
+  "description": "Bun-based skill-creator and filesystem-routed CLI for Patterson AI Pets",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "pp": "scripts/init.ts"
+  },
+  "scripts": {
+    "init": "bun scripts/init.ts",
+    "setup": "bun scripts/setup.ts",
+    "sync-docs": "bun scripts/sync-docs.ts",
+    "search": "bun scripts/search.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^6.0.3"
+  }
+}

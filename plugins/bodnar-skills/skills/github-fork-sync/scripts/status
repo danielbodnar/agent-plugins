@@ -1,0 +1,128 @@
+#!/usr/bin/env bun
+// status [--owner=<owner>] [--since=ISO8601] [--json]
+//
+// Reports current sync state. By default, prints human-readable summary of:
+//  - Last run per repo (most recent only)
+//  - Currently skipped repos
+//  - Recent failures (last 7 days)
+//
+// With --json, emits structured output.
+
+import { openDb, listSkips, pruneExpiredSkips, recentFailures } from "./lib/state.ts";
+import { parseArgs } from "node:util";
+
+const { values } = parseArgs({
+  args: process.argv.slice(2),
+  options: {
+    owner: { type: "string" },
+    since: { type: "string" },
+    json: { type: "boolean", default: false },
+    verbose: { type: "boolean", default: false },
+  },
+});
+
+const since = values.since ?? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+type LastRun = {
+  full_name: string;
+  parent_full_name: string | null;
+  branch: string;
+  outcome: string;
+  strategy: string | null;
+  started_at: string;
+  completed_at: string | null;
+  commits_ahead: number | null;
+  commits_behind: number | null;
+  error_message: string | null;
+};
+
+function main() {
+  const db = openDb();
+  pruneExpiredSkips(db);
+
+  // Last run per repo (most recent across all branches)
+  const ownerFilter = values.owner ? `WHERE r.full_name LIKE ?` : "";
+  const lastRunQuery = `
+    SELECT r.full_name, r.parent_full_name, r.branch, r.outcome, r.strategy,
+           r.started_at, r.completed_at, r.commits_ahead, r.commits_behind,
+           r.error_message
+    FROM sync_runs r
+    INNER JOIN (
+      SELECT full_name, MAX(started_at) AS latest
+      FROM sync_runs
+      GROUP BY full_name
+    ) latest_per_repo
+      ON r.full_name = latest_per_repo.full_name
+     AND r.started_at = latest_per_repo.latest
+    ${ownerFilter}
+    ORDER BY r.started_at DESC
+  `;
+  const lastRunArgs: string[] = values.owner ? [`${values.owner}/%`] : [];
+  const lastRuns = db.prepare(lastRunQuery).all(...lastRunArgs) as LastRun[];
+
+  const skips = listSkips(db);
+  const failures = recentFailures(db, since);
+
+  if (values.json) {
+    const out = { last_runs: lastRuns, skip_list: skips, recent_failures: failures, since };
+    console.log(JSON.stringify(out, null, 2));
+    db.close();
+    return;
+  }
+
+  // Human-readable
+  const counts: Record<string, number> = {};
+  for (const r of lastRuns) counts[r.outcome] = (counts[r.outcome] ?? 0) + 1;
+
+  console.log("=".repeat(60));
+  console.log("github-fork-sync status");
+  if (values.owner) console.log(`Filtered to: ${values.owner}/*`);
+  console.log("=".repeat(60));
+  console.log();
+  console.log(`Total tracked repos: ${lastRuns.length}`);
+  for (const [outcome, count] of Object.entries(counts).sort()) {
+    console.log(`  ${outcome.padEnd(20)} ${count}`);
+  }
+  console.log();
+
+  if (skips.length > 0) {
+    console.log(`Skip list (${skips.length}):`);
+    for (const s of skips) {
+      const expiry = s.expires_at ? `expires ${s.expires_at}` : "permanent";
+      console.log(`  ${s.full_name}  (${expiry})`);
+      console.log(`    ${s.reason}`);
+    }
+    console.log();
+  }
+
+  if (failures.length > 0) {
+    console.log(`Recent failures since ${since.slice(0, 10)} (${failures.length}):`);
+    for (const f of failures.slice(0, 20)) {
+      console.log(`  ${f.full_name}  [${f.outcome}]  ${f.started_at}`);
+      if (f.error_message) {
+        console.log(`    ${f.error_message.slice(0, 200)}`);
+      }
+    }
+    if (failures.length > 20) {
+      console.log(`  ... and ${failures.length - 20} more`);
+    }
+    console.log();
+  }
+
+  if (values.verbose) {
+    console.log("Last run per repo:");
+    for (const r of lastRuns) {
+      const parent = r.parent_full_name ?? "?";
+      const ahead = r.commits_ahead != null ? `+${r.commits_ahead}` : "";
+      const behind = r.commits_behind != null ? `-${r.commits_behind}` : "";
+      const divergence = ahead || behind ? ` (${ahead}${behind})` : "";
+      console.log(
+        `  ${r.full_name} <- ${parent}  [${r.outcome}]${divergence}  ${r.started_at}`,
+      );
+    }
+  }
+
+  db.close();
+}
+
+main();

@@ -1,0 +1,215 @@
+name: Fork Sync (Scheduled)
+
+# Runs weekly, syncs all forks, posts a summary to a tracking issue.
+# Uses GH Actions cache to persist the SQLite state DB across runs.
+#
+# To customize:
+#   - Change SYNC_OWNER below to your GitHub username or org
+#   - Change SYNC_STRATEGY (skip|rebase|pr) — defaults to "skip" for safety
+#   - Change the cron schedule (currently Sunday 03:00 UTC)
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      strategy:
+        description: "Sync strategy"
+        required: true
+        type: choice
+        default: skip
+        options: [skip, rebase, pr]
+      branches:
+        description: "Which branches to sync"
+        required: true
+        type: choice
+        default: default
+        options: [default, all]
+      owner:
+        description: "Owner to sync (overrides default)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+  id-token: write
+
+env:
+  SYNC_OWNER: ${{ inputs.owner || github.repository_owner }}
+  SYNC_STRATEGY: ${{ inputs.strategy || 'skip' }}
+  SYNC_BRANCHES: ${{ inputs.branches || 'default' }}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    outputs:
+      summary: ${{ steps.run.outputs.summary }}
+      run_id: ${{ steps.run.outputs.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # Persist state across runs. Cache key includes ISO week so the cache
+      # rotates weekly without growing unbounded. Restore from previous week
+      # if this week's cache is missing.
+      - name: Compute cache key
+        id: cache-key
+        run: |
+          WEEK=$(date -u +"%G-W%V")
+          echo "key=fork-sync-state-${{ env.SYNC_OWNER }}-${WEEK}" >> "$GITHUB_OUTPUT"
+          echo "restore=fork-sync-state-${{ env.SYNC_OWNER }}-" >> "$GITHUB_OUTPUT"
+
+      - name: Restore state DB
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.local/share/github-fork-sync/state.db
+          key: ${{ steps.cache-key.outputs.key }}
+          restore-keys: |
+            ${{ steps.cache-key.outputs.restore }}
+
+      - name: Init skill
+        run: ./scripts/init
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN_FORKSYNC || secrets.GITHUB_TOKEN }}
+
+      - name: Run orchestrator
+        id: run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN_FORKSYNC || secrets.GITHUB_TOKEN }}
+        run: |
+          set -o pipefail
+          # Capture full NDJSON to file, write summary to GITHUB_OUTPUT
+          ./scripts/orchestrate "$SYNC_OWNER" \
+            --strategy="$SYNC_STRATEGY" \
+            --branches="$SYNC_BRANCHES" \
+            --concurrency=8 \
+            | tee fork-sync-results.ndjson
+          
+          SUMMARY=$(tail -n 1 fork-sync-results.ndjson)
+          RUN_ID=$(echo "$SUMMARY" | jq -r '.run_id')
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+          # Bash-multiline-safe output write
+          {
+            echo "summary<<EOF_SUMMARY"
+            echo "$SUMMARY"
+            echo "EOF_SUMMARY"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Save state DB
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.local/share/github-fork-sync/state.db
+          key: ${{ steps.cache-key.outputs.key }}
+
+      - name: Upload results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fork-sync-results-${{ steps.run.outputs.run_id }}
+          path: fork-sync-results.ndjson
+          retention-days: 30
+
+  report:
+    needs: sync
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build report comment
+        id: report
+        env:
+          SUMMARY: ${{ needs.sync.outputs.summary }}
+          RUN_ID: ${{ needs.sync.outputs.run_id }}
+          OWNER: ${{ env.SYNC_OWNER }}
+          STRATEGY: ${{ env.SYNC_STRATEGY }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          BODY=$(cat <<MARKDOWN
+          ### Fork sync run ${RUN_ID}
+
+          **Owner**: \`${OWNER}\`  
+          **Strategy**: \`${STRATEGY}\`  
+          **Run**: [#${{ github.run_number }}](${RUN_URL})
+
+          \`\`\`json
+          ${SUMMARY}
+          \`\`\`
+          MARKDOWN
+          )
+          {
+            echo "body<<EOF_BODY"
+            echo "$BODY"
+            echo "EOF_BODY"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Find or create tracking issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Look for an open issue titled "fork-sync tracker"
+          NUM=$(gh issue list --state open --label fork-sync --search "fork-sync tracker in:title" --json number --jq '.[0].number')
+          if [ -z "$NUM" ] || [ "$NUM" = "null" ]; then
+            # Ensure label exists
+            gh label create fork-sync --color "0E8A16" --description "github-fork-sync automation" 2>/dev/null || true
+            NUM=$(gh issue create \
+              --title "fork-sync tracker" \
+              --label fork-sync \
+              --body "Tracking issue for github-fork-sync automation. Comments below are appended by the scheduled workflow." \
+              --json number --jq '.number')
+          fi
+          echo "number=$NUM" >> "$GITHUB_OUTPUT"
+
+      - name: Append run comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ steps.issue.outputs.number }}" --body "${{ steps.report.outputs.body }}"
+
+  triage-failures:
+    # Only invoke Claude when there's something to triage
+    needs: [sync, report]
+    if: contains(needs.sync.outputs.summary, '"failed":') || contains(needs.sync.outputs.summary, '"conflict":')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download results
+        uses: actions/download-artifact@v4
+        with:
+          name: fork-sync-results-${{ needs.sync.outputs.run_id }}
+
+      - name: Triage with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            REPO: ${{ github.repository }}
+            RUN_ID: ${{ needs.sync.outputs.run_id }}
+
+            The github-fork-sync scheduled run had failures or conflicts.
+            Inspect fork-sync-results.ndjson, group by error pattern,
+            and post a comment on the fork-sync tracker issue with:
+
+            - Per-failure-pattern groupings (auth errors, conflicts, parent-deleted, etc.)
+            - Specific recommended actions per group (skip-list, retry with --no-cache, switch strategy, etc.)
+            - Any repos that have failed 3+ times in the last 30 days (run ./scripts/status --json --since=30-days-ago and filter)
+
+            Use `gh issue comment` on the issue tagged `fork-sync` to post.
+            Be concise; this is an operational digest, not a deep dive.
+          claude_args: |
+            --max-turns 8
+            --allowedTools "Read,Bash(jq:*),Bash(./scripts/status:*),Bash(gh issue:*),Bash(gh label:*)"

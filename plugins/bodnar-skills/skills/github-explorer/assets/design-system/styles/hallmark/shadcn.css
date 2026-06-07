@@ -1,0 +1,71 @@
+/* shadcn.css — shadcn/ui variable translation of the Quiet token system.
+ *
+ * shadcn reads space-separated OKLCH triples (no wrapper, no commas) so it can compose
+ * alpha with oklch(var(--token) / <alpha>). The mapping is the canonical Hallmark one:
+ * accent -> primary, paper-3 -> secondary, rule -> border/input/muted, focus -> ring.
+ *
+ * Wire into your Tailwind config with oklch(var(--background)) etc. The .dark block mirrors
+ * the dark scheme from tokens.css.
+ */
+
+:root {
+  --background: 99% 0 0;                 /* paper */
+  --foreground: 17% 0.012 240;           /* ink */
+
+  --card: 96.8% 0 0;                     /* paper-2 */
+  --card-foreground: 17% 0.012 240;      /* ink */
+
+  --popover: 96.8% 0 0;                  /* paper-2 */
+  --popover-foreground: 17% 0.012 240;   /* ink */
+
+  --primary: 52% 0.17 244;               /* accent */
+  --primary-foreground: 99% 0 0;         /* paper */
+
+  --secondary: 94% 0.003 240;            /* paper-3 */
+  --secondary-foreground: 36% 0.008 240; /* ink-2 */
+
+  --muted: 89% 0.003 240;                /* rule */
+  --muted-foreground: 54% 0.005 240;     /* ink-3 */
+
+  --accent: 96% 0.025 244;               /* accent-bg */
+  --accent-foreground: 52% 0.17 244;     /* accent */
+
+  --destructive: 55% 0.18 25;            /* danger */
+  --destructive-foreground: 99% 0 0;     /* paper */
+
+  --border: 89% 0.003 240;               /* rule */
+  --input: 89% 0.003 240;                /* rule */
+  --ring: 52% 0.17 244;                  /* focus */
+
+  --radius: 0.5rem;                      /* radius-md */
+}
+
+.dark {
+  --background: 13% 0.008 240;
+  --foreground: 95% 0.005 240;
+
+  --card: 16% 0.01 240;
+  --card-foreground: 95% 0.005 240;
+
+  --popover: 16% 0.01 240;
+  --popover-foreground: 95% 0.005 240;
+
+  --primary: 72% 0.15 244;
+  --primary-foreground: 13% 0.008 240;
+
+  --secondary: 20% 0.012 240;
+  --secondary-foreground: 76% 0.005 240;
+
+  --muted: 26% 0.012 240;
+  --muted-foreground: 58% 0.008 240;
+
+  --accent: 28% 0.07 244;
+  --accent-foreground: 72% 0.15 244;
+
+  --destructive: 70% 0.16 25;
+  --destructive-foreground: 13% 0.008 240;
+
+  --border: 26% 0.012 240;
+  --input: 26% 0.012 240;
+  --ring: 72% 0.15 244;
+}

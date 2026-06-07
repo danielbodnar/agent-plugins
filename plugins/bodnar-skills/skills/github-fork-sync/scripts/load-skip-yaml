@@ -1,0 +1,161 @@
+#!/usr/bin/env bun
+/**
+ * load-skip-yaml — Read .github-fork-sync.yml and rewrite the SQLite skip_list to match.
+ *
+ * Used by the claude.ai/code Routine (see references/routines.md). The YAML config
+ * is the source of truth: humans edit it via PR. This script reapplies it before
+ * each orchestrate run so the skip table reflects the committed config.
+ *
+ * Idempotent. Wipes existing yaml-sourced skip rows and reinserts them. Manually
+ * added skip entries (via ./scripts/skip add) are preserved by tagging YAML rows
+ * with source = 'yaml' and only deleting that subset.
+ *
+ * Usage:
+ *   ./scripts/load-skip-yaml [path-to-yaml]
+ *
+ * Default path: ./.github-fork-sync.yml relative to CWD, then ../../../.github-fork-sync.yml
+ * relative to the skill (host repo root when skill lives at .claude/skills/github-fork-sync).
+ */
+
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { openDb, initSchema } from "./lib/state.ts";
+
+interface YamlSkipEntry {
+  repo: string;
+  reason: string;
+  expires_at?: string;
+}
+
+interface YamlConfig {
+  owner?: string;
+  strategy?: string;
+  branches?: string;
+  concurrency?: number;
+  skip?: YamlSkipEntry[];
+  tracking_issue?: {
+    enabled?: boolean;
+    label?: string;
+    title?: string;
+  };
+}
+
+function findConfigPath(arg: string | undefined): string {
+  if (arg) {
+    const abs = resolve(arg);
+    if (!existsSync(abs)) {
+      throw new Error(`Config file not found: ${abs}`);
+    }
+    return abs;
+  }
+
+  const candidates = [
+    resolve(process.cwd(), ".github-fork-sync.yml"),
+    resolve(import.meta.dir, "..", "..", "..", "..", ".github-fork-sync.yml"),
+    resolve(import.meta.dir, "..", ".github-fork-sync.yml"),
+  ];
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) return candidate;
+  }
+
+  throw new Error(
+    `No .github-fork-sync.yml found. Searched:\n  ${candidates.join("\n  ")}`,
+  );
+}
+
+function parseYaml(text: string): YamlConfig {
+  // Bun.YAML.parse is built in from Bun 1.2.13+.
+  if (typeof (globalThis as any).Bun?.YAML?.parse === "function") {
+    return (globalThis as any).Bun.YAML.parse(text) as YamlConfig;
+  }
+  throw new Error(
+    "Bun.YAML.parse is not available. Upgrade Bun to 1.2.13 or newer (run ./scripts/init).",
+  );
+}
+
+function validateConfig(cfg: unknown): asserts cfg is YamlConfig {
+  if (!cfg || typeof cfg !== "object") {
+    throw new Error("YAML root must be a mapping");
+  }
+  const c = cfg as YamlConfig;
+  if (c.skip !== undefined) {
+    if (!Array.isArray(c.skip)) {
+      throw new Error("`skip` must be a list");
+    }
+    for (let i = 0; i < c.skip.length; i++) {
+      const entry = c.skip[i];
+      if (!entry || typeof entry !== "object") {
+        throw new Error(`skip[${i}] must be a mapping`);
+      }
+      if (typeof entry.repo !== "string" || !entry.repo.includes("/")) {
+        throw new Error(
+          `skip[${i}].repo must be a full_name like "owner/repo"`,
+        );
+      }
+      if (typeof entry.reason !== "string" || entry.reason.length === 0) {
+        throw new Error(`skip[${i}].reason must be a non-empty string`);
+      }
+      if (entry.expires_at !== undefined) {
+        if (
+          typeof entry.expires_at !== "string" ||
+          Number.isNaN(Date.parse(entry.expires_at))
+        ) {
+          throw new Error(`skip[${i}].expires_at must be ISO-8601`);
+        }
+      }
+    }
+  }
+}
+
+async function main(): Promise<void> {
+  const arg = process.argv[2];
+  const configPath = findConfigPath(arg);
+  const text = readFileSync(configPath, "utf8");
+  const parsed = parseYaml(text);
+  validateConfig(parsed);
+
+  const db = openDb();
+  initSchema(db);
+
+  // Wipe existing yaml-sourced rows; preserve manually-added ones.
+  db.run(`DELETE FROM skip_list WHERE added_by = 'yaml'`);
+
+  const stmt = db.prepare(`
+    INSERT INTO skip_list (full_name, reason, expires_at, added_by, added_at)
+    VALUES (?, ?, ?, 'yaml', datetime('now'))
+    ON CONFLICT(full_name) DO UPDATE SET
+      reason = excluded.reason,
+      expires_at = excluded.expires_at,
+      added_by = 'yaml',
+      added_at = datetime('now')
+  `);
+
+  const skip = parsed.skip ?? [];
+  let inserted = 0;
+  for (const entry of skip) {
+    stmt.run(entry.repo, entry.reason, entry.expires_at ?? null);
+    inserted++;
+  }
+
+  console.log(
+    JSON.stringify({
+      type: "load-skip-yaml",
+      config: configPath,
+      yaml_skip_entries: skip.length,
+      inserted,
+      owner: parsed.owner ?? null,
+      strategy: parsed.strategy ?? "skip",
+      branches: parsed.branches ?? "default",
+      concurrency: parsed.concurrency ?? 8,
+      tracking_issue: parsed.tracking_issue ?? { enabled: false },
+    }),
+  );
+
+  db.close();
+}
+
+main().catch((err) => {
+  console.error(`load-skip-yaml: ${err instanceof Error ? err.message : err}`);
+  process.exit(1);
+});

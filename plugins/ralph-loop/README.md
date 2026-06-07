@@ -183,7 +183,7 @@ The stop hook uses a bash script that requires Git for Windows to run properly.
 "command": "\"C:/Program Files/Git/bin/bash.exe\" ${CLAUDE_PLUGIN_ROOT}/hooks/stop-hook.sh"
 ```
 
-**Location**: `~/.claude/plugins/cache/claude-plugins-official/ralph-wiggum/<hash>/hooks/hooks.json`
+**Location**: `~/.claude/plugins/cache/bodnar-agent-plugins/ralph-wiggum/<hash>/hooks/hooks.json`
 
 **Note**: Use `Git/bin/bash.exe` (the wrapper with proper PATH), not `Git/usr/bin/bash.exe` (raw MinGW bash without utilities in PATH).
 

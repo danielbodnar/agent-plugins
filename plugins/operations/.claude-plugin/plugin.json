@@ -1,0 +1,16 @@
+{
+  "name": "operations",
+  "version": "0.1.0",
+  "description": "Operations workflows: runbooks, change requests, process docs, risk assessment, compliance tracking, and capacity planning.",
+  "keywords": [
+    "capacity-plan",
+    "change-request",
+    "compliance-tracking",
+    "process-doc",
+    "process-optimization",
+    "risk-assessment",
+    "runbook",
+    "status-report",
+    "vendor-review"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "sp-global",
+  "version": "0.1.0",
+  "description": "S&P Global Capital IQ research: company tear sheets, funding digests, and earnings previews.",
+  "keywords": [
+    "earnings-preview-single",
+    "funding-digest",
+    "sp-capital-iq-excel-pro",
+    "tear-sheet"
+  ]
+}

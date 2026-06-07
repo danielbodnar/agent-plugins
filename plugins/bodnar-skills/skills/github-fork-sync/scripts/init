@@ -1,0 +1,58 @@
+#!/usr/bin/env sh
+# Bootstrap script for github-fork-sync.
+# Idempotent: safe to run repeatedly.
+
+set -eu
+
+SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$SKILL_DIR"
+
+# 1. Ensure bun is on PATH
+if ! command -v bun >/dev/null 2>&1; then
+  echo "bun not found. Installing..."
+  curl -fsSL https://bun.sh/install | sh
+  # shellcheck disable=SC1090
+  . "$HOME/.bashrc" 2>/dev/null || true
+  export PATH="$HOME/.bun/bin:$PATH"
+fi
+
+# 2. Ensure gh is installed
+if ! command -v gh >/dev/null 2>&1; then
+  echo "ERROR: gh CLI not found. Install from https://cli.github.com/" >&2
+  exit 1
+fi
+
+# 3. Ensure gh is authenticated
+if ! gh auth status >/dev/null 2>&1; then
+  echo "ERROR: gh is not authenticated. Run 'gh auth login' first." >&2
+  exit 1
+fi
+
+# 4. Install bun deps (none required at runtime, but tsconfig + types are nice)
+if [ -f "$SKILL_DIR/package.json" ] && [ ! -d "$SKILL_DIR/node_modules" ]; then
+  bun install --silent
+fi
+
+# 5. Initialize the database
+DB_PATH="${GITHUB_FORK_SYNC_DB:-$HOME/.local/share/github-fork-sync/state.db}"
+DB_DIR="$(dirname "$DB_PATH")"
+mkdir -p "$DB_DIR"
+
+if [ ! -f "$DB_PATH" ]; then
+  echo "Initializing state database at $DB_PATH"
+  bun "$SKILL_DIR/scripts/db" init
+else
+  # Idempotent: re-running schema is safe due to IF NOT EXISTS clauses
+  bun "$SKILL_DIR/scripts/db" init >/dev/null 2>&1 || true
+fi
+
+# 6. Make scripts executable
+chmod +x "$SKILL_DIR/scripts/orchestrate" \
+         "$SKILL_DIR/scripts/list-forks" \
+         "$SKILL_DIR/scripts/sync-fork" \
+         "$SKILL_DIR/scripts/skip" \
+         "$SKILL_DIR/scripts/status" \
+         "$SKILL_DIR/scripts/db" \
+         2>/dev/null || true
+
+echo "github-fork-sync ready. State DB: $DB_PATH"

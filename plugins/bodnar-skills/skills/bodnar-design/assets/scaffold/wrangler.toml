@@ -1,0 +1,15 @@
+name = "app"
+compatibility_date = "2026-05-01"
+compatibility_flags = ["nodejs_compat"]
+main = "./dist/_worker.js/index.js"
+assets = { directory = "./dist", binding = "ASSETS" }
+
+# Bindings — declare here, type via `src/env.d.ts`
+# [[kv_namespaces]]
+# binding = "SESSIONS"
+# id = "..."
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "app"
+# database_id = "..."

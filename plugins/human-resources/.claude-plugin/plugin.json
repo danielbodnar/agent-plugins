@@ -1,0 +1,16 @@
+{
+  "name": "human-resources",
+  "version": "0.1.0",
+  "description": "HR workflows: compensation analysis, offers, onboarding, interviews, performance reviews, and org planning.",
+  "keywords": [
+    "comp-analysis",
+    "draft-offer",
+    "interview-prep",
+    "onboarding",
+    "org-planning",
+    "people-report",
+    "performance-review",
+    "policy-lookup",
+    "recruiting-pipeline"
+  ]
+}

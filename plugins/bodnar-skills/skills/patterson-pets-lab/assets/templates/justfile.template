@@ -1,0 +1,63 @@
+# justfile template
+
+The following is the canonical starting point for a `justfile` in Patterson AI Pets repositories. Copy it to the repository root, adjust task bodies for the specific repository, and keep the verb conventions consistent across the project.
+
+```just
+# Patterson AI Pets justfile
+# Default task: show available commands
+default:
+    @just --list
+
+# Install all dependencies and verify the environment
+bootstrap:
+    mise install
+    bun install
+    @just verify
+
+# Verify that every required tool is available
+verify:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Checking environment..."
+    command -v bun >/dev/null || { echo "bun missing"; exit 1; }
+    command -v gh >/dev/null || { echo "gh missing"; exit 1; }
+    command -v claude >/dev/null || { echo "claude missing"; exit 1; }
+    command -v opencode >/dev/null || { echo "opencode missing"; exit 1; }
+    command -v copilot >/dev/null || { echo "copilot missing"; exit 1; }
+    echo "Environment OK"
+
+# Run the practice challenge locally
+race:
+    bun run scripts/race.ts
+
+# Submit this pet to the Show
+submit:
+    bun run scripts/submit.ts
+
+# Run the pet's test suite
+test:
+    bun test
+
+# Lint and format
+lint:
+    bun run lint
+    bun run format
+
+# Validate the skill structure against the spec
+validate:
+    bunx patterson-skill-creator validate .
+
+# Clean local artifacts
+clean:
+    rm -rf node_modules .bun dist
+```
+
+## Guidance for filling out the template
+
+The verb conventions are consistent across Patterson AI Pets repositories. `bootstrap` installs dependencies and verifies the environment. `verify` is a separate task because it is used both during bootstrap and as a standalone sanity check. `race` runs the pet against the practice challenge locally. `submit` opens a pull request to the Show. `test`, `lint`, and `clean` follow their conventional meanings.
+
+Keep task bodies short. If a task grows beyond a few lines, move the body into a script under `scripts/` and invoke the script from the task. This keeps the `justfile` readable and makes the underlying logic testable.
+
+Use `set -euo pipefail` in any inline bash script that has more than a single command. Silent failure is the most common source of confusion in `justfile` debugging, and these three options collectively eliminate the silent failure modes.
+
+The `default` task shows the list of available commands and is the convention across `just`-based projects. Keep this as the first task in the file so contributors who type `just` without arguments see the full list immediately.

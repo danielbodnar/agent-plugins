@@ -1,0 +1,736 @@
+#!/usr/bin/env bun
+// aitmpl-compose. Author and compose claude-code-templates workflows.
+// Subcommands: catalog, packs, new-pack, compose, validate, expand, detect.
+// Emits upstream-native YAML in .claude/workflows/<name>.yaml.
+
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
+import { homedir } from "node:os";
+import { join, dirname, resolve, basename } from "node:path";
+import { parseArgs } from "node:util";
+
+// ---------- Paths and constants ----------
+
+const SKILL_ROOT = resolve(import.meta.dir, "..");
+const CACHE_DIR = join(process.env.XDG_CACHE_HOME ?? join(homedir(), ".cache"), "aitmpl-compose");
+const CONFIG_DIR = join(process.env.XDG_CONFIG_HOME ?? join(homedir(), ".config"), "aitmpl-compose");
+const USER_PACKS_DIR = join(CONFIG_DIR, "packs");
+const BUNDLED_PACKS_DIR = join(SKILL_ROOT, "packs");
+const CATALOG_CACHE = join(CACHE_DIR, "catalog.json");
+const CATALOG_URL = "https://www.aitmpl.com/components.json";
+const CATALOG_TTL_HOURS = 24;
+
+const COMPONENT_TYPES = ["agent", "command", "mcp", "hook", "setting", "skill"] as const;
+type ComponentType = (typeof COMPONENT_TYPES)[number];
+const TYPE_ORDER: ComponentType[] = ["agent", "command", "mcp", "setting", "hook", "skill"];
+
+interface CatalogEntry {
+  name: string;          // leaf name (e.g. "frontend-developer")
+  path: string;          // e.g. "development-team/frontend-developer.md"
+  category: string;      // e.g. "development-team"
+  type: ComponentType;
+  description?: string;
+  install_name: string;  // category/name (the install identifier)
+}
+
+interface Catalog {
+  fetched_at: string;
+  source_url: string;
+  components: Record<ComponentType, CatalogEntry[]>;
+}
+
+interface PackEntry {
+  type: ComponentType;
+  name: string;          // install_name format (category/name)
+}
+
+interface Pack {
+  name: string;          // e.g. "bodnar/cf-platform"
+  description: string;
+  components: PackEntry[];
+  source_path: string;
+}
+
+interface WorkflowStep {
+  step: number;
+  type: ComponentType;
+  name: string;
+  _from_pack?: string;
+}
+
+interface Workflow {
+  name: string;
+  description?: string;
+  tags?: string[];
+  steps: WorkflowStep[];
+}
+
+// ---------- Tiny YAML helpers ----------
+// Workflow YAML is simple; emit by hand for control over comments.
+// Parse via the `yaml` npm package which Bun will auto-fetch when the import resolves at runtime.
+
+async function parseYaml(text: string): Promise<unknown> {
+  const yaml = await import("yaml");
+  return yaml.parse(text);
+}
+
+function emitWorkflowYaml(wf: Workflow, header: string[] = []): string {
+  const lines: string[] = [];
+  for (const h of header) lines.push(`# ${h}`);
+  if (header.length) lines.push("");
+  lines.push(`name: ${quote(wf.name)}`);
+  if (wf.description) lines.push(`description: ${quote(wf.description)}`);
+  if (wf.tags && wf.tags.length) {
+    lines.push("tags:");
+    for (const t of wf.tags) lines.push(`  - ${quote(t)}`);
+  }
+  lines.push("");
+  lines.push("steps:");
+  for (let i = 0; i < wf.steps.length; i++) {
+    const s = wf.steps[i];
+    lines.push(`  - step: ${s.step}`);
+    lines.push(`    type: ${s.type}`);
+    const nameLine = `    name: ${quote(s.name)}`;
+    if (s._from_pack) {
+      lines.push(`${nameLine}  # from pack: ${s._from_pack}`);
+    } else {
+      lines.push(nameLine);
+    }
+    if (i < wf.steps.length - 1) lines.push("");
+  }
+  return lines.join("\n") + "\n";
+}
+
+function quote(s: string): string {
+  // Quote if contains anything that would need it. Keep simple, no escaping beyond double quotes.
+  if (/^[a-zA-Z0-9_\-./]+$/.test(s)) return s;
+  return `"${s.replace(/"/g, '\\"')}"`;
+}
+
+// ---------- Catalog ----------
+
+async function loadCatalog(opts: { refresh?: boolean } = {}): Promise<Catalog> {
+  mkdirSync(CACHE_DIR, { recursive: true });
+
+  if (!opts.refresh && existsSync(CATALOG_CACHE)) {
+    const cached = JSON.parse(readFileSync(CATALOG_CACHE, "utf8")) as Catalog;
+    const ageHours = (Date.now() - new Date(cached.fetched_at).getTime()) / 3.6e6;
+    if (ageHours < CATALOG_TTL_HOURS) return cached;
+  }
+
+  console.error(`[catalog] fetching ${CATALOG_URL}...`);
+  const res = await fetch(CATALOG_URL);
+  if (!res.ok) throw new Error(`Catalog fetch failed: ${res.status} ${res.statusText}`);
+  const raw = (await res.json()) as Record<string, Array<{ name: string; path: string; category: string; type: string; description?: string }>>;
+
+  const components: Record<ComponentType, CatalogEntry[]> = {
+    agent: [], command: [], mcp: [], hook: [], setting: [], skill: [],
+  };
+
+  // Upstream JSON pluralizes the top-level keys. Map them to singular type names.
+  const keyMap: Record<string, ComponentType> = {
+    agents: "agent",
+    commands: "command",
+    mcps: "mcp",
+    hooks: "hook",
+    settings: "setting",
+    skills: "skill",
+  };
+
+  for (const [pluralKey, list] of Object.entries(raw)) {
+    const type = keyMap[pluralKey];
+    if (!type || !Array.isArray(list)) continue;
+    for (const item of list) {
+      const installName = `${item.category}/${item.name}`;
+      components[type].push({
+        name: item.name,
+        path: item.path,
+        category: item.category,
+        type,
+        description: item.description,
+        install_name: installName,
+      });
+    }
+  }
+
+  const catalog: Catalog = {
+    fetched_at: new Date().toISOString(),
+    source_url: CATALOG_URL,
+    components,
+  };
+
+  // Strip giant `content` fields before caching; we only need metadata.
+  writeFileSync(CATALOG_CACHE, JSON.stringify(catalog, null, 2));
+  return catalog;
+}
+
+function findComponent(catalog: Catalog, type: ComponentType, installName: string): CatalogEntry | undefined {
+  return catalog.components[type].find((c) => c.install_name === installName || c.name === installName);
+}
+
+function fuzzyMatch(catalog: Catalog, type: ComponentType, query: string, max = 5): CatalogEntry[] {
+  const q = query.toLowerCase();
+  const scored = catalog.components[type]
+    .map((c) => ({ c, score: similarity(q, c.install_name.toLowerCase()) + similarity(q, c.name.toLowerCase()) * 0.5 }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, max);
+  return scored.map((s) => s.c);
+}
+
+function similarity(a: string, b: string): number {
+  if (a === b) return 1;
+  if (b.includes(a)) return 0.8;
+  if (a.includes(b)) return 0.7;
+  // Token overlap
+  const ta = new Set(a.split(/[-/_]/));
+  const tb = new Set(b.split(/[-/_]/));
+  const overlap = [...ta].filter((t) => tb.has(t)).length;
+  return overlap / Math.max(ta.size, tb.size);
+}
+
+// ---------- Packs ----------
+
+async function loadPacks(): Promise<Map<string, Pack>> {
+  const packs = new Map<string, Pack>();
+  const dirs = [BUNDLED_PACKS_DIR, USER_PACKS_DIR, join(process.cwd(), ".claude", "packs")];
+  for (const dir of dirs) {
+    if (!existsSync(dir)) continue;
+    for (const file of walkYaml(dir)) {
+      try {
+        const parsed = (await parseYaml(readFileSync(file, "utf8"))) as Pack;
+        if (!parsed?.name || !Array.isArray(parsed.components)) continue;
+        parsed.source_path = file;
+        // Later sources (user, project) override earlier (bundled) by name.
+        packs.set(parsed.name, parsed);
+      } catch (e) {
+        console.error(`[packs] failed to parse ${file}: ${(e as Error).message}`);
+      }
+    }
+  }
+  return packs;
+}
+
+function walkYaml(dir: string): string[] {
+  const out: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    const p = join(dir, entry);
+    const s = statSync(p);
+    if (s.isDirectory()) out.push(...walkYaml(p));
+    else if (entry.endsWith(".yaml") || entry.endsWith(".yml")) out.push(p);
+  }
+  return out;
+}
+
+// ---------- Templates ----------
+// The 14 upstream templates are not currently in components.json. They live in the repo under
+// cli-tool/templates/<name>/. For now we treat them as named bundles documented in the README,
+// resolved by hardcoded mapping. Future: scrape the repo's template definitions at refresh time.
+
+const KNOWN_TEMPLATES: Record<string, { description: string; components: PackEntry[] }> = {
+  // Minimal hand-curated list. Compose from individual components for full control.
+  // To add more, run: scripts/aitmpl-compose templates refresh (TODO future).
+  "minimal": {
+    description: "Lightweight configuration with essentials",
+    components: [
+      { type: "agent", name: "development-team/code-architect" },
+    ],
+  },
+};
+
+// ---------- Stack detection ----------
+
+interface DetectedStack {
+  stacks: string[];
+  suggested: PackEntry[];
+}
+
+function detectStack(cwd: string = process.cwd()): DetectedStack {
+  const stacks: string[] = [];
+  const suggested: PackEntry[] = [];
+
+  const hasFile = (rel: string) => existsSync(join(cwd, rel));
+  const readJson = (rel: string): Record<string, unknown> | null => {
+    try { return JSON.parse(readFileSync(join(cwd, rel), "utf8")); } catch { return null; }
+  };
+
+  if (hasFile("package.json")) {
+    const pkg = readJson("package.json") ?? {};
+    const deps = { ...(pkg.dependencies as object || {}), ...(pkg.devDependencies as object || {}) };
+    const has = (n: string) => n in deps;
+    stacks.push("node");
+    if (has("react")) { stacks.push("react"); suggested.push({ type: "agent", name: "development-team/frontend-developer" }); }
+    if (has("vue")) { stacks.push("vue"); suggested.push({ type: "agent", name: "development-team/frontend-developer" }); }
+    if (has("astro")) { stacks.push("astro"); }
+    if (has("hono")) { stacks.push("hono"); suggested.push({ type: "agent", name: "development-team/backend-developer" }); }
+    if (has("next")) { stacks.push("nextjs"); }
+    if (has("vitest") || has("playwright")) { stacks.push("testing"); suggested.push({ type: "command", name: "testing/generate-tests" }); }
+  }
+
+  if (hasFile("Cargo.toml")) {
+    stacks.push("rust");
+    const cargo = readFileSync(join(cwd, "Cargo.toml"), "utf8");
+    if (cargo.includes("workers-rs")) { stacks.push("cloudflare-workers-rust"); }
+    if (cargo.includes("aya")) { stacks.push("ebpf"); }
+  }
+
+  if (hasFile("wrangler.toml") || hasFile("wrangler.jsonc") || hasFile("wrangler.json")) {
+    stacks.push("cloudflare-workers");
+    suggested.push({ type: "mcp", name: "development/cloudflare-developer-platform" });
+  }
+
+  if (hasFile("pyproject.toml") || hasFile("requirements.txt")) {
+    stacks.push("python");
+  }
+
+  if (hasFile("flake.nix") || hasFile("shell.nix")) {
+    stacks.push("nix");
+  }
+
+  if (hasFile(".tool-versions") || hasFile("mise.toml") || hasFile(".mise.toml")) {
+    stacks.push("mise");
+  }
+
+  if (hasFile("Dockerfile") || hasFile("docker-compose.yml") || hasFile("compose.yaml")) {
+    stacks.push("docker");
+    suggested.push({ type: "command", name: "devops/docker-setup" });
+  }
+
+  return { stacks, suggested };
+}
+
+// ---------- Compose ----------
+
+interface ComposeInput {
+  name: string;
+  description?: string;
+  tags?: string[];
+  templates: string[];          // template names
+  workflows: string[];           // paths to existing workflow.yaml files
+  packs: string[];               // pack names
+  add: PackEntry[];              // cherry-picks (type:install_name)
+  emit_template?: boolean;       // emit template.json instead of workflow.yaml
+}
+
+async function compose(input: ComposeInput, catalog: Catalog, packs: Map<string, Pack>): Promise<{ workflow: Workflow; header: string[]; pack_origins: Map<string, string> }> {
+  const collected: Array<{ entry: PackEntry; from_pack?: string }> = [];
+  const header: string[] = [
+    `Composed by aitmpl-compose on ${new Date().toISOString()}`,
+  ];
+
+  // 1. Expand templates
+  for (const tplName of input.templates) {
+    const tpl = KNOWN_TEMPLATES[tplName];
+    if (!tpl) {
+      throw new Error(`Unknown template '${tplName}'. Known templates: ${Object.keys(KNOWN_TEMPLATES).join(", ")}`);
+    }
+    header.push(`Includes template: ${tplName}`);
+    for (const c of tpl.components) collected.push({ entry: c, from_pack: `template:${tplName}` });
+  }
+
+  // 2. Expand workflow YAML files
+  for (const wfPath of input.workflows) {
+    const wf = (await parseYaml(readFileSync(wfPath, "utf8"))) as Workflow;
+    header.push(`Includes workflow: ${wfPath}`);
+    for (const s of wf.steps ?? []) {
+      if ((s as unknown as { pack?: string }).pack) {
+        const packName = (s as unknown as { pack: string }).pack;
+        const pack = packs.get(packName);
+        if (!pack) throw new Error(`Workflow ${wfPath} references unknown pack '${packName}'`);
+        for (const c of pack.components) collected.push({ entry: c, from_pack: packName });
+      } else if (s.type && s.name) {
+        collected.push({ entry: { type: s.type, name: s.name } });
+      }
+    }
+  }
+
+  // 3. Expand packs
+  for (const packName of input.packs) {
+    const pack = packs.get(packName);
+    if (!pack) {
+      const known = [...packs.keys()].join(", ");
+      throw new Error(`Unknown pack '${packName}'. Known: ${known || "(none)"}`);
+    }
+    header.push(`Includes pack: ${packName}`);
+    for (const c of pack.components) collected.push({ entry: c, from_pack: packName });
+  }
+
+  // 4. Add cherry-picks
+  for (const c of input.add) collected.push({ entry: c });
+
+  // 5. Validate every component against the catalog
+  const errors: string[] = [];
+  for (const { entry } of collected) {
+    const found = findComponent(catalog, entry.type, entry.name);
+    if (!found) {
+      const suggestions = fuzzyMatch(catalog, entry.type, entry.name, 3);
+      const hint = suggestions.length
+        ? ` Did you mean: ${suggestions.map((s) => `${s.install_name}`).join(", ")}?`
+        : "";
+      errors.push(`Unknown ${entry.type}: '${entry.name}'.${hint}`);
+    }
+  }
+  if (errors.length) throw new Error("Validation failed:\n  " + errors.join("\n  "));
+
+  // 6. Dedupe by (type, name); first occurrence wins for pack origin
+  const seen = new Map<string, { entry: PackEntry; from_pack?: string }>();
+  for (const c of collected) {
+    const key = `${c.entry.type}:${c.entry.name}`;
+    if (!seen.has(key)) seen.set(key, c);
+  }
+
+  // 7. Sort by TYPE_ORDER, preserve insertion order within type
+  const grouped = new Map<ComponentType, Array<{ entry: PackEntry; from_pack?: string }>>();
+  for (const t of TYPE_ORDER) grouped.set(t, []);
+  for (const c of seen.values()) grouped.get(c.entry.type)?.push(c);
+
+  // 8. Build workflow steps
+  const steps: WorkflowStep[] = [];
+  const pack_origins = new Map<string, string>();
+  let stepNum = 1;
+  for (const t of TYPE_ORDER) {
+    for (const c of grouped.get(t) ?? []) {
+      const step: WorkflowStep = { step: stepNum++, type: t, name: c.entry.name };
+      if (c.from_pack) {
+        step._from_pack = c.from_pack;
+        pack_origins.set(`${t}:${c.entry.name}`, c.from_pack);
+      }
+      steps.push(step);
+    }
+  }
+
+  const workflow: Workflow = {
+    name: input.name,
+    description: input.description,
+    tags: input.tags,
+    steps,
+  };
+
+  return { workflow, header, pack_origins };
+}
+
+// ---------- Subcommand handlers ----------
+
+async function cmdCatalog(args: string[]): Promise<number> {
+  const sub = args[0] ?? "list";
+  if (sub === "refresh") {
+    const cat = await loadCatalog({ refresh: true });
+    const total = Object.values(cat.components).reduce((n, list) => n + list.length, 0);
+    console.log(`Refreshed catalog: ${total} components`);
+    for (const t of COMPONENT_TYPES) console.log(`  ${t}: ${cat.components[t].length}`);
+    return 0;
+  }
+  const cat = await loadCatalog();
+  if (sub === "list") {
+    const typeFlag = args.indexOf("--type");
+    const type = typeFlag >= 0 ? (args[typeFlag + 1] as ComponentType) : null;
+    const types = type ? [type] : COMPONENT_TYPES;
+    for (const t of types) {
+      console.log(`\n# ${t} (${cat.components[t].length})`);
+      for (const c of cat.components[t]) console.log(`  ${c.install_name}`);
+    }
+    return 0;
+  }
+  if (sub === "search") {
+    const query = args.slice(1).join(" ");
+    if (!query) { console.error("Usage: catalog search <query>"); return 2; }
+    for (const t of COMPONENT_TYPES) {
+      const matches = fuzzyMatch(cat, t, query, 5).filter((c) => similarity(query.toLowerCase(), c.install_name.toLowerCase()) > 0.2);
+      if (matches.length) {
+        console.log(`\n# ${t}`);
+        for (const c of matches) console.log(`  ${c.install_name}  ${c.description?.slice(0, 60) ?? ""}`);
+      }
+    }
+    return 0;
+  }
+  console.error(`Unknown catalog subcommand: ${sub}`);
+  return 2;
+}
+
+async function cmdPacks(args: string[]): Promise<number> {
+  const sub = args[0] ?? "list";
+  const packs = await loadPacks();
+  if (sub === "list") {
+    if (packs.size === 0) { console.log("(no packs available; create one with `aitmpl-compose new-pack`)"); return 0; }
+    for (const [name, pack] of packs) {
+      const sourceLabel = pack.source_path.startsWith(BUNDLED_PACKS_DIR) ? "bundled"
+        : pack.source_path.startsWith(USER_PACKS_DIR) ? "user"
+        : "project";
+      console.log(`${name}  [${sourceLabel}]  ${pack.description}`);
+    }
+    return 0;
+  }
+  if (sub === "show") {
+    const name = args[1];
+    if (!name) { console.error("Usage: packs show <name>"); return 2; }
+    const pack = packs.get(name);
+    if (!pack) { console.error(`Unknown pack: ${name}`); return 1; }
+    console.log(`# ${pack.name}`);
+    console.log(`# ${pack.description}`);
+    console.log(`# source: ${pack.source_path}`);
+    console.log("");
+    for (const c of pack.components) console.log(`${c.type}: ${c.name}`);
+    return 0;
+  }
+  console.error(`Unknown packs subcommand: ${sub}`);
+  return 2;
+}
+
+async function cmdNewPack(args: string[]): Promise<number> {
+  // Non-interactive mode (driven by Claude): accept --name, --description, --component flags.
+  const { values } = parseArgs({
+    args,
+    options: {
+      name: { type: "string" },
+      description: { type: "string" },
+      component: { type: "string", multiple: true },
+      scope: { type: "string", default: "user" }, // user | project
+    },
+    allowPositionals: true,
+    strict: false,
+  });
+
+  if (!values.name) {
+    console.error("Usage: new-pack --name <scope/name> --description <text> --component <type>:<install_name> [...]");
+    console.error("Example: new-pack --name bodnar/cf-platform --description 'Cloudflare base' --component agent:development-team/backend-developer");
+    return 2;
+  }
+
+  const components: PackEntry[] = (values.component as string[] ?? []).map((spec) => {
+    const [type, ...rest] = spec.split(":");
+    const name = rest.join(":");
+    if (!COMPONENT_TYPES.includes(type as ComponentType)) {
+      throw new Error(`Invalid component type '${type}'. Must be one of: ${COMPONENT_TYPES.join(", ")}`);
+    }
+    if (!name) throw new Error(`Missing install name in --component ${spec}. Expected <type>:<category>/<name>.`);
+    return { type: type as ComponentType, name };
+  });
+
+  // Validate against catalog
+  const catalog = await loadCatalog();
+  const missing = components.filter((c) => !findComponent(catalog, c.type, c.name));
+  if (missing.length) {
+    for (const m of missing) {
+      const suggestions = fuzzyMatch(catalog, m.type, m.name, 3);
+      console.error(`Unknown ${m.type}: ${m.name}. Suggestions: ${suggestions.map((s) => s.install_name).join(", ") || "(none)"}`);
+    }
+    return 1;
+  }
+
+  const baseDir = values.scope === "project" ? join(process.cwd(), ".claude", "packs") : USER_PACKS_DIR;
+  mkdirSync(baseDir, { recursive: true });
+
+  const safe = (values.name as string).replace(/[^a-zA-Z0-9_/-]/g, "_");
+  const filePath = join(baseDir, `${safe.replace("/", "__")}.yaml`);
+
+  const lines = [
+    `name: ${quote(values.name as string)}`,
+    `description: ${quote((values.description as string) ?? "")}`,
+    `components:`,
+    ...components.map((c) => `  - { type: ${c.type}, name: ${quote(c.name)} }`),
+  ];
+  writeFileSync(filePath, lines.join("\n") + "\n");
+  console.log(`Wrote pack: ${filePath}`);
+  return 0;
+}
+
+async function cmdCompose(args: string[]): Promise<number> {
+  const { values } = parseArgs({
+    args,
+    options: {
+      name: { type: "string" },
+      description: { type: "string" },
+      tags: { type: "string" },
+      templates: { type: "string" },
+      workflows: { type: "string" },
+      packs: { type: "string" },
+      add: { type: "string", multiple: true },
+      out: { type: "string" },
+      "emit-template": { type: "boolean" },
+      "selection-file": { type: "string" },
+    },
+    allowPositionals: true,
+    strict: false,
+  });
+
+  // Support a selection-file JSON for the interactive selector path
+  let inputBase: ComposeInput | null = null;
+  if (values["selection-file"]) {
+    const sel = JSON.parse(readFileSync(values["selection-file"] as string, "utf8"));
+    inputBase = {
+      name: sel.name,
+      description: sel.description,
+      tags: sel.tags,
+      templates: sel.templates ?? [],
+      workflows: sel.workflows ?? [],
+      packs: sel.packs ?? [],
+      add: sel.components ?? [],  // selector emits { type, name } entries directly
+      emit_template: sel.emit_template,
+    };
+  }
+
+  if (!inputBase && !values.name) {
+    console.error("Usage: compose --name <name> [--description ...] [--templates a,b] [--packs x,y] [--add type:name ...] [--out path]");
+    console.error("       compose --selection-file <path-to-selection.json>");
+    return 2;
+  }
+
+  const input: ComposeInput = inputBase ?? {
+    name: values.name as string,
+    description: values.description as string | undefined,
+    tags: values.tags ? (values.tags as string).split(",").map((s) => s.trim()) : undefined,
+    templates: values.templates ? (values.templates as string).split(",").map((s) => s.trim()) : [],
+    workflows: values.workflows ? (values.workflows as string).split(",").map((s) => s.trim()) : [],
+    packs: values.packs ? (values.packs as string).split(",").map((s) => s.trim()) : [],
+    add: (values.add as string[] ?? []).map((spec) => {
+      const [type, ...rest] = spec.split(":");
+      return { type: type as ComponentType, name: rest.join(":") };
+    }),
+    emit_template: values["emit-template"] as boolean | undefined,
+  };
+
+  const catalog = await loadCatalog();
+  const packs = await loadPacks();
+  const { workflow, header } = await compose(input, catalog, packs);
+
+  const outPath = (values.out as string | undefined) ?? join(process.cwd(), ".claude", "workflows", `${input.name}.yaml`);
+  mkdirSync(dirname(outPath), { recursive: true });
+
+  if (input.emit_template) {
+    // template.json shape: { name, description, components: { agents: [...], commands: [...], ... } }
+    const grouped: Record<string, string[]> = { agents: [], commands: [], mcps: [], hooks: [], settings: [], skills: [] };
+    const pluralMap: Record<ComponentType, string> = {
+      agent: "agents", command: "commands", mcp: "mcps", hook: "hooks", setting: "settings", skill: "skills",
+    };
+    for (const s of workflow.steps) grouped[pluralMap[s.type]].push(s.name);
+    const tpl = { name: workflow.name, description: workflow.description ?? "", components: grouped };
+    writeFileSync(outPath.replace(/\.ya?ml$/, ".json"), JSON.stringify(tpl, null, 2));
+    console.log(`Wrote template: ${outPath.replace(/\.ya?ml$/, ".json")}`);
+  } else {
+    writeFileSync(outPath, emitWorkflowYaml(workflow, header));
+    console.log(`Wrote workflow: ${outPath}`);
+    console.log(`  ${workflow.steps.length} components`);
+    const counts: Record<string, number> = {};
+    for (const s of workflow.steps) counts[s.type] = (counts[s.type] ?? 0) + 1;
+    for (const [t, n] of Object.entries(counts)) console.log(`    ${t}: ${n}`);
+    console.log(`\nInstall with:`);
+    console.log(`  npx claude-code-templates@latest --workflow ${outPath} --yes`);
+  }
+  return 0;
+}
+
+async function cmdValidate(args: string[]): Promise<number> {
+  const path = args[0];
+  if (!path) { console.error("Usage: validate <workflow.yaml>"); return 2; }
+  const wf = (await parseYaml(readFileSync(path, "utf8"))) as Workflow;
+  const catalog = await loadCatalog();
+  const errors: string[] = [];
+  for (const s of wf.steps ?? []) {
+    if ((s as unknown as { pack?: string }).pack) continue;  // packs are not validated here; use `expand` first
+    if (!s.type || !s.name) { errors.push(`step ${s.step}: missing type or name`); continue; }
+    const found = findComponent(catalog, s.type, s.name);
+    if (!found) {
+      const suggestions = fuzzyMatch(catalog, s.type, s.name, 3);
+      errors.push(`step ${s.step}: unknown ${s.type} '${s.name}'. Suggestions: ${suggestions.map((x) => x.install_name).join(", ") || "(none)"}`);
+    }
+  }
+  if (errors.length) {
+    for (const e of errors) console.error(e);
+    return 1;
+  }
+  console.log(`OK: ${wf.steps?.length ?? 0} steps validated`);
+  return 0;
+}
+
+async function cmdExpand(args: string[]): Promise<number> {
+  const path = args[0];
+  if (!path) { console.error("Usage: expand <workflow.yaml>"); return 2; }
+  const wf = (await parseYaml(readFileSync(path, "utf8"))) as Workflow & { steps?: Array<WorkflowStep | { step: number; pack: string }> };
+  const packs = await loadPacks();
+  const expanded: WorkflowStep[] = [];
+  let stepNum = 1;
+  for (const s of wf.steps ?? []) {
+    if ("pack" in s) {
+      const pack = packs.get(s.pack);
+      if (!pack) throw new Error(`Unknown pack: ${s.pack}`);
+      for (const c of pack.components) {
+        expanded.push({ step: stepNum++, type: c.type, name: c.name, _from_pack: pack.name });
+      }
+    } else {
+      expanded.push({ step: stepNum++, type: s.type, name: s.name });
+    }
+  }
+  const out: Workflow = { name: wf.name, description: wf.description, tags: wf.tags, steps: expanded };
+  process.stdout.write(emitWorkflowYaml(out, [`Expanded from ${path} on ${new Date().toISOString()}`]));
+  return 0;
+}
+
+async function cmdDetect(_args: string[]): Promise<number> {
+  const result = detectStack();
+  // Filter suggestions against the live catalog so we never suggest non-existent components
+  try {
+    const catalog = await loadCatalog();
+    result.suggested = result.suggested.filter((s) => !!findComponent(catalog, s.type, s.name));
+  } catch {
+    // If the catalog can't be loaded, return suggestions unfiltered; better than crashing on detect.
+  }
+  console.log(JSON.stringify(result, null, 2));
+  return 0;
+}
+
+// ---------- Entry ----------
+
+function printHelp(): void {
+  console.log(`aitmpl-compose: Author and compose claude-code-templates workflows.
+
+Usage:
+  aitmpl-compose <subcommand> [args]
+
+Subcommands:
+  catalog refresh                          Refresh the local catalog cache
+  catalog list [--type <type>]             List catalog components
+  catalog search <query>                   Fuzzy search the catalog
+  packs list                               List available packs
+  packs show <name>                        Show a pack's component list
+  new-pack --name <scope/name> [...]       Author a new pack
+  compose --name <name> [...] [--out path] Compose a workflow.yaml
+  validate <workflow.yaml>                 Validate against the catalog
+  expand <workflow.yaml>                   Expand pack: references inline
+  detect                                   Detect tech stack of CWD
+
+Types: agent, command, mcp, hook, setting, skill
+
+Examples:
+  aitmpl-compose catalog refresh
+  aitmpl-compose catalog search cloudflare
+  aitmpl-compose compose --name cf-base \\
+    --packs bodnar/cf-platform \\
+    --add agent:development-team/rust-systems-expert \\
+    --out .claude/workflows/cf-base.yaml
+  aitmpl-compose validate .claude/workflows/cf-base.yaml
+`);
+}
+
+async function main(): Promise<number> {
+  const [, , sub, ...rest] = process.argv;
+  if (!sub || sub === "--help" || sub === "-h") { printHelp(); return 0; }
+  try {
+    switch (sub) {
+      case "catalog": return await cmdCatalog(rest);
+      case "packs": return await cmdPacks(rest);
+      case "new-pack": return await cmdNewPack(rest);
+      case "compose": return await cmdCompose(rest);
+      case "validate": return await cmdValidate(rest);
+      case "expand": return await cmdExpand(rest);
+      case "detect": return await cmdDetect(rest);
+      default:
+        console.error(`Unknown subcommand: ${sub}`);
+        printHelp();
+        return 2;
+    }
+  } catch (e) {
+    console.error(`Error: ${(e as Error).message}`);
+    return 1;
+  }
+}
+
+const code = await main();
+process.exit(code);

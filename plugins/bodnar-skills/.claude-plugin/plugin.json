@@ -1,0 +1,20 @@
+{
+  "name": "bodnar-skills",
+  "version": "1.0.0",
+  "description": "Daniel Bodnar's personal Claude skill set (28 skills): platform/SRE engineering, Cloudflare composition, Bun/TypeScript tooling, Nushell, design systems, and writing.",
+  "author": {
+    "name": "Daniel Bodnar",
+    "email": "1790726+danielbodnar@users.noreply.github.com",
+    "url": "https://github.com/danielbodnar"
+  },
+  "homepage": "https://github.com/danielbodnar/agent-plugins/tree/main/plugins/bodnar-skills",
+  "license": "MIT",
+  "keywords": [
+    "cloudflare",
+    "bun",
+    "nushell",
+    "platform-engineering",
+    "sre",
+    "skills"
+  ]
+}

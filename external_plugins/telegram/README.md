@@ -26,7 +26,7 @@ These are Claude Code commands — run `claude` to start a session first.
 
 Install the plugin:
 ```
-/plugin install telegram@claude-plugins-official
+/plugin install telegram@bodnar-agent-plugins
 /reload-plugins
 ```
 
@@ -45,7 +45,7 @@ Writes `TELEGRAM_BOT_TOKEN=...` to `~/.claude/channels/telegram/.env`. You can a
 The server won't connect without this — exit your session and start a new one:
 
 ```sh
-claude --channels plugin:telegram@claude-plugins-official
+claude --channels plugin:telegram@bodnar-agent-plugins
 ```
 
 **5. Pair.**

@@ -1,0 +1,70 @@
+#!/usr/bin/env bun
+// skip add <full_name> --reason "..." [--expires=ISO8601]
+// skip remove <full_name>
+// skip list
+
+import { openDb, addSkip, removeSkip, listSkips, pruneExpiredSkips } from "./lib/state.ts";
+import { parseArgs } from "node:util";
+
+const subcommand = process.argv[2];
+
+if (subcommand === "list") {
+  const db = openDb();
+  pruneExpiredSkips(db);
+  const skips = listSkips(db);
+  if (skips.length === 0) {
+    console.log("No repos on the skip list.");
+  } else {
+    for (const s of skips) {
+      const expiry = s.expires_at ? `(expires ${s.expires_at})` : "(permanent)";
+      console.log(`${s.full_name} ${expiry}`);
+      console.log(`  reason: ${s.reason}`);
+      console.log(`  added: ${s.added_at}${s.added_by ? ` by ${s.added_by}` : ""}`);
+    }
+  }
+  db.close();
+  process.exit(0);
+}
+
+const restArgs = process.argv.slice(3);
+const { values, positionals } = parseArgs({
+  args: restArgs,
+  options: {
+    reason: { type: "string" },
+    expires: { type: "string" },
+    "added-by": { type: "string" },
+  },
+  allowPositionals: true,
+});
+
+const full_name = positionals[0];
+
+if (subcommand === "add") {
+  if (!full_name || !values.reason) {
+    console.error("Usage: skip add <full_name> --reason \"<reason>\" [--expires=ISO8601] [--added-by=<who>]");
+    process.exit(1);
+  }
+  const db = openDb();
+  addSkip(db, full_name, values.reason, {
+    expires_at: values.expires ?? null,
+    added_by: values["added-by"] ?? null,
+  });
+  console.log(`Added ${full_name} to skip list.`);
+  db.close();
+  process.exit(0);
+}
+
+if (subcommand === "remove") {
+  if (!full_name) {
+    console.error("Usage: skip remove <full_name>");
+    process.exit(1);
+  }
+  const db = openDb();
+  const removed = removeSkip(db, full_name);
+  console.log(removed ? `Removed ${full_name} from skip list.` : `${full_name} was not on the skip list.`);
+  db.close();
+  process.exit(0);
+}
+
+console.error("Usage: skip add | remove | list");
+process.exit(1);

@@ -1,0 +1,68 @@
+#!/usr/bin/env sh
+# cloudflare-compose — one-time environment bootstrap.
+#
+# Ensures `bun` is on PATH, then installs the two Cloudflare CLIs this skill
+# leans on globally: `cf` (the official Cloudflare CLI preview, from Agents
+# Week April 2026) and `wrangler` (canonical Workers/bindings management).
+#
+# POSIX sh, not bash or bun, because this is the script that runs *before*
+# any JS runtime is guaranteed to be available.
+#
+# Usage:
+#   ./scripts/init
+#
+# Idempotent. Safe to run repeatedly.
+
+set -eu
+
+log() { printf "[init] %s\n" "$*"; }
+err() { printf "[init] error: %s\n" "$*" >&2; }
+
+# --- Step 1: ensure bun ----------------------------------------------------
+if command -v bun >/dev/null 2>&1; then
+  log "bun is already installed: $(bun --version)"
+else
+  log "bun not found; installing via npm"
+  if ! command -v npm >/dev/null 2>&1; then
+    err "neither bun nor npm is on PATH. Install Node.js/npm first, then re-run."
+    err "  macOS:   brew install node"
+    err "  Linux:   see https://nodejs.org/ or use your distro package manager"
+    exit 1
+  fi
+  # Global install via npm. The user's standing preference is Bun-first, and
+  # this is the explicit fallback when Bun isn't already present.
+  npm install --global bun@latest
+  log "bun installed: $(bun --version)"
+fi
+
+# --- Step 2: install Cloudflare CLIs globally via bun ----------------------
+log "installing cf@latest and wrangler@latest globally via bun"
+bun install --global cf@latest wrangler@latest
+
+# --- Step 3: PATH sanity check --------------------------------------------
+# Bun's global bin directory may not be on $PATH on first install. Surface
+# the path so the user can add it to their shell rc if needed.
+BUN_BIN="$(bun pm bin --global 2>/dev/null || echo "$HOME/.bun/bin")"
+if ! printf "%s" "$PATH" | tr ':' '\n' | grep -qxF "$BUN_BIN"; then
+  log "note: $BUN_BIN is not on \$PATH"
+  log "      add this to your shell rc:"
+  log "        export PATH=\"$BUN_BIN:\$PATH\""
+fi
+
+# --- Step 4: verify -------------------------------------------------------
+export PATH="$BUN_BIN:$PATH"
+if command -v cf >/dev/null 2>&1; then
+  log "cf installed:       $(cf --version 2>&1 | tail -1 | head -c 80)"
+else
+  err "cf installed but not found on PATH after install"
+  exit 1
+fi
+if command -v wrangler >/dev/null 2>&1; then
+  log "wrangler installed: $(wrangler --version)"
+else
+  err "wrangler installed but not found on PATH after install"
+  exit 1
+fi
+
+log "bootstrap complete."
+log "next step: run ./scripts/cli to browse the command catalog."

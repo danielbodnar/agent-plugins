@@ -1,0 +1,3897 @@
+{
+  "meta": {
+    "fetched_at": "2026-04-17T03:25:24.049Z",
+    "sources_fetched": [
+      "c3",
+      "cloudflare-templates",
+      "reference-architecture",
+      "first-party-repo",
+      "user-github"
+    ],
+    "sources_failed": [],
+    "entry_count": 161
+  },
+  "entries": [
+    {
+      "catalog_id": "c3:analog",
+      "name": "analog",
+      "description": "analog",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "analog"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/analog",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:angular",
+      "name": "angular",
+      "description": "angular",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "angular"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/angular",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:astro",
+      "name": "astro",
+      "description": "astro",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "astro"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/astro",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:common",
+      "name": "common",
+      "description": "common",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "common"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/common",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:docusaurus",
+      "name": "docusaurus",
+      "description": "docusaurus",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "docusaurus"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/docusaurus",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:gatsby",
+      "name": "gatsby",
+      "description": "gatsby",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "gatsby"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/gatsby",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:hello-world",
+      "name": "hello-world",
+      "description": "hello-world",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "hello-world"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/hello-world",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:hello-world-assets-only",
+      "name": "hello-world-assets-only",
+      "description": "hello-world-assets-only",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "hello-world-assets-only"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/hello-world-assets-only",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:hello-world-durable-object",
+      "name": "hello-world-durable-object",
+      "description": "hello-world-durable-object",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "hello-world-durable-object"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/hello-world-durable-object",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:hello-world-durable-object-with-assets",
+      "name": "hello-world-durable-object-with-assets",
+      "description": "hello-world-durable-object-with-assets",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "hello-world-durable-object-with-assets"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/hello-world-durable-object-with-assets",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:hello-world-with-assets",
+      "name": "hello-world-with-assets",
+      "description": "hello-world-with-assets",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "hello-world-with-assets"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/hello-world-with-assets",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:hello-world-workflows",
+      "name": "hello-world-workflows",
+      "description": "hello-world-workflows",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "hello-world-workflows"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/hello-world-workflows",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:hono",
+      "name": "hono",
+      "description": "hono",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "hono"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/hono",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:next",
+      "name": "next",
+      "description": "next",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "next"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/next",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:nuxt",
+      "name": "nuxt",
+      "description": "nuxt",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "nuxt"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/nuxt",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:openapi",
+      "name": "openapi",
+      "description": "openapi",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "openapi"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/openapi",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:pre-existing",
+      "name": "pre-existing",
+      "description": "pre-existing",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "pre-existing"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/pre-existing",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:queues",
+      "name": "queues",
+      "description": "queues",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "queues"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/queues",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:qwik",
+      "name": "qwik",
+      "description": "qwik",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "qwik"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/qwik",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:react",
+      "name": "react",
+      "description": "react",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "react"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/react",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:react-router",
+      "name": "react-router",
+      "description": "react-router",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "react-router"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/react-router",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:redwood",
+      "name": "redwood",
+      "description": "redwood",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "redwood"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/redwood",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:scheduled",
+      "name": "scheduled",
+      "description": "scheduled",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "scheduled"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/scheduled",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:solid",
+      "name": "solid",
+      "description": "solid",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "solid"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/solid",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:svelte",
+      "name": "svelte",
+      "description": "svelte",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "svelte"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/svelte",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:tanstack-start",
+      "name": "tanstack-start",
+      "description": "tanstack-start",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "tanstack-start"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/tanstack-start",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:vike",
+      "name": "vike",
+      "description": "vike",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "vike"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/vike",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:vue",
+      "name": "vue",
+      "description": "vue",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "vue"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/vue",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "c3:waku",
+      "name": "waku",
+      "description": "waku",
+      "type": "template",
+      "source": "c3",
+      "action": "create-cloudflare",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "template_id": "waku"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare/templates/waku",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/astro-blog-starter-template",
+      "name": "astro-blog-starter-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/astro-blog-starter-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Astro"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "astro-blog-starter-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/astro-blog-starter-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/chanfana-openapi-template",
+      "name": "chanfana-openapi-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/chanfana-openapi-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "D1",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "chanfana-openapi-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/chanfana-openapi-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/cli",
+      "name": "cli",
+      "description": "A handy CLI for developing templates.",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "cli"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/cli",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/containers-template",
+      "name": "containers-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/containers-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "DurableObjects",
+        "WorkersAI",
+        "Containers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "containers-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/containers-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/d1-starter-sessions-api-template",
+      "name": "d1-starter-sessions-api-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/d1-starter-sessions-api-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "D1",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "d1-starter-sessions-api-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/d1-starter-sessions-api-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/d1-template",
+      "name": "d1-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/d1-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "d1-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/d1-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/durable-chat-template",
+      "name": "durable-chat-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/durable-chat-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "durable-chat-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/durable-chat-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/hello-world-do-template",
+      "name": "hello-world-do-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/hello-world-do-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "hello-world-do-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/hello-world-do-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/llm-chat-app-template",
+      "name": "llm-chat-app-template",
+      "description": "A simple, ready-to-deploy chat application template powered by Cloudflare Workers AI. This template provides a clean starting point for building AI chat applications with streaming responses.",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "llm-chat-app-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/llm-chat-app-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/microfrontend-template",
+      "name": "microfrontend-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/microfrontend-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "microfrontend-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/microfrontend-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/multiplayer-globe-template",
+      "name": "multiplayer-globe-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/multiplayer-globe-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "multiplayer-globe-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/multiplayer-globe-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/mysql-hyperdrive-template",
+      "name": "mysql-hyperdrive-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/mysql-hyperdrive-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI",
+        "Hyperdrive"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "mysql-hyperdrive-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/mysql-hyperdrive-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/next-starter-template",
+      "name": "next-starter-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/next-starter-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React",
+        "Next.js"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "next-starter-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/next-starter-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/nlweb-template",
+      "name": "nlweb-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/nlweb-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "DurableObjects",
+        "WorkersAI",
+        "Agents"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "nlweb-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/nlweb-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/nodejs-http-server-template",
+      "name": "nodejs-http-server-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/nodejs-http-server-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "nodejs-http-server-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/nodejs-http-server-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/openauth-template",
+      "name": "openauth-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/openauth-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "openauth-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/openauth-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/playwright-tests",
+      "name": "playwright-tests",
+      "description": "playwright-tests",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "playwright-tests"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/playwright-tests",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/postgres-hyperdrive-template",
+      "name": "postgres-hyperdrive-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/postgres-hyperdrive-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI",
+        "Hyperdrive"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "postgres-hyperdrive-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/postgres-hyperdrive-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/r2-explorer-template",
+      "name": "r2-explorer-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/r2-explorer-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "r2-explorer-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/r2-explorer-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/react-postgres-fullstack-template",
+      "name": "react-postgres-fullstack-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/react-postgres-fullstack-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI",
+        "Hyperdrive"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono",
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "react-postgres-fullstack-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/react-postgres-fullstack-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/react-router-hono-fullstack-template",
+      "name": "react-router-hono-fullstack-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/react-router-hono-fullstack-templat",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono",
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "react-router-hono-fullstack-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/react-router-hono-fullstack-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/react-router-postgres-ssr-template",
+      "name": "react-router-postgres-ssr-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/react-router-postgres-ssr-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI",
+        "Hyperdrive"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono",
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "react-router-postgres-ssr-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/react-router-postgres-ssr-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/react-router-starter-template",
+      "name": "react-router-starter-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/react-router-starter-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "react-router-starter-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/react-router-starter-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/remix-starter-template",
+      "name": "remix-starter-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/remix-starter-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "remix-starter-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/remix-starter-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/saas-admin-template",
+      "name": "saas-admin-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/saas-admin-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "D1",
+        "Workflows",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React",
+        "Astro"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "saas-admin-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/saas-admin-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/text-to-image-template",
+      "name": "text-to-image-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/text-to-image-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "text-to-image-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/text-to-image-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/to-do-list-kv-template",
+      "name": "to-do-list-kv-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/to-do-list-kv-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "KV",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "to-do-list-kv-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/to-do-list-kv-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/vite-react-template",
+      "name": "vite-react-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/vite-react-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono",
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "vite-react-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/vite-react-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/worker-publisher-template",
+      "name": "worker-publisher-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/worker-publisher-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "worker-publisher-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/worker-publisher-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/workers-builds-notifications-template",
+      "name": "workers-builds-notifications-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/workers-builds-notifications-templa",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "Queues",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "workers-builds-notifications-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/workers-builds-notifications-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/workers-for-platforms-template",
+      "name": "workers-for-platforms-template",
+      "description": "Build your own website hosting platform using [Cloudflare Workers for Platforms](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/). Users can create and deploy website",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "D1",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "workers-for-platforms-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/workers-for-platforms-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/workflows-starter-template",
+      "name": "workflows-starter-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/workflows-starter-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "DurableObjects",
+        "Workflows",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "workflows-starter-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/workflows-starter-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare-templates/x402-proxy-template",
+      "name": "x402-proxy-template",
+      "description": "[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/x402-proxy-template)",
+      "type": "template",
+      "source": "cloudflare-templates",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/templates",
+        "ref": "main",
+        "subpath": "x402-proxy-template"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/templates/tree/main/x402-proxy-template",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare/agents",
+      "name": "agents",
+      "description": "Build and deploy AI Agents on Cloudflare ",
+      "type": "demo",
+      "source": "first-party-repo",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "Agents",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/agents",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/agents",
+        "stars": 4774,
+        "last_updated": "2026-04-16T22:32:32Z",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare/agents-starter",
+      "name": "agents-starter",
+      "description": "A starter kit for building ai agents on Cloudflare",
+      "type": "demo",
+      "source": "first-party-repo",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "DurableObjects",
+        "WorkersAI",
+        "Agents"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/agents-starter",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/agents-starter",
+        "stars": 1233,
+        "last_updated": "2026-04-16T10:50:56Z",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare/ai",
+      "name": "ai",
+      "description": "",
+      "type": "demo",
+      "source": "first-party-repo",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "Agents",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/ai",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/ai",
+        "stars": 1001,
+        "last_updated": "2026-04-16T10:43:48Z",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare/sandbox",
+      "name": "sandbox",
+      "description": "Simple Linux seccomp rules without writing any code",
+      "type": "demo",
+      "source": "first-party-repo",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/sandbox",
+        "ref": "master"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/sandbox",
+        "stars": 523,
+        "last_updated": "2025-07-02T15:22:31Z",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare/workers-sdk",
+      "name": "workers-sdk",
+      "description": "⛅️ Home to Wrangler, the CLI for Cloudflare Workers®",
+      "type": "demo",
+      "source": "first-party-repo",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/workers-sdk",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workers-sdk",
+        "stars": 3980,
+        "last_updated": "2026-04-16T22:26:33Z",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:cloudflare/workflows-starter",
+      "name": "workflows-starter",
+      "description": "A starter template for Cloudflare Workflows. ",
+      "type": "demo",
+      "source": "first-party-repo",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "Workflows",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/cloudflare/workflows-starter",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/cloudflare/workflows-starter",
+        "stars": 46,
+        "last_updated": "2025-09-19T17:26:41Z",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/agents-starter",
+      "name": "danielbodnar/agents-starter",
+      "description": "A starter kit for building ai agents on Cloudflare",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "DurableObjects",
+        "WorkersAI",
+        "Agents"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/agents-starter",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/agents-starter",
+        "stars": 1,
+        "last_updated": "2026-03-18T19:45:37Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/cloudflare-agents",
+      "name": "danielbodnar/cloudflare-agents",
+      "description": "Build and deploy AI Agents on Cloudflare ",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "Agents",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/cloudflare-agents",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/cloudflare-agents",
+        "stars": 1,
+        "last_updated": "2026-04-16T02:43:09Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/cnc-resume",
+      "name": "danielbodnar/cnc-resume",
+      "description": "CNC-machined physical resume — design files, G-code, and documentation for a machined aluminum resume.",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/cnc-resume",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/cnc-resume",
+        "stars": 1,
+        "last_updated": "2025-12-21T09:04:36Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/jsonresume.org",
+      "name": "danielbodnar/jsonresume.org",
+      "description": "The mono repo that builds the homepage, utils, ui components, registry and anything else",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React",
+        "Next.js"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/jsonresume.org",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/jsonresume.org",
+        "stars": 1,
+        "last_updated": "2026-02-26T19:59:04Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/laravel-sandbox",
+      "name": "danielbodnar/laravel-sandbox",
+      "description": "A secure laravel development sandbox",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "Sandboxes"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/laravel-sandbox",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/laravel-sandbox",
+        "stars": 1,
+        "last_updated": "2026-03-18T19:45:50Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/mcp",
+      "name": "danielbodnar/mcp",
+      "description": "MCP server for the Cloudflare API",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "R2",
+        "KV",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/mcp",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/mcp",
+        "stars": 1,
+        "last_updated": "2026-03-18T19:44:15Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/ngfw.sh",
+      "name": "danielbodnar/ngfw.sh",
+      "description": "ngfw.sh is a cloud-managed next-generation firewall and router administration platform that runs on Cloudflare's Edge. It provides centralized management, configuration, monitoring, and security designed with families in mind.",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/ngfw.sh",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/ngfw.sh",
+        "stars": 1,
+        "last_updated": "2026-04-14T03:49:07Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/ocx",
+      "name": "danielbodnar/ocx",
+      "description": "OpenCode extension manager with portable, isolated profiles. Your setup, anywhere.",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "None"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/ocx",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/ocx",
+        "stars": 1,
+        "last_updated": "2026-01-27T02:29:47Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/openai-finetune-r2-example",
+      "name": "danielbodnar/openai-finetune-r2-example",
+      "description": "An example repo showing how to create finetuned OpenAI models using R2 and Workers",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "R2",
+        "WorkersAI"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/openai-finetune-r2-example",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/openai-finetune-r2-example",
+        "stars": 0,
+        "last_updated": "2026-01-17T00:56:51Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "gh:danielbodnar/vibesdk",
+      "name": "danielbodnar/vibesdk",
+      "description": "An open-source vibe coding platform that helps you build your own vibe-coding platform, built entirely on Cloudflare stack ",
+      "type": "custom",
+      "source": "user-github",
+      "action": "git-clone",
+      "products": [
+        "Workers",
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "WorkersAI",
+        "Containers",
+        "Agents",
+        "Sandboxes"
+      ],
+      "languages": [
+        "TypeScript"
+      ],
+      "frameworks": [
+        "Hono",
+        "React"
+      ],
+      "fields": {
+        "url": "https://github.com/danielbodnar/vibesdk",
+        "ref": "main"
+      },
+      "meta": {
+        "source_url": "https://github.com/danielbodnar/vibesdk",
+        "stars": 1,
+        "last_updated": "2026-04-09T12:11:24Z",
+        "official": false,
+        "user_owned": true
+      }
+    },
+    {
+      "catalog_id": "ra:ai/ai-asset-creation",
+      "name": "Content-based asset creation",
+      "description": "AI systems combine text-generation and text-to-image models to create visual content from text. They generate prompts, moderate content, and produce images for various applications.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-asset-creation/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-asset-creation/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:ai/ai-composable",
+      "name": "Composable AI architecture",
+      "description": "The architecture diagram illustrates how AI applications can be built end-to-end on Cloudflare, or single services can be integrated with external infrastructure and services.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "DurableObjects",
+        "Vectorize",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-composable/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-composable/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:ai/ai-multivendor-observability-control",
+      "name": "Multi-vendor AI observability and control",
+      "description": "By shifting features such as rate limiting, caching, and error handling to the proxy layer, organizations can apply unified configurations across services and inference service providers.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-multivendor-observability-control/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-multivendor-observability-control/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:ai/ai-rag",
+      "name": "Retrieval Augmented Generation (RAG)",
+      "description": "RAG combines retrieval with generative models for better text. It uses external knowledge to create factual, relevant responses, improving coherence and accuracy in NLP tasks like chatbots.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "DurableObjects",
+        "Queues",
+        "Vectorize",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-rag/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-rag/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:ai/ai-vibe-coding-platform",
+      "name": "AI Vibe Coding Platform",
+      "description": "Cloudflare's low-latency, fully serverless compute platform, Workers offers powerful capabilities to enable A/B testing using a server-side implementation.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "KV",
+        "DurableObjects",
+        "Containers",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-vibe-coding-platform/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-vibe-coding-platform/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:ai/ai-video-caption",
+      "name": "Automatic captioning for video uploads",
+      "description": "By integrating automatic speech recognition technology into video platforms, content creators, publishers, and distributors can reach a broader audience, including individuals with hearing impairments or those who prefer to consume content in different languages.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-video-caption/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-video-caption/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:ai/bigquery-workers-ai",
+      "name": "Ingesting BigQuery Data into Workers AI",
+      "description": "You can connect a Cloudflare Worker to get data from Google BigQuery and pass it to Workers AI, to run AI Models, powered by serverless GPUs.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "Vectorize",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/bigquery-workers-ai/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/bigquery-workers-ai/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:application-security/mtls",
+      "name": "Use mTLS with Cloudflare protected resources",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/application-security/mtls/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/application-security/mtls/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/ai-security-for-apps",
+      "name": "AI Security for Apps Reference Architecture",
+      "description": "This article highlights how Cloudflare's AI Security for Apps complements Cloudflare WAF by providing an AI protection layer for detecting and mitigating threats to AI-powered applications.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/ai-security-for-apps/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/ai-security-for-apps/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/cdn",
+      "name": "Content Delivery Network (CDN) Reference Architecture",
+      "description": "This reference architecture discusses the traditional challenges customers face with web applications, how the Cloudflare CDN resolves these challenges, and CDN architecture and design.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/cdn/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/cdn/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/cloudflare-sase-with-crowdstrike",
+      "name": "CrowdStrike and Cloudflare - A unified security ecosystem for automated, risk-based protection",
+      "description": "This reference architecture outlines how Cloudflare and CrowdStrike solutions integrate to create a unified security ecosystem that combines endpoint protection with zero trust network access, threat intelligence sharing, and automated remediation workflows. Organizations can leverage this integrati",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/cloudflare-sase-with-crowdstrike/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/cloudflare-sase-with-crowdstrike/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/cloudflare-sase-with-microsoft",
+      "name": "Reference Architecture using Cloudflare SASE with Microsoft",
+      "description": "This reference architecture explains how Microsoft and Cloudflare can be integrated together. By leveraging Cloudflare's secure network access, risky user isolation, and application and data visibility, organizations can consolidate management.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/cloudflare-sase-with-microsoft/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/cloudflare-sase-with-microsoft/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/cloudflare-sase-with-sentinelone",
+      "name": "Enhancing security posture with SentinelOne and Cloudflare One",
+      "description": "The integration between Cloudflare One and SentinelOne provides organizations with a comprehensive security solution. The integration works through a service-to-service posture check that identifies devices based on their serial numbers.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/cloudflare-sase-with-sentinelone/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/cloudflare-sase-with-sentinelone/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/email-security-deployments",
+      "name": "Understanding Email Security Deployments",
+      "description": "This reference architecture describes the key architecture of Cloudflare Email security.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/email-security-deployments/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/email-security-deployments/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/load-balancing",
+      "name": "Load Balancing Reference Architecture",
+      "description": "This reference architecture is for organizations looking to deploy both global and local traffic management load balancing solutions. It is designed for IT, web hosting, and network professionals with some responsibility over or familiarity with their organization's existing infrastructure.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/load-balancing/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/load-balancing/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/magic-transit",
+      "name": "Magic Transit Reference Architecture",
+      "description": "This reference architecture describes the key architecture, functionalities, and network deployment options of Cloudflare Magic Transit.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/magic-transit/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/magic-transit/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/multi-vendor",
+      "name": "Multi-vendor Application Security and Performance Reference Architecture",
+      "description": "This reference architecture describes how a multi-vendor approach for application security and performance can be accomplished.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/multi-vendor/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/multi-vendor/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/sase",
+      "name": "Evolving to a SASE architecture with Cloudflare",
+      "description": "This reference architecture explains how organizations can work towards a SASE architecture using Cloudflare.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/sase/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/sase/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:architectures/security",
+      "name": "Cloudflare Security Architecture",
+      "description": "This document provides insight into how this network and platform are architected from a security perspective, how they are operated, and what services are available for businesses to address their own security challenges.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "Queues",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/security/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/security/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:bots/bot-management",
+      "name": "Bot management",
+      "description": "Cloudflare has bot management capabilities to help identify and mitigate automated traffic to protect domains from bad bots.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/bots/bot-management/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/bots/bot-management/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:content-delivery/distributed-web-performance-architecture",
+      "name": "Designing a distributed web performance architecture",
+      "description": "A prescriptive pattern for building a Cloudflare-based L7 performance architecture that reduces latency, raises cache efficiency, and improves Core Web Vitals.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "Queues",
+        "WorkersAI",
+        "Hyperdrive"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/content-delivery/distributed-web-performance-architecture/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/content-delivery/distributed-web-performance-architecture/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:content-delivery/optimizing-image-delivery-with-cloudflare-image-resizing-and-r2",
+      "name": "Optimizing image delivery with Cloudflare image resizing and R2",
+      "description": "Learn how to get a scalable, high-performance solution to optimizing image delivery.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/content-delivery/optimizing-image-delivery-with-cloudflare-image-resizing-and-r2/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/content-delivery/optimizing-image-delivery-with-cloudflare-image-resizing-and-r2/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/designing-ztna-access-policies",
+      "name": "Designing ZTNA access policies for Cloudflare Access",
+      "description": "This guide is for customers looking to deploy Cloudflare's ZTNA service. It provides best practices and guidelines for how to effectively build the right policies.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/designing-ztna-access-policies/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/designing-ztna-access-policies/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/extending-cloudflares-benefits-to-saas-providers-end-customers",
+      "name": "Extend Cloudflare's benefits to SaaS providers' end-customers",
+      "description": "Learn how to use Cloudflare to extend performance, security, and data localization to your end users.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/extending-cloudflares-benefits-to-saas-providers-end-customers/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/extending-cloudflares-benefits-to-saas-providers-end-customers/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/leveraging-cloudflare-for-your-saas-applications",
+      "name": "Leveraging Cloudflare for your SaaS applications",
+      "description": "This document provides a reference and guidance for using Cloudflare for Platforms. It is designed for SaaS application owners, engineers, or architects who want to learn how to make their application more scalable and secure.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "KV",
+        "DurableObjects",
+        "Queues",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/leveraging-cloudflare-for-your-saas-applications/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/leveraging-cloudflare-for-your-saas-applications/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/network-vpn-migration",
+      "name": "Network-focused migration from VPN concentrators to Zero Trust Network Access",
+      "description": "The traditional approach of installing and maintaining hardware for remote access to private company networks is no longer secure or cost effective. IT teams are recognizing the cost and effort to install and maintain their own hardware can be offset with more modern, and more secure cloud hosted se",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/network-vpn-migration/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/network-vpn-migration/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/secure-application-delivery",
+      "name": "Securely deliver applications with Cloudflare",
+      "description": "Cloudflare provides a complete suite of services around application performance, security, reliability, development, and Zero Trust.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/secure-application-delivery/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/secure-application-delivery/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/securing-guest-wireless-networks",
+      "name": "Securing guest wireless networks",
+      "description": "This guide is designed for IT or security professionals who are looking at Cloudflare to help secure their guest wireless networks.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/securing-guest-wireless-networks/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/securing-guest-wireless-networks/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/streamlined-waf-deployment-across-zones-and-applications",
+      "name": "Streamlined WAF deployment across zones and applications",
+      "description": "Learn how to streamline WAF deployment across different zones and applications.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/streamlined-waf-deployment-across-zones-and-applications/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/streamlined-waf-deployment-across-zones-and-applications/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/zero-trust-for-saas",
+      "name": "Using a zero trust framework to secure SaaS applications",
+      "description": "Learn how to eliminate the trade-off between security and performance by using Cloudflare's global network.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-saas/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-saas/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:design-guides/zero-trust-for-startups",
+      "name": "Building zero trust architecture into your startup",
+      "description": "Cloudflare Zero Trust is a simple, (sometimes free!) way for startups to develop a comprehensive Zero Trust strategy. This guide explains how to use Cloudflare to establish the foundation for a Zero Trust architecture.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-startups/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-startups/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/ai",
+      "name": "Artificial Intelligence (AI)",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/ai/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/bots",
+      "name": "Bots",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/bots/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/bots/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/content-delivery",
+      "name": "Content Delivery",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/content-delivery/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/content-delivery/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/iot",
+      "name": "Internet of Things (IoT)",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/iot/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/iot/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/network",
+      "name": "Network",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/sase",
+      "name": "Secure Access Service Edge (SASE)",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/security",
+      "name": "Security",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/serverless",
+      "name": "Serverless",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:diagrams/storage",
+      "name": "Storage",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:implementation-guides/application-security",
+      "name": "Application Security",
+      "description": "Application security implementation guides walk you through the steps to secure your public applications, devices and APIs with Cloudflare.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/application-security/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/application-security/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:implementation-guides/zero-trust",
+      "name": "Zero Trust",
+      "description": "Zero Trust implementation guides walk you through the steps to deploy a Zero Trust solution with Cloudflare.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:iot/optimizing-and-securing-connected-transportation-systems",
+      "name": "Optimizing and securing connected transportation systems",
+      "description": "This diagram showcases Cloudflare components optimizing connected transportation systems. It illustrates how their technologies minimize latency, ensure reliability, and strengthen security for critical data flow.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/iot/optimizing-and-securing-connected-transportation-systems/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/iot/optimizing-and-securing-connected-transportation-systems/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:network/bring-your-own-ip-space-to-cloudflare",
+      "name": "Bring your own IP space to Cloudflare",
+      "description": "Cloudflare allows enterprises to bring their IP space to the Cloudflare network. This allows them to gain the security and performance of the platform while still appearing to the rest of the world via their own public IP space.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/bring-your-own-ip-space-to-cloudflare/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/bring-your-own-ip-space-to-cloudflare/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:network/optimizing-roaming-experience-with-geolocated-ips",
+      "name": "Optimizing device roaming experience with geolocated IPs",
+      "description": "Cloudflare can use private mobile networks (APNs) to connect devices roaming across multiple countries through regional Internet breakouts.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/optimizing-roaming-experience-with-geolocated-ips/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/optimizing-roaming-experience-with-geolocated-ips/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:network/protect-data-center-networks",
+      "name": "Protect data center networks",
+      "description": "This document focuses on the reference architecture of using Cloudflare WAN, Cloudflare Network Firewall, and Cloudflare Gateway services.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/protect-data-center-networks/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/protect-data-center-networks/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:network/protect-hybrid-cloud-networks-with-cloudflare-magic-transit",
+      "name": "Protect hybrid cloud networks with Cloudflare Magic Transit",
+      "description": "Cloudflare Magic Transit provides cloud-native, in-line DDoS protection, and traffic acceleration for all Internet-facing networks.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/protect-hybrid-cloud-networks-with-cloudflare-magic-transit/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/protect-hybrid-cloud-networks-with-cloudflare-magic-transit/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:network/protect-public-networks-with-cloudflare",
+      "name": "Protect public networks with Cloudflare",
+      "description": "This document explains how Cloudflare Magic Transit, Cloudflare Network Firewall, and Gateway work. The products offer in-line, automatic, scalable network protection for all Internet-facing networks. The architecture is designed to protect public networks across multiple clouds and on-premises.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/protect-public-networks-with-cloudflare/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/protect-public-networks-with-cloudflare/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:network/protecting-sp-networks-from-ddos",
+      "name": "Protect ISP and telecommunications networks from DDoS attacks",
+      "description": "Learn how Internet service providers (ISPs) and telecommunications companies (such as T-Mobile or British Telecom) can protect themselves from DDoS attacks.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/protecting-sp-networks-from-ddos/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/network/protecting-sp-networks-from-ddos/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:reference-architecture/architectures",
+      "name": "Reference Architectures",
+      "description": "Reference architecture documents and diagrams are designed to provide a foundational knowledge of the Cloudflare platform and products. Building on the information in these documents, you can architect software solutions based on your specific context and needs.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/architectures/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/architectures/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:reference-architecture/by-solution",
+      "name": "Find by solution",
+      "description": "Use the list below for reference architecture documentation that relates to a solution area you are interested in.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/by-solution/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/by-solution/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:reference-architecture/design-guides",
+      "name": "Design Guides",
+      "description": "Design guides take your knowledge from a reference architecture and walk through the conceptual decisions and directions you should take to implement a specific solution. They do not replace our product documentation, but instead provide guidance on the decisions you should make given a certain solu",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/design-guides/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/design-guides/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:reference-architecture/diagrams",
+      "name": "Reference Architecture Diagrams",
+      "description": "Reference architecture documents and diagrams are designed to provide a foundational knowledge of the Cloudflare platform and products. Building on the information in these documents, you can architect software solutions based on your specific context and needs.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:reference-architecture/how-to-use",
+      "name": "How to use",
+      "description": "Below are the different types of architecture content and information is organized from high level reference architectures, to design guides with best practices and guidelines to implementation guides which provide detailed steps to deploy a specific solution.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/how-to-use/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/how-to-use/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:reference-architecture/implementation-guides",
+      "name": "Implementation Guides",
+      "description": "Implementation guides provide step-by-step instructions and practical guidance for how to effectively deploy and configure specific solutions or services. Implementation guides are focused on a specific implementation goal.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:sase/augment-access-with-serverless",
+      "name": "Extend ZTNA with external authorization and serverless computing",
+      "description": "Cloudflare's ZTNA enhances access policies using external API calls and Workers for robust security. It verifies user authentication and authorization, ensuring only legitimate access to protected resources.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/augment-access-with-serverless/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/augment-access-with-serverless/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:sase/cloudflare-one-appliance-deployment",
+      "name": "Cloudflare One Appliance deployment options",
+      "description": "Learn how to deploy Cloudflare One Appliance and evaluate your various deployment options.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/cloudflare-one-appliance-deployment/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/cloudflare-one-appliance-deployment/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:sase/deploying-self-hosted-voip-services-for-hybrid-users",
+      "name": "Deploy self-hosted VoIP services for hybrid users",
+      "description": "Learn how Cloudflare improves over traditional VPN solutions by leveraging its global network.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/deploying-self-hosted-voip-services-for-hybrid-users/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/deploying-self-hosted-voip-services-for-hybrid-users/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:sase/gateway-dns-for-isp",
+      "name": "DNS filtering solution for Internet service providers",
+      "description": "Learn how to use Cloudflare Gateway as a DNS filtering solution for Internet service providers.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-dns-for-isp/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-dns-for-isp/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:sase/gateway-for-protective-dns",
+      "name": "Protective DNS for governments",
+      "description": "Learn how to use Cloudflare Gateway as a Protective DNS service for governments.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-for-protective-dns/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-for-protective-dns/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:sase/sase-clientless-access-private-dns",
+      "name": "Access to private apps without having to deploy client agents",
+      "description": "Learn how to provide access to private apps without having to deploy client agents.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/sase-clientless-access-private-dns/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/sase-clientless-access-private-dns/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:sase/secure-access-to-saas-applications-with-sase",
+      "name": "Secure access to SaaS applications with SASE",
+      "description": "Cloudflare's SASE platform offers the ability to bring a more Zero Trust orientated approach to securing SaaS applications. Centralized policies, based on device posture, identity attributes and granular network location can be applied across one or many Saas applications.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/secure-access-to-saas-applications-with-sase/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/secure-access-to-saas-applications-with-sase/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:sase/zero-trust-and-virtual-desktop-infrastructure",
+      "name": "Zero Trust and Virtual Desktop Infrastructure",
+      "description": "This document provides a reference and guidance for using Cloudflare's Zero Trust services. It offers a vast improvement over remote access to web applications with greater security.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/zero-trust-and-virtual-desktop-infrastructure/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/sase/zero-trust-and-virtual-desktop-infrastructure/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:security/fips-140-3",
+      "name": "FIPS 140 level 3 compliance with Cloudflare Application Services",
+      "description": "This document outlines a reference architecture for achieving Federal Information Processing Standard (FIPS) 140 Level 3 compliance using Cloudflare's Application Services.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/fips-140-3/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/fips-140-3/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:security/securing-data-at-rest",
+      "name": "Securing data at rest",
+      "description": "Learn how Cloudflare's API-driven Cloud Access Security Broker (CASB) works and secures data at rest.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:security/securing-data-in-transit",
+      "name": "Reference Architecture Diagram: Securing data in transit",
+      "description": "Data in transit is often considered vulnerable to interception or tampering during transmission. Data Loss Prevention (DLP) technologies can be used to inspect the contents of network traffic and block sensitive data from going to a risky destination.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-transit/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-transit/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:security/securing-data-in-use",
+      "name": "Securing data in use",
+      "description": "Learn how Cloudflare's Remote Browser Isolation (RBI) works and secures data in use.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:serverless/a-b-testing-using-workers",
+      "name": "A/B-testing using Workers",
+      "description": "Cloudflare's low-latency, fully serverless compute platform, Workers offers powerful capabilities to enable A/B testing using a server-side implementation.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "KV",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/a-b-testing-using-workers/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/a-b-testing-using-workers/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:serverless/fullstack-application",
+      "name": "Fullstack applications",
+      "description": "A practical example of how these services come together in a real fullstack application architecture.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "Queues",
+        "Workflows",
+        "Agents",
+        "Containers",
+        "Vectorize",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/fullstack-application/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/fullstack-application/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:serverless/programmable-platforms",
+      "name": "Programmable Platforms",
+      "description": "Workers for Platforms provide secure, scalable, cost-effective infrastructure for programmable platforms with global reach.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/programmable-platforms/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/programmable-platforms/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:serverless/serverless-etl",
+      "name": "Serverless ETL pipelines",
+      "description": "Cloudflare enables fully serverless ETL pipelines, significantly reducing complexity, accelerating time to production, and lowering overall costs.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "Queues",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-etl/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-etl/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:serverless/serverless-global-apis",
+      "name": "Serverless global APIs",
+      "description": "An example architecture of a serverless API on Cloudflare and aims to illustrate how different compute and data products could interact with each other.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "KV",
+        "DurableObjects",
+        "Queues",
+        "WorkersAI",
+        "Hyperdrive"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-global-apis/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-global-apis/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:serverless/serverless-image-content-management",
+      "name": "Serverless image content management",
+      "description": "Leverage various components of Cloudflare's ecosystem to construct a scalable image management solution",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "KV",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-image-content-management/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-image-content-management/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:storage/durable-object-control-data-plane-pattern",
+      "name": "Control and data plane architectural pattern for Durable Objects",
+      "description": "Separate the control plane from the data plane of your application to achieve great performance and reliability without compromising on functionality.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "Queues",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/durable-object-control-data-plane-pattern/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/durable-object-control-data-plane-pattern/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:storage/egress-free-storage-multi-cloud",
+      "name": "Egress-free object storage in multi-cloud setups",
+      "description": "Learn how to use R2 to get egress-free object storage in multi-cloud setups.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/egress-free-storage-multi-cloud/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/egress-free-storage-multi-cloud/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:storage/event-notifications-for-storage",
+      "name": "Event notifications for storage",
+      "description": "Use Cloudflare Workers or an external service to monitor for notifications about data changes and then handle them appropriately.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "Queues",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/event-notifications-for-storage/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/event-notifications-for-storage/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:storage/on-demand-object-storage-migration",
+      "name": "On-demand Object Storage Data Migration",
+      "description": "Use Cloudflare migration tools to migrate data between cloud object storage providers.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/on-demand-object-storage-migration/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/on-demand-object-storage-migration/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:storage/storing-user-generated-content",
+      "name": "Storing user generated content",
+      "description": "Store user-generated content in R2 for fast, secure, and cost-effective architecture.",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "D1",
+        "R2",
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/storing-user-generated-content/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/diagrams/storage/storing-user-generated-content/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:zero-trust/holistic-ai-security",
+      "name": "Holistic AI Security with Cloudflare One",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/holistic-ai-security/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/holistic-ai-security/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:zero-trust/replace-vpn",
+      "name": "Replace your VPN",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/replace-vpn/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/replace-vpn/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:zero-trust/secure-internet-traffic",
+      "name": "Secure your Internet traffic and SaaS apps",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/secure-internet-traffic/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/secure-internet-traffic/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:zero-trust/secure-your-email",
+      "name": "Secure your email with Email security",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/secure-your-email/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/secure-your-email/",
+        "official": true
+      }
+    },
+    {
+      "catalog_id": "ra:zero-trust/ztna-web-access",
+      "name": "Deploy clientless access",
+      "description": "Cloudflare reference architecture",
+      "type": "reference-arch",
+      "source": "reference-architecture",
+      "action": "fetch-docs",
+      "products": [
+        "DurableObjects",
+        "WorkersAI"
+      ],
+      "languages": [],
+      "frameworks": [],
+      "fields": {
+        "url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/ztna-web-access/"
+      },
+      "meta": {
+        "source_url": "https://developers.cloudflare.com/reference-architecture/implementation-guides/zero-trust/ztna-web-access/",
+        "official": true
+      }
+    }
+  ]
+}

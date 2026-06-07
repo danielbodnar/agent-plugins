@@ -60,7 +60,7 @@ Security hardening pass on the **legacy** system: OWASP/CWE scan, dependency CVE
 ## Installation
 
 ```
-/plugin install code-modernization@claude-plugins-official
+/plugin install code-modernization@bodnar-agent-plugins
 ```
 
 ## Recommended Workspace Setup

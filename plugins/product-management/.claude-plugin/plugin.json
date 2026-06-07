@@ -1,0 +1,15 @@
+{
+  "name": "product-management",
+  "version": "0.1.0",
+  "description": "Product management workflows: specs, roadmaps, sprint planning, metrics review, and stakeholder updates.",
+  "keywords": [
+    "competitive-brief",
+    "metrics-review",
+    "product-brainstorming",
+    "roadmap-update",
+    "sprint-planning",
+    "stakeholder-update",
+    "synthesize-research",
+    "write-spec"
+  ]
+}

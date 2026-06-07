@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>cloudflare-compose — selector</title>
+<style>
+  /* Tokyo Night inspired, utilitarian, dense */
+  :root {
+    --bg: #1a1b26;
+    --bg-alt: #16161e;
+    --bg-panel: #1f2335;
+    --bg-hover: #292e42;
+    --bg-selected: #3d59a1;
+    --border: #2e334c;
+    --text: #c0caf5;
+    --text-dim: #565f89;
+    --text-bright: #f7f7ff;
+    --accent-teal: #7dcfff;
+    --accent-green: #9ece6a;
+    --accent-purple: #bb9af7;
+    --accent-orange: #ff9e64;
+    --accent-red: #f7768e;
+    --accent-yellow: #e0af68;
+    --font-mono: ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 14px; line-height: 1.45; }
+  body { min-height: 100vh; }
+
+  .app { display: grid; grid-template-columns: 1fr 360px; min-height: 100vh; }
+  @media (max-width: 900px) { .app { grid-template-columns: 1fr; } .sidebar { position: static; border-left: none; border-top: 1px solid var(--border); } }
+
+  .main { padding: 16px 24px; overflow-y: auto; }
+  .sidebar { background: var(--bg-panel); border-left: 1px solid var(--border); padding: 16px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+
+  h1 { font-size: 18px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-bright); }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin: 20px 0 8px 0; font-weight: 500; }
+  .meta-line { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); margin-bottom: 16px; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; align-items: center; }
+  .search {
+    flex: 1 1 240px; min-width: 200px;
+    background: var(--bg-alt); border: 1px solid var(--border); border-radius: 4px;
+    color: var(--text); padding: 8px 12px; font-family: var(--font-mono); font-size: 13px;
+  }
+  .search:focus { outline: none; border-color: var(--accent-teal); }
+
+  .filter-group { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+  .chip {
+    background: var(--bg-alt); border: 1px solid var(--border); border-radius: 3px;
+    color: var(--text-dim); padding: 3px 8px; font-size: 11px; font-family: var(--font-mono);
+    cursor: pointer; user-select: none; transition: all 80ms;
+  }
+  .chip:hover { border-color: var(--accent-teal); color: var(--text); }
+  .chip.active { background: var(--accent-teal); color: var(--bg); border-color: var(--accent-teal); }
+  .chip.active-secondary { background: var(--accent-purple); color: var(--bg); border-color: var(--accent-purple); }
+
+  .group { margin-bottom: 20px; }
+  .group-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  .group-title { font-family: var(--font-mono); font-size: 12px; color: var(--accent-teal); font-weight: 500; }
+  .group-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
+
+  .entry {
+    display: grid; grid-template-columns: 20px 1fr auto; gap: 10px;
+    padding: 6px 10px; margin: 2px 0;
+    border: 1px solid transparent; border-radius: 3px;
+    cursor: pointer; align-items: center;
+  }
+  .entry:hover { background: var(--bg-hover); border-color: var(--border); }
+  .entry.selected { background: var(--bg-selected); border-color: var(--accent-teal); }
+  .entry-check {
+    width: 16px; height: 16px; border: 1px solid var(--text-dim); border-radius: 2px;
+    display: flex; align-items: center; justify-content: center; font-size: 11px;
+    background: var(--bg-alt);
+  }
+  .entry.selected .entry-check { background: var(--accent-teal); border-color: var(--accent-teal); color: var(--bg); }
+  .entry-body { min-width: 0; }
+  .entry-name { font-family: var(--font-mono); font-size: 13px; color: var(--text-bright); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .entry-desc { font-size: 12px; color: var(--text-dim); margin-top: 1px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .entry-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+  .entry-tag {
+    font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 2px;
+    background: var(--bg-alt); color: var(--text-dim); border: 1px solid var(--border);
+  }
+  .entry-tag.product { color: var(--accent-green); border-color: var(--accent-green); }
+  .entry-tag.language { color: var(--accent-orange); border-color: var(--accent-orange); }
+  .entry-tag.framework { color: var(--accent-purple); border-color: var(--accent-purple); }
+  .entry-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); }
+  .entry-official { color: var(--accent-yellow); }
+
+  /* Sidebar */
+  .sidebar h1 { margin-bottom: 12px; }
+  .sidebar-section { margin-bottom: 18px; }
+  .project-input {
+    width: 100%;
+    background: var(--bg-alt); border: 1px solid var(--border); border-radius: 3px;
+    color: var(--text); padding: 6px 10px; font-family: var(--font-mono); font-size: 13px;
+  }
+  .project-input:focus { outline: none; border-color: var(--accent-teal); }
+
+  .selected-list { list-style: none; margin: 0; padding: 0; }
+  .selected-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 6px; font-family: var(--font-mono); font-size: 11px;
+    border-bottom: 1px dotted var(--border);
+  }
+  .selected-item:last-child { border-bottom: none; }
+  .selected-name { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .selected-remove { cursor: pointer; color: var(--accent-red); padding: 0 4px; }
+  .selected-remove:hover { color: var(--accent-yellow); }
+
+  .btn {
+    width: 100%; padding: 8px 12px; margin-top: 6px; background: var(--accent-teal); color: var(--bg);
+    border: none; border-radius: 3px; cursor: pointer; font-family: var(--font-mono); font-size: 13px;
+    font-weight: 600; transition: all 100ms;
+  }
+  .btn:hover { background: var(--accent-green); }
+  .btn:disabled { background: var(--bg-hover); color: var(--text-dim); cursor: not-allowed; }
+  .btn.secondary { background: var(--bg-alt); color: var(--text); border: 1px solid var(--border); }
+  .btn.secondary:hover { border-color: var(--accent-teal); color: var(--accent-teal); }
+  .btn.danger { background: var(--bg-alt); color: var(--accent-red); border: 1px solid var(--border); }
+
+  /* Custom source panel */
+  .custom-panel { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 3px; padding: 10px; margin-bottom: 16px; }
+  .custom-panel input {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 3px;
+    color: var(--text); padding: 6px 8px; font-family: var(--font-mono); font-size: 12px; margin-bottom: 6px;
+  }
+  .custom-panel input:focus { outline: none; border-color: var(--accent-teal); }
+  .custom-panel select {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 3px;
+    color: var(--text); padding: 4px 6px; font-family: var(--font-mono); font-size: 11px;
+  }
+
+  /* Export dialog */
+  .dialog-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10; display: none; align-items: center; justify-content: center; }
+  .dialog-backdrop.open { display: flex; }
+  .dialog { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; padding: 20px; max-width: 720px; width: 90%; max-height: 80vh; overflow: auto; }
+  .dialog h3 { margin: 0 0 12px 0; font-size: 15px; color: var(--text-bright); }
+  .dialog pre { background: var(--bg-alt); padding: 12px; border-radius: 3px; overflow: auto; font-family: var(--font-mono); font-size: 11px; color: var(--text); max-height: 50vh; }
+  .dialog-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+
+  .empty { padding: 40px 20px; text-align: center; color: var(--text-dim); font-family: var(--font-mono); font-size: 12px; }
+  kbd { font-family: var(--font-mono); background: var(--bg-alt); border: 1px solid var(--border); border-radius: 2px; padding: 1px 4px; font-size: 10px; color: var(--text-bright); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="main">
+    <h1>cloudflare-compose</h1>
+    <div class="meta-line" id="meta-line">loading catalog…</div>
+
+    <div class="toolbar">
+      <input type="text" class="search" id="search" placeholder="search name / description / product  (press /)" autofocus>
+      <div class="filter-group" id="type-filters"></div>
+    </div>
+
+    <div class="toolbar" style="margin-top: 0;">
+      <div class="filter-group" id="product-filters"></div>
+    </div>
+
+    <div id="results"></div>
+  </div>
+
+  <aside class="sidebar">
+    <h1>selection</h1>
+
+    <div class="sidebar-section">
+      <h2>project</h2>
+      <input type="text" class="project-input" id="project-name" placeholder="my-cf-project" value="">
+    </div>
+
+    <div class="sidebar-section">
+      <h2>add custom source</h2>
+      <div class="custom-panel">
+        <input type="text" id="custom-input" placeholder="github url / npm package / docs url">
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <select id="custom-action">
+            <option value="auto">auto-detect</option>
+            <option value="git-clone">git clone</option>
+            <option value="npm-package">npm package</option>
+            <option value="fetch-docs">fetch docs</option>
+          </select>
+          <button class="btn secondary" id="add-custom" style="flex: 1; margin: 0;">add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h2>selected <span id="selected-count" style="color: var(--accent-teal); font-family: var(--font-mono);">(0)</span></h2>
+      <ul class="selected-list" id="selected-list"></ul>
+    </div>
+
+    <div class="sidebar-section">
+      <button class="btn" id="done" disabled>done — send to claude</button>
+      <button class="btn secondary" id="save">save draft</button>
+      <button class="btn danger" id="clear">clear selection</button>
+      <div style="margin-top: 12px; font-size: 11px; color: var(--text-dim); line-height: 1.6;">
+        <kbd>/</kbd> search &middot; <kbd>esc</kbd> clear search &middot; <kbd>enter</kbd> toggle first result
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="dialog-backdrop" id="export-dialog">
+  <div class="dialog">
+    <h3>selection payload</h3>
+    <p style="color: var(--text-dim); font-size: 12px; margin-bottom: 10px;">Copy this JSON and paste it back to Claude, or note the project slug to have Claude read it from storage.</p>
+    <pre id="export-json"></pre>
+    <div class="dialog-actions">
+      <button class="btn secondary" id="copy-json" style="width: auto; margin: 0;">copy to clipboard</button>
+      <button class="btn" id="close-dialog" style="width: auto; margin: 0;">close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// CATALOG_INJECTION_POINT — Claude replaces this block at render time with:
+//   const CATALOG = {"meta": {...}, "entries": [...]};
+const CATALOG = /*@@CATALOG@@*/ {"meta":{"fetched_at":"","sources_fetched":[],"sources_failed":[],"entry_count":0},"entries":[]};
+
+const STORAGE_PREFIX = "cf-compose:";
+const state = {
+  selected: new Map(),
+  customEntries: [],
+  searchTerm: "",
+  typeFilter: null,
+  productFilters: new Set(),
+  projectName: "",
+};
+
+function slugify(s) {
+  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
+}
+
+function targetDirFor(entry) {
+  const base = entry.name.replace(/^[^/]+\//, "").replace(/[^a-zA-Z0-9_-]/g, "-");
+  return slugify(base) || "pkg";
+}
+
+function allEntries() {
+  return [...CATALOG.entries, ...state.customEntries];
+}
+
+function matches(entry, term) {
+  if (!term) return true;
+  const haystack = [entry.name, entry.description, ...(entry.products || []), ...(entry.languages || []), ...(entry.frameworks || [])].join(" ").toLowerCase();
+  return haystack.includes(term.toLowerCase());
+}
+
+function filterEntries() {
+  return allEntries().filter(e => {
+    if (!matches(e, state.searchTerm)) return false;
+    if (state.typeFilter && e.type !== state.typeFilter) return false;
+    if (state.productFilters.size > 0) {
+      const hasAny = (e.products || []).some(p => state.productFilters.has(p));
+      if (!hasAny) return false;
+    }
+    return true;
+  });
+}
+
+function groupByType(entries) {
+  const groups = new Map();
+  for (const e of entries) {
+    if (!groups.has(e.type)) groups.set(e.type, []);
+    groups.get(e.type).push(e);
+  }
+  const typeOrder = ["template", "starter", "demo", "reference-arch", "doc", "custom"];
+  return typeOrder.filter(t => groups.has(t)).map(t => [t, groups.get(t)]);
+}
+
+function renderFilters() {
+  const types = [...new Set(allEntries().map(e => e.type))];
+  const typeEl = document.getElementById("type-filters");
+  typeEl.innerHTML = "";
+  for (const t of types) {
+    const chip = document.createElement("span");
+    chip.className = "chip" + (state.typeFilter === t ? " active" : "");
+    chip.textContent = t;
+    chip.onclick = () => {
+      state.typeFilter = state.typeFilter === t ? null : t;
+      renderAll();
+    };
+    typeEl.appendChild(chip);
+  }
+
+  const allProducts = new Set();
+  for (const e of allEntries()) (e.products || []).forEach(p => allProducts.add(p));
+  const productEl = document.getElementById("product-filters");
+  productEl.innerHTML = "";
+  for (const p of [...allProducts].sort()) {
+    const chip = document.createElement("span");
+    chip.className = "chip" + (state.productFilters.has(p) ? " active-secondary" : "");
+    chip.textContent = p;
+    chip.onclick = () => {
+      if (state.productFilters.has(p)) state.productFilters.delete(p);
+      else state.productFilters.add(p);
+      renderAll();
+    };
+    productEl.appendChild(chip);
+  }
+}
+
+function renderResults() {
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+  const filtered = filterEntries();
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty">no entries match current filters</div>';
+    return;
+  }
+  const groups = groupByType(filtered);
+  for (const [typeName, entries] of groups) {
+    const group = document.createElement("div");
+    group.className = "group";
+    group.innerHTML = `
+      <div class="group-header">
+        <span class="group-title">${typeName}</span>
+        <span class="group-count">${entries.length}</span>
+      </div>
+    `;
+    for (const e of entries) {
+      group.appendChild(renderEntry(e));
+    }
+    container.appendChild(group);
+  }
+}
+
+function renderEntry(entry) {
+  const el = document.createElement("div");
+  el.className = "entry" + (state.selected.has(entry.catalog_id) ? " selected" : "");
+  el.dataset.id = entry.catalog_id;
+  const productTags = (entry.products || []).slice(0, 6).map(p => `<span class="entry-tag product">${p}</span>`).join("");
+  const langTags = (entry.languages || []).slice(0, 2).map(l => `<span class="entry-tag language">${l}</span>`).join("");
+  const fwTags = (entry.frameworks || []).filter(f => f !== "None").slice(0, 2).map(f => `<span class="entry-tag framework">${f}</span>`).join("");
+  const right = `
+    <div class="entry-right">
+      <span>${entry.action}</span>
+      ${entry.meta?.stars != null ? `<span>★ ${entry.meta.stars}</span>` : ""}
+      ${entry.meta?.official ? `<span class="entry-official">official</span>` : ""}
+    </div>
+  `;
+  el.innerHTML = `
+    <div class="entry-check">${state.selected.has(entry.catalog_id) ? "✓" : ""}</div>
+    <div class="entry-body">
+      <div class="entry-name">${entry.name}</div>
+      <div class="entry-desc">${entry.description || ""}</div>
+      <div class="entry-tags">${productTags}${langTags}${fwTags}</div>
+    </div>
+    ${right}
+  `;
+  el.onclick = () => toggleSelected(entry);
+  return el;
+}
+
+function toggleSelected(entry) {
+  if (state.selected.has(entry.catalog_id)) {
+    state.selected.delete(entry.catalog_id);
+  } else {
+    state.selected.set(entry.catalog_id, entry);
+  }
+  renderResults();
+  renderSidebar();
+  persist();
+}
+
+function renderSidebar() {
+  document.getElementById("selected-count").textContent = `(${state.selected.size})`;
+  const list = document.getElementById("selected-list");
+  list.innerHTML = "";
+  for (const [id, entry] of state.selected) {
+    const li = document.createElement("li");
+    li.className = "selected-item";
+    li.innerHTML = `<span class="selected-name" title="${entry.catalog_id}">${entry.name}</span><span class="selected-remove">×</span>`;
+    li.querySelector(".selected-remove").onclick = () => toggleSelected(entry);
+    list.appendChild(li);
+  }
+  document.getElementById("done").disabled = state.selected.size === 0 || !state.projectName;
+}
+
+function renderMeta() {
+  const meta = CATALOG.meta;
+  const line = `${CATALOG.entries.length} entries · fetched ${meta.fetched_at || "unknown"} · sources: ${(meta.sources_fetched || []).join(", ")}${(meta.sources_failed || []).length > 0 ? " · failed: " + meta.sources_failed.map(s => s.source).join(",") : ""}`;
+  document.getElementById("meta-line").textContent = line;
+}
+
+function renderAll() {
+  renderFilters();
+  renderResults();
+  renderSidebar();
+}
+
+function buildSelectionPayload() {
+  const selections = [...state.selected.values()].map(e => {
+    const base = {
+      catalog_id: e.catalog_id,
+      name: e.name,
+      type: e.type,
+      action: e.action,
+      target_dir: targetDirFor(e),
+    };
+    if (e.action === "create-cloudflare") base.template_id = e.fields.template_id;
+    if (e.action === "git-clone") {
+      base.url = e.fields.url;
+      base.ref = e.fields.ref || "main";
+      if (e.fields.subpath) base.subpath = e.fields.subpath;
+    }
+    if (e.action === "fetch-docs") {
+      base.url = e.fields.url;
+      base.target_dir = `docs/reference-architectures/${slugify(e.name)}.md`;
+    }
+    if (e.action === "npm-package") base.package = e.fields.package;
+    return base;
+  });
+
+  return {
+    project_name: state.projectName || "my-cf-project",
+    project_slug: slugify(state.projectName || "my-cf-project"),
+    monorepo_root: "./scaffolding",
+    selections,
+    user_notes: "",
+    _meta: {
+      generated_at: new Date().toISOString(),
+      selector_version: "1.0.0",
+    },
+  };
+}
+
+async function persist() {
+  if (!window.storage) return;
+  try {
+    const key = `${STORAGE_PREFIX}draft:${slugify(state.projectName) || "unnamed"}`;
+    await window.storage.set(key, JSON.stringify({
+      selected: [...state.selected.keys()],
+      customEntries: state.customEntries,
+      projectName: state.projectName,
+    }));
+  } catch (e) {
+    console.warn("persist failed", e);
+  }
+}
+
+async function loadDraft() {
+  if (!window.storage) return;
+  try {
+    const keys = await window.storage.list(STORAGE_PREFIX + "draft:");
+    if (keys && keys.keys && keys.keys.length > 0) {
+      const result = await window.storage.get(keys.keys[0]);
+      if (result && result.value) {
+        const draft = JSON.parse(result.value);
+        state.projectName = draft.projectName || "";
+        state.customEntries = draft.customEntries || [];
+        document.getElementById("project-name").value = state.projectName;
+        const all = allEntries();
+        for (const id of (draft.selected || [])) {
+          const entry = all.find(e => e.catalog_id === id);
+          if (entry) state.selected.set(id, entry);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("loadDraft failed", e);
+  }
+}
+
+// Custom source handling
+function detectCustomAction(input) {
+  if (/^https?:\/\/github\.com\//.test(input)) return "git-clone";
+  if (/^https?:\/\//.test(input)) return "fetch-docs";
+  if (/^[@a-z0-9][\w\-./]*$/i.test(input)) return "npm-package";
+  return "fetch-docs";
+}
+
+function addCustomSource() {
+  const input = document.getElementById("custom-input").value.trim();
+  if (!input) return;
+  const actionSelect = document.getElementById("custom-action").value;
+  const action = actionSelect === "auto" ? detectCustomAction(input) : actionSelect;
+
+  let entry;
+  if (action === "git-clone") {
+    const m = input.match(/github\.com\/([^/]+)\/([^/?#]+)(?:\/tree\/([^/]+)(\/.+)?)?/);
+    if (!m) {
+      alert("Couldn't parse GitHub URL");
+      return;
+    }
+    const [_, owner, repo, ref, subpath] = m;
+    entry = {
+      catalog_id: `user:${owner}/${repo}${subpath || ""}`,
+      name: `${owner}/${repo}${subpath || ""}`,
+      description: "user-added GitHub repo",
+      type: "custom",
+      source: "user-added",
+      action: "git-clone",
+      products: ["Workers"],
+      languages: [],
+      frameworks: [],
+      fields: {
+        url: `https://github.com/${owner}/${repo.replace(/\.git$/, "")}`,
+        ref: ref || "main",
+        ...(subpath ? { subpath: subpath.replace(/^\//, "") } : {}),
+      },
+      meta: { official: false, user_added_at: new Date().toISOString() },
+    };
+  } else if (action === "npm-package") {
+    entry = {
+      catalog_id: `user:npm:${input}`,
+      name: input,
+      description: "user-added NPM package",
+      type: "custom",
+      source: "user-added",
+      action: "npm-package",
+      products: [],
+      languages: ["TypeScript"],
+      frameworks: [],
+      fields: { package: input },
+      meta: { official: false, user_added_at: new Date().toISOString() },
+    };
+  } else {
+    entry = {
+      catalog_id: `user:docs:${btoa(input).slice(0, 16)}`,
+      name: input.replace(/^https?:\/\//, "").split("/").slice(0, 3).join("/"),
+      description: "user-added documentation URL",
+      type: "doc",
+      source: "user-added",
+      action: "fetch-docs",
+      products: [],
+      languages: [],
+      frameworks: [],
+      fields: { url: input },
+      meta: { official: false, user_added_at: new Date().toISOString() },
+    };
+  }
+
+  state.customEntries.push(entry);
+  state.selected.set(entry.catalog_id, entry);
+  document.getElementById("custom-input").value = "";
+  persist();
+  renderAll();
+}
+
+function showExport() {
+  const payload = buildSelectionPayload();
+  document.getElementById("export-json").textContent = JSON.stringify(payload, null, 2);
+  document.getElementById("export-dialog").classList.add("open");
+  // Also persist the final selection under a stable key
+  if (window.storage) {
+    const key = `${STORAGE_PREFIX}selection:${payload.project_slug}`;
+    window.storage.set(key, JSON.stringify(payload), false).catch(() => {});
+  }
+}
+
+// Event wiring
+document.getElementById("search").addEventListener("input", e => {
+  state.searchTerm = e.target.value;
+  renderResults();
+});
+document.getElementById("project-name").addEventListener("input", e => {
+  state.projectName = e.target.value;
+  renderSidebar();
+  persist();
+});
+document.getElementById("add-custom").addEventListener("click", addCustomSource);
+document.getElementById("custom-input").addEventListener("keydown", e => { if (e.key === "Enter") addCustomSource(); });
+document.getElementById("done").addEventListener("click", showExport);
+document.getElementById("save").addEventListener("click", persist);
+document.getElementById("clear").addEventListener("click", () => {
+  if (!confirm("Clear all selections?")) return;
+  state.selected.clear();
+  state.customEntries = [];
+  persist();
+  renderAll();
+});
+document.getElementById("close-dialog").addEventListener("click", () => document.getElementById("export-dialog").classList.remove("open"));
+document.getElementById("copy-json").addEventListener("click", () => {
+  const text = document.getElementById("export-json").textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copy-json");
+    const orig = btn.textContent;
+    btn.textContent = "copied ✓";
+    setTimeout(() => { btn.textContent = orig; }, 1200);
+  });
+});
+
+// Keyboard shortcuts
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement !== document.getElementById("search") && document.activeElement !== document.getElementById("custom-input") && document.activeElement !== document.getElementById("project-name")) {
+    e.preventDefault();
+    document.getElementById("search").focus();
+  } else if (e.key === "Escape" && document.activeElement === document.getElementById("search")) {
+    document.getElementById("search").value = "";
+    state.searchTerm = "";
+    renderResults();
+  } else if (e.key === "Enter" && document.activeElement === document.getElementById("search")) {
+    const first = filterEntries()[0];
+    if (first) toggleSelected(first);
+  }
+});
+
+// Init
+(async function init() {
+  await loadDraft();
+  renderMeta();
+  renderAll();
+})();
+</script>
+</body>
+</html>

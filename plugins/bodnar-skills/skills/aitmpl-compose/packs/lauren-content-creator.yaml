@@ -1,0 +1,7 @@
+name: lauren/content-creator
+description: Content authoring stack. Marketing writer, technical writer, and doc workflow commands for Cairn+Kindling and Mixing it with Brains.
+components:
+  - { type: agent,   name: business-marketing/content-marketer }
+  - { type: agent,   name: documentation/technical-writer }
+  - { type: command, name: documentation/update-docs }
+  - { type: command, name: documentation/interactive-documentation }

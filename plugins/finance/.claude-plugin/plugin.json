@@ -1,0 +1,15 @@
+{
+  "name": "finance",
+  "version": "0.1.0",
+  "description": "Accounting and finance workflows: financial statements, journal entries, reconciliation, variance analysis, and SOX testing.",
+  "keywords": [
+    "audit-support",
+    "close-management",
+    "financial-statements",
+    "journal-entry",
+    "journal-entry-prep",
+    "reconciliation",
+    "sox-testing",
+    "variance-analysis"
+  ]
+}

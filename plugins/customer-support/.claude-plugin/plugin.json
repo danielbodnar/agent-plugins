@@ -1,0 +1,12 @@
+{
+  "name": "customer-support",
+  "version": "0.1.0",
+  "description": "Customer support workflows: ticket triage, research, escalation, response drafting, and knowledge-base articles.",
+  "keywords": [
+    "customer-escalation",
+    "customer-research",
+    "draft-response",
+    "kb-article",
+    "ticket-triage"
+  ]
+}

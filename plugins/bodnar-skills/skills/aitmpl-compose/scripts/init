@@ -1,0 +1,51 @@
+#!/usr/bin/env sh
+# aitmpl-compose bootstrap. POSIX sh. Idempotent. No bashisms.
+#
+# 1. Verify bun is on PATH; install via npm if missing.
+# 2. Verify jq is available (used by tests; soft requirement).
+# 3. Ensure cache and config directories exist.
+# 4. Print versions for diagnostics.
+
+set -eu
+
+skill_dir="$(cd "$(dirname "$0")/.." && pwd)"
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/aitmpl-compose"
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/aitmpl-compose"
+
+mkdir -p "$cache_dir" "$config_dir/packs"
+
+# Check bun
+if ! command -v bun >/dev/null 2>&1; then
+  if command -v npm >/dev/null 2>&1; then
+    printf '[init] bun not found; installing via npm...\n' >&2
+    npm install -g bun@latest
+  else
+    printf '[init] ERROR: neither bun nor npm is available. Install bun: https://bun.sh\n' >&2
+    exit 1
+  fi
+fi
+
+# Check jq (soft; only warn)
+if ! command -v jq >/dev/null 2>&1; then
+  printf '[init] note: jq not found. Some debug utilities will be unavailable.\n' >&2
+fi
+
+# Install local deps (yaml parser) in the skill dir if not already present
+if [ ! -d "$skill_dir/node_modules/yaml" ]; then
+  printf '[init] installing local deps (bun install)...\n' >&2
+  (cd "$skill_dir" && bun install --silent) || {
+    printf '[init] WARN: bun install failed; YAML parsing may not work. Retry manually.\n' >&2
+  }
+fi
+
+# Print versions
+bun_version="$(bun --version 2>/dev/null || printf 'unknown')"
+printf '[init] bun %s\n' "$bun_version"
+printf '[init] skill dir: %s\n' "$skill_dir"
+printf '[init] cache dir: %s\n' "$cache_dir"
+printf '[init] config dir: %s\n' "$config_dir"
+
+# Make main entrypoint executable in case the filesystem dropped the bit
+chmod +x "$skill_dir/scripts/aitmpl-compose" 2>/dev/null || true
+
+printf '[init] ready\n'

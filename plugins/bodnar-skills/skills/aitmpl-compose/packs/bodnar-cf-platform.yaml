@@ -1,0 +1,9 @@
+name: bodnar/cf-platform
+description: Cloudflare Workers platform base. Backend agent, Rust expertise for edge, plus the cf-deploy and Hono skills.
+components:
+  - { type: agent,   name: development-team/backend-developer }
+  - { type: agent,   name: programming-languages/rust-pro }
+  - { type: skill,   name: development/cloudflare-deploy }
+  - { type: skill,   name: web-development/hono }
+  - { type: skill,   name: utilities/cf-crawl }
+  - { type: setting, name: mcp/mcp-timeouts }

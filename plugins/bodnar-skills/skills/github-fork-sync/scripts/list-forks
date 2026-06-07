@@ -1,0 +1,70 @@
+#!/usr/bin/env bun
+// list-forks <owner> [--json] [--no-cache]
+//
+// Discovers all forks owned by <owner> (user or org) via a single GraphQL query.
+// Filters out skip-listed repos. Outputs to stdout.
+
+import { openDb, listSkips, isSkipped } from "./lib/state.ts";
+import { listForks, ensureAuthenticated } from "./lib/sync.ts";
+import { parseArgs } from "node:util";
+
+const { values, positionals } = parseArgs({
+  args: process.argv.slice(2),
+  options: {
+    json: { type: "boolean", default: false },
+    "no-cache": { type: "boolean", default: false },
+    "include-skipped": { type: "boolean", default: false },
+    "include-archived": { type: "boolean", default: false },
+  },
+  allowPositionals: true,
+});
+
+const owner = positionals[0];
+if (!owner) {
+  console.error("Usage: list-forks <owner> [--json] [--no-cache] [--include-skipped] [--include-archived]");
+  process.exit(1);
+}
+
+async function main() {
+  const db = openDb();
+  try {
+    const forks = await listForks(db, owner, { noCache: values["no-cache"] });
+
+    let filtered = forks;
+    if (!values["include-archived"]) {
+      filtered = filtered.filter((f) => !f.is_archived && !f.parent_is_archived);
+    }
+    if (!values["include-skipped"]) {
+      filtered = filtered.filter((f) => isSkipped(db, f.full_name) === null);
+    }
+
+    if (values.json) {
+      process.stdout.write(JSON.stringify(filtered, null, 2) + "\n");
+    } else {
+      for (const f of filtered) {
+        process.stdout.write(`${f.full_name}\t<-  ${f.parent_full_name}\n`);
+      }
+      const skipped = forks.length - filtered.length;
+      if (!values["include-skipped"] && skipped > 0) {
+        process.stderr.write(
+          `\n(${filtered.length} forks; ${skipped} excluded by skip list / archive)\n`,
+        );
+      }
+    }
+  } finally {
+    db.close();
+  }
+}
+
+main().catch((e) => {
+  // Provide friendly auth error
+  if (typeof e === "object" && e !== null && "stderr" in e) {
+    const stderr = (e as { stderr: string }).stderr;
+    if (stderr.includes("authentication") || stderr.includes("401")) {
+      console.error("gh authentication required. Run: gh auth login");
+      process.exit(1);
+    }
+  }
+  console.error(e);
+  process.exit(1);
+});

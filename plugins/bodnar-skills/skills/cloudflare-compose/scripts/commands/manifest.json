@@ -1,0 +1,291 @@
+{
+  "generated_at": "2026-04-26T22:41:53.828Z",
+  "source": "https://developers.cloudflare.com/llms-full.txt",
+  "total_products": 24,
+  "total_commands": 139,
+  "products": [
+    {
+      "product": "agents",
+      "count": 7,
+      "subcommands": [
+        "agents-starter",
+        "ai-demos-hello-world",
+        "ai-demos-remote-mcp-authless",
+        "ai-demos-remote-mcp-github-oauth",
+        "chat-agent",
+        "my-chess-app",
+        "my-slack-agent"
+      ]
+    },
+    {
+      "product": "ai-gateway",
+      "count": 2,
+      "subcommands": [
+        "hello-ai",
+        "openai-aig"
+      ]
+    },
+    {
+      "product": "artifacts",
+      "count": 2,
+      "subcommands": [
+        "artifacts-worker",
+        "sandbox-sdk-examples-git-repo-per-sandbox"
+      ]
+    },
+    {
+      "product": "browser-run",
+      "count": 1,
+      "subcommands": [
+        "browser-worker"
+      ]
+    },
+    {
+      "product": "cloudflare-one",
+      "count": 6,
+      "subcommands": [
+        "ai-demos-remote-mcp-cf-access",
+        "ai-demos-remote-mcp-cf-access-self-hosted",
+        "authentication-worker",
+        "device-posture-worker",
+        "https-github-com-cloudflare-msft-risky-user-ad-sync",
+        "https-github-com-cloudflare-workers-access-external-auth-example"
+      ]
+    },
+    {
+      "product": "containers",
+      "count": 1,
+      "subcommands": [
+        "templates-containers-template"
+      ]
+    },
+    {
+      "product": "d1",
+      "count": 5,
+      "subcommands": [
+        "d1-comments-api",
+        "d1-http",
+        "d1-tutorial",
+        "fast-commerce",
+        "prisma-d1-example"
+      ]
+    },
+    {
+      "product": "durable-objects",
+      "count": 2,
+      "subcommands": [
+        "durable-object-starter",
+        "seat-booking"
+      ]
+    },
+    {
+      "product": "email-service",
+      "count": 2,
+      "subcommands": [
+        "email-processor",
+        "email-service-tutorial"
+      ]
+    },
+    {
+      "product": "hyperdrive",
+      "count": 2,
+      "subcommands": [
+        "hyperdrive-tutorial",
+        "timescale-api"
+      ]
+    },
+    {
+      "product": "kv",
+      "count": 1,
+      "subcommands": [
+        "kv-tutorial"
+      ]
+    },
+    {
+      "product": "learning-paths",
+      "count": 1,
+      "subcommands": [
+        "first-worker"
+      ]
+    },
+    {
+      "product": "pages",
+      "count": 13,
+      "subcommands": [
+        "c3-cli",
+        "i18n-example",
+        "my-angular-app",
+        "my-astro-app",
+        "my-docusaurus-app",
+        "my-hono-app",
+        "my-nuxt-app",
+        "my-qwik-app",
+        "my-react-app",
+        "my-solid-app",
+        "my-svelte-app",
+        "my-vue-app",
+        "telemetry"
+      ]
+    },
+    {
+      "product": "queues",
+      "count": 3,
+      "subcommands": [
+        "producer-worker",
+        "queues-web-crawler",
+        "resend-rate-limit-queue"
+      ]
+    },
+    {
+      "product": "r2",
+      "count": 3,
+      "subcommands": [
+        "consumer-worker",
+        "pdf-summarizer",
+        "r2-worker"
+      ]
+    },
+    {
+      "product": "radar",
+      "count": 1,
+      "subcommands": [
+        "hijack-alerts"
+      ]
+    },
+    {
+      "product": "realtime",
+      "count": 1,
+      "subcommands": [
+        "hello-agent"
+      ]
+    },
+    {
+      "product": "sandbox",
+      "count": 4,
+      "subcommands": [
+        "sandbox-sdk-bridge-worker",
+        "sandbox-sdk-examples-claude-code",
+        "sandbox-sdk-examples-code-interpreter",
+        "sandbox-sdk-examples-minimal"
+      ]
+    },
+    {
+      "product": "stream",
+      "count": 1,
+      "subcommands": [
+        "stream-webhook-handler"
+      ]
+    },
+    {
+      "product": "vectorize",
+      "count": 2,
+      "subcommands": [
+        "embeddings-tutorial",
+        "vectorize-tutorial"
+      ]
+    },
+    {
+      "product": "workers",
+      "count": 69,
+      "subcommands": [
+        "airtable-form-handler",
+        "email-with-postmark",
+        "email-with-resend",
+        "express-d1-app",
+        "finetune-chatgpt-model",
+        "github-twilio-notifications",
+        "gradual-deployments",
+        "my-analog-app",
+        "my-angular-app",
+        "my-astro-app",
+        "my-docusaurus-app",
+        "my-dynamic-site",
+        "my-first-worker",
+        "my-gatsby-app",
+        "my-next-app",
+        "my-nuxt-app",
+        "my-qwik-app",
+        "my-react-app",
+        "my-react-router-app",
+        "my-solid-app",
+        "my-static-site",
+        "my-svelte-app",
+        "my-tanstack-start-app",
+        "my-vue-app",
+        "my-waku-app",
+        "mysql-tutorial",
+        "openai-function-calling-workers",
+        "postgres-tutorial",
+        "prisma-postgres-worker",
+        "qr-code-generator",
+        "send-emails-with-postmark",
+        "slack-bot",
+        "source",
+        "templates-astro-blog-starter-template",
+        "templates-chanfana-openapi-template",
+        "templates-cli",
+        "templates-containers-template",
+        "templates-d1-starter-sessions-api-template",
+        "templates-d1-template",
+        "templates-durable-chat-template",
+        "templates-hello-world-do-template",
+        "templates-llm-chat-app-template",
+        "templates-microfrontend-template",
+        "templates-multiplayer-globe-template",
+        "templates-mysql-hyperdrive-template",
+        "templates-next-starter-template",
+        "templates-nlweb-template",
+        "templates-nodejs-http-server-template",
+        "templates-openauth-template",
+        "templates-postgres-hyperdrive-template",
+        "templates-r2-explorer-template",
+        "templates-react-postgres-fullstack-template",
+        "templates-react-router-hono-fullstack-template",
+        "templates-react-router-postgres-ssr-template",
+        "templates-react-router-starter-template",
+        "templates-remix-starter-template",
+        "templates-saas-admin-template",
+        "templates-text-to-image-template",
+        "templates-to-do-list-kv-template",
+        "templates-vite-react-template",
+        "templates-worker-publisher-template",
+        "templates-workers-builds-notifications-template",
+        "templates-workers-for-platforms-template",
+        "templates-workflows-starter-template",
+        "templates-x402-proxy-template",
+        "thumbnail-image",
+        "todos",
+        "upload-r2-assets",
+        "worker-turso-ts"
+      ]
+    },
+    {
+      "product": "workers-ai",
+      "count": 5,
+      "subcommands": [
+        "getting-started",
+        "hello-ai",
+        "llama-vision-tutorial",
+        "rag-ai-tutorial",
+        "whisper-tutorial"
+      ]
+    },
+    {
+      "product": "workers-vpc",
+      "count": 1,
+      "subcommands": [
+        "workers-vpc-app"
+      ]
+    },
+    {
+      "product": "workflows",
+      "count": 4,
+      "subcommands": [
+        "cloudflare-workflows-starter",
+        "docs-examples-workflows-durableagent",
+        "durable-ai-agent",
+        "my-workflow"
+      ]
+    }
+  ]
+}

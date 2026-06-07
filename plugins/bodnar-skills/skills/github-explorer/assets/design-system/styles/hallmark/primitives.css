@@ -1,0 +1,514 @@
+/* primitives.css — the reusable component vocabulary of the Stars Workbench.
+ *
+ * These are the building blocks the app composes: surfaces, buttons, tags, chips,
+ * the tree, the datagrid, activity indicators, the README prose style, toast, modal.
+ * Every declaration references a token. No raw colour, font, or size literal appears here
+ * except structural geometry (border widths, icon box sizes) that is not themeable.
+ *
+ * Layering: import after base.css. Page-level layout (the app grid, panel resize handles,
+ * responsive breakpoints) is the app's concern and is not duplicated here — primitives are
+ * placement-independent so they can be reused in the marketing site, docs, and app alike.
+ */
+
+@import "./base.css";
+
+/* ─── Surfaces ──────────────────────────────────────────────── */
+.surface {
+  background: var(--color-paper);
+  border: var(--hairline);
+  border-radius: var(--radius-md);
+}
+.surface-raised {
+  background: var(--color-paper);
+  border: var(--hairline);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.hairline {
+  border-bottom: var(--hairline);
+}
+
+/* ─── Buttons ───────────────────────────────────────────────── */
+.btn {
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  line-height: 1.4;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.btn-primary {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+.btn-primary:hover {
+  background: var(--color-accent);
+}
+.btn-secondary {
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+}
+.btn-secondary:hover {
+  background: var(--color-paper-3);
+}
+.btn.is-starred {
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+}
+.btn.is-starred:hover {
+  background: var(--color-accent-bg-strong);
+}
+
+.icon-btn {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-2);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.icon-btn:hover {
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+}
+.icon-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* A small, outlined affordance — used for "Star" on Discover cards */
+.star-btn {
+  background: transparent;
+  border: 1px solid var(--color-rule-2);
+  color: var(--color-ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 0.25rem var(--space-2);
+  /* 1.5rem floor keeps the tap target at the WCAG 2.5.8 (AA) 24px minimum even at the
+   * smallest font scale; text-xs alone would render the control a few px short. */
+  min-height: 1.5rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.star-btn:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.star-btn.is-starred {
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+  border-color: transparent;
+}
+
+/* ─── Tags & chips ──────────────────────────────────────────── */
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 0.125rem var(--space-2);
+  background: var(--color-paper-3);
+  color: var(--color-ink-2);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.tag-lang {
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.1875rem var(--space-2);
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+
+/* ─── Inputs ────────────────────────────────────────────────── */
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-paper-2);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: all var(--duration) var(--ease-out);
+}
+.search-wrap:focus-within {
+  background: var(--color-paper);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-accent-bg);
+}
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  min-width: 0;
+}
+/* The wrapper's :focus-within glow is the visible focus state, so the inner input's own
+ * outline would be redundant for pointer/typing focus. Suppress it only for non-keyboard
+ * focus; keyboard users still get the global :focus-visible ring from base.css. */
+.search-input:focus:not(:focus-visible) {
+  outline: none;
+}
+.search-input::placeholder {
+  color: var(--color-ink-3);
+}
+.kbd {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-ink-3);
+  padding: 0.125rem var(--space-2);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper);
+  white-space: nowrap;
+}
+.select {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid transparent;
+  padding: var(--space-2) var(--space-6) var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.select:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-accent-bg);
+  outline: none;
+}
+.select:focus:not(:focus-visible) {
+  border-color: var(--color-accent);
+}
+
+/* ─── Segmented toggle ──────────────────────────────────────── */
+.segmented {
+  display: flex;
+  background: var(--color-paper-2);
+  padding: 0.125rem;
+  border-radius: var(--radius-md);
+}
+.segmented button {
+  padding: var(--space-1) var(--space-3);
+  min-height: 1.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  display: inline-flex;
+  align-items: center;
+  transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.segmented button.is-active {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-sm);
+}
+.segmented button:hover:not(.is-active) {
+  color: var(--color-ink);
+}
+
+/* ─── Card ──────────────────────────────────────────────────── */
+.card {
+  padding: var(--space-4);
+  border: var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.card:hover {
+  border-color: var(--color-rule-2);
+  transform: translateY(-0.0625rem);
+  box-shadow: var(--shadow-sm);
+}
+.card.is-selected {
+  border-color: var(--color-row-selected-rule);
+  background: var(--color-row-selected);
+}
+
+/* ─── Tree (sidebar) ────────────────────────────────────────── */
+.tree-node-header {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem var(--space-3);
+  margin: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.tree-node-header:hover {
+  background: var(--color-paper-2);
+}
+.tree-caret {
+  width: 1rem;
+  height: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink-3);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+.tree-node.is-collapsed > .tree-node-header .tree-caret {
+  transform: rotate(-90deg);
+}
+.tree-node-label {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-3);
+  font-weight: 500;
+}
+.tree-children {
+  padding-left: 1rem;
+  margin-left: calc(var(--space-3) + 0.4375rem);
+  border-left: 1px solid var(--color-rule);
+}
+.tree-node.is-collapsed > .tree-children {
+  display: none;
+}
+.tree-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.25rem var(--space-3) 0.25rem var(--space-2);
+  min-height: 1.5rem;
+  margin-right: var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.tree-item:hover {
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+}
+.tree-item.is-active {
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+}
+
+/* ─── Datagrid ──────────────────────────────────────────────── */
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-sm);
+  background: var(--color-paper);
+  table-layout: fixed;
+}
+.table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--color-paper);
+}
+.table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-3);
+  font-weight: 500;
+  border-bottom: var(--hairline);
+  white-space: nowrap;
+  background: var(--color-paper);
+  user-select: none;
+}
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--hairline);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.table tbody tr {
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.table tbody tr:hover {
+  background: var(--color-row-hover);
+}
+.table tr.is-selected {
+  background: var(--color-row-selected);
+}
+.cell-name {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.cell-num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-2);
+}
+
+/* ─── Activity indicator ────────────────────────────────────── */
+.activity {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-ink-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1875rem;
+}
+.activity-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: var(--color-success);
+}
+.activity.is-warm .activity-dot {
+  background: var(--color-warning);
+}
+.activity.is-cold .activity-dot {
+  background: var(--color-ink-4);
+}
+
+/* ─── README prose ──────────────────────────────────────────── */
+.readme {
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--color-ink-2);
+  max-width: 65ch;
+}
+.readme h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--color-ink);
+  margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: var(--hairline);
+  letter-spacing: -0.015em;
+}
+.readme h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--color-ink);
+  margin: var(--space-6) 0 var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--hairline);
+  letter-spacing: -0.01em;
+}
+.readme p {
+  margin: 0 0 var(--space-3);
+}
+.readme blockquote {
+  padding: var(--space-3) var(--space-4);
+  margin: var(--space-3) 0 var(--space-4);
+  border-left: 3px solid var(--color-rule-2);
+  background: var(--color-paper-2);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+}
+.readme code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-paper-2);
+  padding: 0.0625rem 0.375rem;
+  border-radius: 0.1875rem;
+  color: var(--color-accent);
+}
+.readme pre {
+  background: var(--color-paper-2);
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-4);
+  overflow-x: auto;
+}
+.readme pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--color-ink);
+}
+.readme-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 0.1875rem var(--space-2);
+  background: var(--color-paper-3);
+  color: var(--color-ink-2);
+  border-radius: var(--radius-sm);
+}
+.readme-badge.is-accent {
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+}
+
+/* ─── Toast ─────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: var(--space-5);
+  left: 50%;
+  transform: translateX(-50%) translateY(1.25rem);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: all var(--duration) var(--ease-out);
+  z-index: 50;
+}
+.toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ─── Modal ─────────────────────────────────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: oklch(0% 0 0 / 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 40;
+  transition: opacity var(--duration) var(--ease-out);
+}
+.modal-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal {
+  background: var(--color-paper);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  max-width: 25rem;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(0.5rem);
+  transition: transform var(--duration) var(--ease-out);
+}
+.modal-backdrop.is-open .modal {
+  transform: translateY(0);
+}

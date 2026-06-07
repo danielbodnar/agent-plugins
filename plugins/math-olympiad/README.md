@@ -27,7 +27,7 @@ See the skill's eval data in the
 ## Install
 
 ```
-/plugin install math-olympiad@claude-plugins-official
+/plugin install math-olympiad@bodnar-agent-plugins
 ```
 
 ## Use

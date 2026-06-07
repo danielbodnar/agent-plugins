@@ -1,0 +1,125 @@
+{
+  "$schema": "./config-schema.json",
+  "taxonomy": {
+    "categories": [
+      {
+        "name": "Development",
+        "description": "Programming, software development, dev tools",
+        "keywords": ["code", "programming", "development", "software", "api", "github"],
+        "patterns": ["github\\.com", "stackoverflow\\.com", "dev\\.to"],
+        "subcategories": ["Frontend", "Backend", "DevOps", "Data Science"],
+        "color": "#0366d6"
+      },
+      {
+        "name": "Documentation",
+        "description": "Technical documentation, API docs, guides",
+        "keywords": ["docs", "documentation", "guide", "tutorial", "reference"],
+        "patterns": ["docs\\.", "documentation", "guide"],
+        "color": "#6f42c1"
+      },
+      {
+        "name": "Learning",
+        "description": "Educational resources, courses, tutorials",
+        "keywords": ["learn", "course", "tutorial", "education", "training"],
+        "patterns": ["coursera\\.com", "udemy\\.com", "pluralsight\\.com"],
+        "color": "#28a745"
+      },
+      {
+        "name": "Tools",
+        "description": "Utilities, web tools, productivity apps",
+        "keywords": ["tool", "utility", "converter", "generator", "calculator"],
+        "color": "#ffd33d"
+      },
+      {
+        "name": "Reading",
+        "description": "Articles, blog posts, news",
+        "keywords": ["article", "blog", "post", "news", "read"],
+        "color": "#d73a49"
+      }
+    ],
+    "defaultCategory": "Uncategorized",
+    "autoClassify": true,
+    "preserveExisting": true
+  },
+  "classification": {
+    "provider": "hybrid",
+    "confidence_threshold": 0.7,
+    "batch_size": 50,
+    "cache_duration_days": 30,
+    "retry_failed": true,
+    "max_retries": 3,
+    "gemini_model": "gemini-nano",
+    "claude_model": "claude-sonnet-4-20250514"
+  },
+  "deduplication": {
+    "strategy": "url",
+    "duplicates_folder_name": "Duplicates",
+    "auto_group": true,
+    "similarity_threshold": 0.9,
+    "preserve_newest": true,
+    "hash_algorithm": "sha256"
+  },
+  "performance": {
+    "external_index": "duckdb",
+    "batch_size": 100,
+    "batch_delay_ms": 100,
+    "max_concurrent_operations": 5,
+    "read_only_index": true,
+    "lazy_load": true,
+    "memory_limit_mb": 512,
+    "enable_progress_bar": true
+  },
+  "chrome": {
+    "profile_name": "Default",
+    "headless": true,
+    "debugging_port": 9222,
+    "launch_flags": [
+      "--disable-dev-shm-usage",
+      "--disable-software-rasterizer",
+      "--disable-extensions",
+      "--disk-cache-size=1",
+      "--media-cache-size=1",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--disable-background-networking",
+      "--disable-sync"
+    ]
+  },
+  "systemd": {
+    "auto_start": false,
+    "restart_on_failure": true,
+    "restart_delay_sec": 10,
+    "io_scheduling_class": "best-effort",
+    "io_scheduling_priority": 4,
+    "cpu_weight": 100,
+    "memory_high": "80%",
+    "memory_max": "90%"
+  },
+  "github": {
+    "enabled": false,
+    "sync_interval_hours": 24,
+    "classify_new_stars": true,
+    "merge_with_bookmarks": true,
+    "dedupe_against_bookmarks": true
+  },
+  "metadata": {
+    "fetch_open_graph": true,
+    "fetch_json_ld": true,
+    "extract_article_content": false,
+    "cache_duration_days": 90,
+    "timeout_ms": 5000,
+    "max_concurrent_fetches": 10
+  },
+  "cache": {
+    "directory": "~/.cache/bookmark-manager",
+    "classification_db": "classifications.db",
+    "metadata_db": "metadata.db",
+    "external_index_file": "bookmarks.duckdb",
+    "max_size_mb": 1024
+  },
+  "logging": {
+    "level": "info",
+    "console": true,
+    "include_timestamps": true
+  }
+}

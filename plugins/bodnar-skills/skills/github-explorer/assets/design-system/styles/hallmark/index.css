@@ -1,0 +1,16 @@
+/* index.css — the Stars Workbench design system entry point.
+ *
+ * Import this one file to get the whole system: tokens, reset, and component primitives.
+ * The cascade order matters and is fixed here so consumers cannot get it wrong:
+ *
+ *   tokens  →  base  →  primitives
+ *
+ * primitives.css already chains base.css which already chains tokens.css, so importing
+ * primitives alone is sufficient. This barrel exists so the intent reads clearly at the
+ * call site and so additional layers (e.g. a future print.css) have one obvious home.
+ *
+ * Usage in the app:  <link rel="stylesheet" href="/styles/hallmark/index.css">
+ * Usage with Bun/Vite:  import "@/styles/hallmark/index.css";
+ */
+
+@import "./primitives.css";

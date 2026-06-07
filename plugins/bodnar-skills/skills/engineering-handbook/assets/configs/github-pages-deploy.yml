@@ -1,0 +1,79 @@
+# .github/workflows/deploy-handbook.yml
+# Deploy an engineering handbook (built with MkDocs Material) to GitHub Pages.
+#
+# To use:
+#   1. Copy this file to .github/workflows/deploy-handbook.yml in your repo.
+#   2. Pair with assets/configs/mkdocs.yml at your repo root.
+#   3. Enable GitHub Pages in Settings -> Pages, set Source: GitHub Actions.
+#   4. Push to main; site goes live at https://<org>.github.io/<repo>/.
+#
+# For VitePress, replace the build steps with:
+#   - run: bun install
+#   - run: bunx vitepress build
+#   - and upload .vitepress/dist instead of site/.
+#
+# For Astro Starlight, replace with:
+#   - run: bun install
+#   - run: bun astro build
+#   - and upload dist/ instead of site/.
+
+name: Deploy handbook
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'handbook/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/deploy-handbook.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Cancel in-progress deploys when a new push lands.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git-revision-date plugin
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+
+      - name: Install MkDocs Material
+        run: |
+          pip install \
+            mkdocs-material \
+            mkdocs-git-revision-date-localized-plugin
+
+      - name: Build site
+        run: mkdocs build --strict
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

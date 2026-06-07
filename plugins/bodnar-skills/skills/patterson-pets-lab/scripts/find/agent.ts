@@ -1,0 +1,5 @@
+#!/usr/bin/env bun
+// find agent -- filesystem-routed entry point. All logic lives in ../lib/crud.ts.
+import { runVerb } from "../lib/crud.ts";
+
+await runVerb("find", "agent", Bun.argv.slice(2));

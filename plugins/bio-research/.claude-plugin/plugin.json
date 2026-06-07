@@ -1,0 +1,13 @@
+{
+  "name": "bio-research",
+  "version": "0.1.0",
+  "description": "Bioinformatics and computational biology workflows: single-cell RNA QC, scvi-tools, Nextflow pipelines, Allotrope conversion, and research strategy.",
+  "keywords": [
+    "instrument-data-to-allotrope",
+    "nextflow-development",
+    "scientific-problem-selection",
+    "scvi-tools",
+    "single-cell-rna-qc",
+    "start"
+  ]
+}

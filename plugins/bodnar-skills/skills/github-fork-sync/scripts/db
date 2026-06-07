@@ -1,0 +1,78 @@
+#!/usr/bin/env bun
+// DB admin tool: init | dump | vacuum | reset
+
+import { openDb, initSchema, getDbPath } from "./lib/state.ts";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const cmd = process.argv[2];
+const SCHEMA_PATH = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "lib",
+  "schema.sql",
+);
+
+async function main() {
+  switch (cmd) {
+    case "init": {
+      const db = openDb();
+      initSchema(db, SCHEMA_PATH);
+      console.log(`Initialized state DB at ${getDbPath()}`);
+      db.close();
+      break;
+    }
+    case "dump": {
+      const db = openDb();
+      const tables = ["skip_list", "sync_runs", "api_cache", "repo_metadata"];
+      const out: Record<string, unknown[]> = {};
+      for (const t of tables) {
+        out[t] = db.prepare(`SELECT * FROM ${t}`).all();
+      }
+      console.log(JSON.stringify(out, null, 2));
+      db.close();
+      break;
+    }
+    case "vacuum": {
+      const db = openDb();
+      const before = db
+        .prepare("SELECT COUNT(*) as c FROM api_cache")
+        .get() as { c: number };
+      db.exec(
+        `DELETE FROM api_cache WHERE expires_at < datetime('now', '-24 hours')`,
+      );
+      const after = db
+        .prepare("SELECT COUNT(*) as c FROM api_cache")
+        .get() as { c: number };
+      db.exec("VACUUM");
+      console.log(`Pruned ${before.c - after.c} expired cache entries.`);
+      db.close();
+      break;
+    }
+    case "reset": {
+      if (process.argv[3] !== "--confirm") {
+        console.error(
+          "Refusing to reset without --confirm. This drops all tables.",
+        );
+        process.exit(1);
+      }
+      const db = openDb();
+      db.exec("DROP TABLE IF EXISTS skip_list");
+      db.exec("DROP TABLE IF EXISTS sync_runs");
+      db.exec("DROP TABLE IF EXISTS api_cache");
+      db.exec("DROP TABLE IF EXISTS repo_metadata");
+      db.exec("DROP TABLE IF EXISTS schema_version");
+      initSchema(db, SCHEMA_PATH);
+      console.log("State DB reset.");
+      db.close();
+      break;
+    }
+    default:
+      console.error("Usage: db init | dump | vacuum | reset --confirm");
+      process.exit(1);
+  }
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

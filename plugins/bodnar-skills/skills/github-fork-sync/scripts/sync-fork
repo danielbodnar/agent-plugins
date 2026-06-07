@@ -1,0 +1,81 @@
+#!/usr/bin/env bun
+// sync-fork <full_name> [--strategy=skip|rebase|pr] [--branches=default|all]
+//          [--run-id=<id>] [--no-cache] [--dry-run]
+//
+// Syncs a single fork. Outputs NDJSON results to stdout (one line per branch),
+// with a final summary line.
+//
+// Used directly OR called by sub-agents in audit mode.
+
+import { openDb } from "./lib/state.ts";
+import { syncFork, type StrategyName } from "./lib/sync.ts";
+import { parseArgs } from "node:util";
+import { randomUUID } from "node:crypto";
+
+const { values, positionals } = parseArgs({
+  args: process.argv.slice(2),
+  options: {
+    strategy: { type: "string", default: "skip" },
+    branches: { type: "string", default: "default" },
+    "run-id": { type: "string" },
+    "no-cache": { type: "boolean", default: false },
+    "dry-run": { type: "boolean", default: false },
+  },
+  allowPositionals: true,
+});
+
+const full_name = positionals[0];
+if (!full_name) {
+  console.error("Usage: sync-fork <full_name> [options]");
+  process.exit(1);
+}
+
+const strategy = values.strategy as StrategyName;
+if (!["skip", "rebase", "pr"].includes(strategy)) {
+  console.error(`Invalid strategy: ${strategy}. Use skip|rebase|pr.`);
+  process.exit(1);
+}
+
+const branches = values.branches as "default" | "all";
+if (!["default", "all"].includes(branches)) {
+  console.error(`Invalid branches: ${branches}. Use default|all.`);
+  process.exit(1);
+}
+
+async function main() {
+  const db = openDb();
+  try {
+    const results = await syncFork({
+      db,
+      full_name,
+      strategy,
+      branches,
+      run_id: values["run-id"] ?? randomUUID(),
+      noCache: values["no-cache"],
+      dryRun: values["dry-run"],
+    });
+    for (const r of results) {
+      process.stdout.write(JSON.stringify(r) + "\n");
+    }
+    // Exit non-zero if any branch failed or had a conflict, so the caller can
+    // detect failures with exit codes (in addition to NDJSON output).
+    const bad = results.find(
+      (r) => r.outcome === "failed" || r.outcome === "conflict",
+    );
+    process.exit(bad ? 1 : 0);
+  } finally {
+    db.close();
+  }
+}
+
+main().catch((e) => {
+  process.stdout.write(
+    JSON.stringify({
+      type: "result",
+      full_name,
+      outcome: "failed",
+      error_message: String(e),
+    }) + "\n",
+  );
+  process.exit(1);
+});

@@ -1,0 +1,26 @@
+{
+  "name": "app",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "wrangler dev ./dist/_worker.js/index.js --assets ./dist",
+    "deploy": "astro build && wrangler deploy",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "typecheck": "astro check && tsc --noEmit"
+  },
+  "dependencies": {
+    "astro": "^6.3.0",
+    "@astrojs/vue": "^5.0.0",
+    "@astrojs/cloudflare": "^12.0.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "oxlint": "^0.15.0",
+    "wrangler": "^3.90.0",
+    "typescript": "^5.6.0"
+  },
+  "packageManager": "bun@1.2.0"
+}

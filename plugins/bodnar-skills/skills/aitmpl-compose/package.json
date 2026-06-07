@@ -1,0 +1,10 @@
+{
+  "name": "aitmpl-compose",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Author and compose claude-code-templates workflows",
+  "dependencies": {
+    "yaml": "^2.6.0"
+  }
+}

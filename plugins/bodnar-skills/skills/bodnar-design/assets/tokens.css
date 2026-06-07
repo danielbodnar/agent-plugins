@@ -1,0 +1,124 @@
+/* ============================================================
+   bodnar.sh design tokens
+   Import once from src/layouts/Base.astro.
+   Themes switch via [data-theme] on <body> (or <html>).
+   They are four distinct moods, not light/dark variants.
+   ============================================================ */
+
+:root {
+  /* --- type pairing (theme-independent) --- */
+  --ff-mono:    "JetBrains Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ff-sans:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ff-serif:   "Newsreader", "Iowan Old Style", "Charter", Georgia, serif;
+  --ff-display: var(--ff-mono);   /* terminal + blueprint themes */
+  --ff-body:    var(--ff-mono);   /* mono-primary by default */
+
+  /* --- spacing, radii, rule --- */
+  --r: 2px;                     /* radius — small, almost-flat */
+  --pad: 56px;                  /* page padding */
+  --pad-card: 22px;             /* card padding */
+  --pad-sec-y: 32px 0 28px;     /* section vertical rhythm */
+}
+
+/* --- dark / terminal (default) ---------------------------------
+   warm near-black bg, sage-lime accent, mono everything */
+:root,
+[data-theme="dark"] {
+  --bg: #0a0b0d;        --bg-2: #111214;   --bg-3: #06070a;
+  --fg: #dfe1d8;        --fg-dim: rgba(223,225,216,0.7);
+  --fg-faint: rgba(223,225,216,0.36);
+  --fg-ghost: rgba(255,255,255,0.16);
+  --rule: rgba(223,225,216,0.12);
+  --accent:  oklch(78% 0.2 145);   /* green   */
+  --red:     oklch(74% 0.18 28);
+  --amber:   oklch(82% 0.16 80);
+  --blue:    oklch(74% 0.13 240);
+  --magenta: oklch(72% 0.18 320);
+}
+
+/* --- light / terminal light ------------------------------------
+   warm paper, deeper green accent */
+[data-theme="light"] {
+  --bg: #ecebe6;        --bg-2: #f6f5f0;   --bg-3: #e0ddd4;
+  --fg: #0e0e10;        --fg-dim: rgba(14,14,16,0.65);
+  --fg-faint: rgba(14,14,16,0.36);
+  --fg-ghost: rgba(0,0,0,0.16);
+  --rule: rgba(14,14,16,0.16);
+  --accent:  oklch(55% 0.16 145);
+  --red:     oklch(55% 0.18 28);
+  --amber:   oklch(68% 0.16 70);
+  --blue:    oklch(54% 0.14 245);
+  --magenta: oklch(56% 0.18 320);
+}
+
+/* --- editorial -------------------------------------------------
+   cream paper, burnt-orange accent, Newsreader serif on display */
+[data-theme="editorial"] {
+  --bg: #f6f3ec;   --bg-2: #ece8de;   --bg-3: #ffffff;
+  --fg: #1a1814;   --fg-dim: #6a6358;  --fg-faint: #b8b0a0;
+  --fg-ghost: rgba(0,0,0,0.12);
+  --rule: #d6cfbe;
+  --accent: #c2410c;  --accent-2: #1a1814;
+  --warn: #b91c1c;
+  /* serifs read denser — bump display + body to the serif face */
+  --ff-display: var(--ff-serif);
+  --ff-body:    var(--ff-serif);
+}
+
+/* --- blueprint -------------------------------------------------
+   deep navy with grid texture, amber + sky accents */
+[data-theme="blueprint"] {
+  --bg: #0c2540;   --bg-2: #0e2c4a;   --bg-3: #103258;
+  --fg: #e8efff;   --fg-dim: #8aa6cf;  --fg-faint: #4a6794;
+  --fg-ghost: rgba(255,255,255,0.16);
+  --rule: #1d4779;
+  --accent: #ffd166;  --accent-2: #7dd3fc;
+  --warn: #fb7185;
+}
+
+/* ============================================================
+   texture overlay — faint, always present, never decorative
+   for its own sake. terminal = scanlines, blueprint = grid,
+   editorial = clean paper (none).
+   ============================================================ */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: repeating-linear-gradient(
+    0deg, transparent 0 23px, rgba(255,255,255,0.012) 23px 24px);
+}
+
+[data-theme="blueprint"] body::before {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+[data-theme="editorial"] body::before {
+  background-image: none;
+}
+
+/* ============================================================
+   motion keyframes — the Caret and section reveals depend on
+   these. All motion collapses under prefers-reduced-motion.
+   ============================================================ */
+
+@keyframes v3blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
