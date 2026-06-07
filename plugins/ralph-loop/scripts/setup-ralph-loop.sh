@@ -110,7 +110,7 @@ HELP_EOF
 done
 
 # Join all prompt parts with spaces
-PROMPT="${PROMPT_PARTS[*]}"
+PROMPT="${PROMPT_PARTS[*]:-}"
 
 # Validate prompt is non-empty
 if [[ -z "$PROMPT" ]]; then
@@ -141,6 +141,7 @@ cat > .claude/ralph-loop.local.md <<EOF
 ---
 active: true
 iteration: 1
+session_id: ${CLAUDE_CODE_SESSION_ID:-}
 max_iterations: $MAX_ITERATIONS
 completion_promise: $COMPLETION_PROMISE_YAML
 started_at: "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
