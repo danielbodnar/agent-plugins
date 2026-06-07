@@ -4589,7 +4589,7 @@
         "sha": "7023e6030ac8f726938d92e3b27e6fd496c30c7b"
       },
       "skills": [
-        "."
+        "./."
       ],
       "homepage": "https://github.com/danielbodnar/nushell-pro"
     },
