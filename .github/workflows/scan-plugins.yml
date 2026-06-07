@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -91,7 +91,7 @@ jobs:
       - name: Restore verdict cache
         if: steps.changes.outputs.relevant == 'true'
         id: cache-restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: .scan-cache
           # run_attempt so a re-run can save its own verdicts (cache keys are
@@ -342,7 +342,7 @@ jobs:
       # found policy failures" from "scan never ran" (infra error → no revert).
       - name: Upload scan verdicts artifact
         if: steps.changes.outputs.relevant == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: scan-verdicts
           path: |
@@ -354,7 +354,7 @@ jobs:
       # re-burning Claude time on a known-bad SHA every night.
       - name: Save verdict cache
         if: always() && steps.changes.outputs.relevant == 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: .scan-cache
           key: scan-verdicts-${{ hashFiles('.github/policy/**') }}-${{ github.run_id }}-${{ github.run_attempt }}
