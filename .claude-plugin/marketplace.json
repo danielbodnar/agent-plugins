@@ -473,7 +473,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/brightdata/skills.git",
-        "sha": "68651246ad1819b98a1fc15ce10239e55406ff37"
+        "sha": "3e6d0838285cbc107b86d61e2e1a943baf7ead29"
       },
       "homepage": "https://docs.brightdata.com"
     },
@@ -1036,7 +1036,7 @@
         "url": "https://github.com/microsoft/Dataverse-skills.git",
         "path": ".github/plugins/dataverse",
         "ref": "main",
-        "sha": "ab906c960db0f2da83c2cb92a3fd162ccaba9cb9"
+        "sha": "2d50cf65f80efc17ac50632222d61fb374115a70"
       },
       "homepage": "https://github.com/microsoft/Dataverse-skills"
     },
@@ -1127,7 +1127,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/exa-labs/exa-mcp-server.git",
-        "sha": "ad888a188cdefbe832c9feed2c3a97d1cb93cb35"
+        "sha": "f08388256c5806f457fae777b5528eb02a48e703"
       },
       "homepage": "https://exa.ai/docs/reference/exa-mcp"
     },
@@ -1362,7 +1362,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/heygen-com/hyperframes.git",
-        "sha": "dd9567446bce28dff9f8a163b03a0071870eb07b"
+        "sha": "fc01717c8219fd766e2b3fd8b6ea550457f03095"
       },
       "homepage": "https://hyperframes.heygen.com"
     },
@@ -2141,7 +2141,7 @@
         "url": "https://github.com/railwayapp/railway-skills.git",
         "path": "plugins/railway",
         "ref": "main",
-        "sha": "daa677165306b5cf6db4fb763e411fdf67fe92ff"
+        "sha": "1df604ebd18f528ff16b84975125ecff944cc036"
       },
       "homepage": "https://docs.railway.com/ai/claude-code-plugin"
     },
@@ -2882,7 +2882,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/wix/skills.git",
-        "sha": "29a68ecdf5ff34bf2334afbee6d95446aa8e543e"
+        "sha": "038e0c5593f115519bfd634b1270fd897cf5b99d"
       },
       "homepage": "https://dev.wix.com/docs/wix-cli/guides/development/about-wix-skills"
     },
