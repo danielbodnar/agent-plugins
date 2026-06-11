@@ -102,6 +102,41 @@ SDK_BOOTSTRAP_ERR_CODES = {
     "_uncategorized":       99,
 }
 
+# Exception-type encoding for the "exc:<TypeName>" err_kinds (the generic
+# `except Exception` path — venv/pip raised a Python exception rather than
+# a CalledProcessError with categorizable stderr).
+#
+# #2154 telemetry surfaced that the dominant remaining venv BUILD_FAILED
+# bucket (phase=venv, err=99) is ~99% `exc:` with stderr_sig=NULL — i.e.
+# exceptions, not stderr-bearing subprocess failures — so the stderr_sig
+# hash couldn't distinguish them. This maps the exception TYPE to a stable
+# code so BQ can tell FileNotFoundError (python/venv binary missing) from
+# PermissionError (read-only home) from a bare OSError, etc.
+#
+# All the FileNotFoundError/PermissionError/etc. entries are OSError
+# subclasses, so they ALSO carry an errno (see _encode_errno) — the type
+# code gives the Python class, errno gives the OS-level cause. APPEND-ONLY.
+SDK_BOOTSTRAP_EXC_CODES = {
+    "FileNotFoundError":  1,   # interpreter/venv path component missing
+    "PermissionError":    2,   # read-only home, sandboxed FS
+    "NotADirectoryError": 3,
+    "IsADirectoryError":  4,
+    "FileExistsError":    5,   # (sentinel race is handled separately; this
+                               # is FileExistsError from elsewhere in venv)
+    "OSError":            6,   # bare OSError — errno carries the real cause
+    "BlockingIOError":    7,
+    "BrokenPipeError":    8,
+    "ConnectionError":    9,
+    "TimeoutError":       10,  # distinct from subprocess.TimeoutExpired
+    "InterruptedError":   11,
+    "MemoryError":        12,
+    "UnicodeDecodeError": 13,
+    "ValueError":         14,
+    "RuntimeError":       15,
+    # 16–98 reserved; APPEND-ONLY.
+    "_other_exc":         99,  # an exception type not in this map
+}
+
 
 def _encode_phase(s):
     """Map err_phase string to its telemetry integer code, or 0 if unset.
@@ -156,6 +191,55 @@ def _encode_stderr_sig(err_kind):
         return 0
     h = hashlib.sha1(tail.encode("utf-8", errors="replace")).digest()
     return int.from_bytes(h[:2], "big") % 1000
+
+
+def _encode_exc_kind(err_kind):
+    """Map an "exc:<TypeName>[:errno]" err_kind to its exception-type code
+    (SDK_BOOTSTRAP_EXC_CODES). Returns 0 for non-exc err_kinds (so the
+    sdk_bootstrap_exc field auto-omits on stderr/categorized failures).
+    Unmapped exception types → 99 (_other_exc)."""
+    if not err_kind or not err_kind.startswith("exc:"):
+        return 0
+    # "exc:OSError:28" → "OSError"; "exc:RuntimeError" → "RuntimeError"
+    name = err_kind[len("exc:"):].split(":", 1)[0].strip()
+    if not name:
+        return 0
+    return SDK_BOOTSTRAP_EXC_CODES.get(name, SDK_BOOTSTRAP_EXC_CODES["_other_exc"])
+
+
+def _encode_errno(err_kind):
+    """Extract the OS errno from an "exc:<TypeName>:<errno>" err_kind.
+    OSError-family exceptions embed their errno (ENOENT=2, EACCES=13,
+    ENOSPC=28, …) — the OS-level cause is far more actionable than the
+    Python class alone. Returns 0 when absent/non-numeric (field omitted)."""
+    if not err_kind or not err_kind.startswith("exc:"):
+        return 0
+    parts = err_kind.split(":")
+    if len(parts) < 3:
+        return 0
+    try:
+        return int(parts[2])
+    except (ValueError, IndexError):
+        return 0
+
+
+def _probe_has_pip() -> bool:
+    """True iff the current interpreter can run pip (`-m pip --version`).
+
+    Probed only on the venv_ensurepip_fail path (see __main__), NOT on the
+    happy path — it's an extra subprocess we only want when diagnosing a
+    failure. The result decides whether a `pip install --target` fallback
+    (Option A) is even viable for this machine: ensurepip/venv missing but
+    pip present → --target would work; pip also missing → it wouldn't, and
+    the user needs a system package (python3-venv / a complete Python)."""
+    try:
+        r = subprocess.run(
+            [sys.executable, "-m", "pip", "--version"],
+            capture_output=True, timeout=10,
+        )
+        return r.returncode == 0
+    except Exception:
+        return False
 
 
 def _sdk_on_syspath() -> bool:
@@ -364,6 +448,13 @@ def main() -> tuple[int, str, str]:
     except subprocess.TimeoutExpired:
         return BUILD_FAILED, err_phase, "subprocess_timeout"
     except Exception as e:
+        # Embed errno for OSError-family exceptions ("exc:OSError:28") so
+        # telemetry can decode the OS-level cause (ENOENT/EACCES/ENOSPC/…),
+        # not just the Python class. #2154 follow-up: this is the dominant
+        # remaining venv BUILD_FAILED bucket. See _encode_exc_kind/_encode_errno.
+        errno = getattr(e, "errno", None)
+        if isinstance(errno, int):
+            return BUILD_FAILED, err_phase, f"exc:{type(e).__name__}:{errno}"
         return BUILD_FAILED, err_phase, f"exc:{type(e).__name__}"
     finally:
         # Only remove the sentinel if THIS process created it. The
@@ -467,6 +558,30 @@ if __name__ == "__main__":
         sig = _encode_stderr_sig(err_kind)
         if sig:
             metrics["sdk_bootstrap_stderr_sig"] = sig
+        # Exception-type + errno for the "exc:" bucket (the dominant
+        # remaining venv BUILD_FAILED mode per #2154 telemetry). Both
+        # auto-omit (0) on stderr/categorized failures.
+        exc = _encode_exc_kind(err_kind)
+        if exc:
+            metrics["sdk_bootstrap_exc"] = exc
+        exc_errno = _encode_errno(err_kind)
+        if exc_errno:
+            metrics["sdk_bootstrap_errno"] = exc_errno
+        # venv_ensurepip_fail (code 11) is the top categorizable venv
+        # failure, and telemetry shows it's NOT just Debian — macOS has the
+        # most distinct affected users. Probe whether this interpreter has
+        # pip so we know if a `pip install --target` fallback (Option A)
+        # would actually help, vs the user needing a system package. Probed
+        # only here (not on the happy path) to avoid an extra subprocess
+        # per healthy session.
+        if _encode_err_kind(err_kind) == 11:
+            metrics["sdk_has_pip"] = _probe_has_pip()
+    # Interpreter version (major*100 + minor, e.g. 309 / 312), emitted on
+    # every bootstrap. Disambiguates the macOS cohort (Apple 3.9 vs a 3.10+
+    # with broken ensurepip) for both venv_ensurepip_fail AND
+    # HOOK_PY_INCOMPATIBLE (whose "py_3.9" err_kind otherwise collapses to
+    # err=99, losing the version). Cheap — no subprocess, just sys.version_info.
+    metrics["sdk_hook_py"] = sys.version_info[0] * 100 + sys.version_info[1]
     pv = _plugin_version_int()
     if pv:
         metrics["pv"] = pv
