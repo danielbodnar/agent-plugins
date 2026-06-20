@@ -7,6 +7,9 @@ on:
       - '**/skills/*/SKILL.md'
       - '**/commands/*.md'
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     # Fork PRs are auto-closed by close-external-prs.yml, so skip validation
