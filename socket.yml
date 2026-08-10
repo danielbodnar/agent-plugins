@@ -10,7 +10,6 @@ projectIgnorePaths:
   - "plugins/**/skills/**/assets/**"
   - "plugins/**/skills/**/references/**"
   - "plugins/**/skills/**/examples/**"
-  - "external_plugins/**/skills/**/assets/**"
   - "**/*.min.js"
 
 # Block (fail the check) on the supply-chain issues that actually matter for a

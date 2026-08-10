@@ -12,9 +12,6 @@ permissions:
 
 jobs:
   validate:
-    # Fork PRs are auto-closed by close-external-prs.yml, so skip validation
-    # for them entirely. This also prevents untrusted filenames from forks
-    # from ever reaching the shell steps below.
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:

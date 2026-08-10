@@ -4,12 +4,9 @@
 
 > **⚠️ Important:** Make sure you trust a plugin before installing, updating, or using it. This marketplace does not control what MCP servers, files, or other software are included in plugins and cannot verify that they will work as intended or that they won't change. See each plugin's homepage for more information.
 
-> This directory was forked from Anthropic's [`claude-plugins-official`](https://github.com/anthropics/claude-plugins-public) marketplace and extended with Daniel Bodnar's personal skill bundles and additional sources. Individual plugins retain their original authors and homepages.
-
 ## Structure
 
-- **`/plugins`** - First-party plugins and skills curated by Daniel Bodnar, plus plugins inherited from the upstream marketplace (each retains its original author)
-- **`/external_plugins`** - Third-party plugins from partners and the community
+- **`/plugins`** - Daniel Bodnar's personal plugins and skills
 
 ## Installation
 
@@ -23,11 +20,7 @@ or browse for the plugin in `/plugin > Discover`
 
 ### First-party Plugins
 
-First-party plugins are maintained in this repository. See `/plugins/example-plugin` for a reference implementation.
-
-### External Plugins
-
-Plugins can be added to the catalog by referencing their source repository. External plugins should meet reasonable quality and security standards. Open an issue or pull request to propose a new plugin.
+First-party plugins are maintained in this repository. See `/plugins/bodnar-skills` for an example.
 
 ## Daniel Bodnar repositories
 
