@@ -4,6 +4,10 @@ on:
   pull_request_target:
     branches: [main]
     types: [opened, reopened, synchronize, ready_for_review]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/auto-merge-dependabot.yml'
   workflow_dispatch:
   schedule:
     - cron: '15 * * * *'
